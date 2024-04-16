@@ -24,7 +24,8 @@ int main() {
     //int coins = 0;
     
     // Raylib Initialization
-    const int screenWidth = 832;
+    //const int screenWidth = 832;
+    const int screenWidth = 1088;
     const int screenHeight = 640;
     InitWindow(screenWidth, screenHeight, "Map Editor");
     

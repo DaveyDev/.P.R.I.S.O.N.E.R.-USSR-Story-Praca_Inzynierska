@@ -27,6 +27,8 @@ int main() {
     const int screenWidth = 832;
     const int screenHeight = 640;
     InitWindow(screenWidth, screenHeight, ".P.R.I.S.O.N.E.R.");
+    //ToggleFullscreen();
+
     
     loadTextures();
     
