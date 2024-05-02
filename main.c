@@ -2,15 +2,11 @@
 #include <stdlib.h>
 #include <raylib.h>
 #include "src/scripts/player.c"
-#include "src/scripts/hoe.c"
 #include "src/scripts/checkCollision.c"
 #include "src/scripts/menu.c"
-#include "src/scripts/waterCan.c"
-#include "src/scripts/coffeeSeed.c"
 #include "src/scripts/textures.c"
 #include "src/scripts/map.c"
-#include "src/scripts/plant.c"
-#include "src/scripts/shop.c"
+
 
 
 
@@ -24,8 +20,9 @@ int main() {
     int coins = 0;
     
     // Raylib Initialization
-    const int screenWidth = 832;
-    const int screenHeight = 640;
+    const int screenWidth = 1024;
+    const int screenHeight = 768;
+    
     InitWindow(screenWidth, screenHeight, ".P.R.I.S.O.N.E.R.");
     //ToggleFullscreen();
 
@@ -36,26 +33,7 @@ int main() {
     Player player;
     initPlayer(&player, screenWidth, screenHeight, 213.7f); // Initial position and speed
     
-    Hoe hoe;
-    spawnHoe(&hoe, (Vector2){200, 300});
-    
-    WaterCan waterCan;
-    spawnWaterCan(&waterCan, (Vector2){300, 200});
-    
-    Shop shop;
-    spawnShop(&shop, (Vector2){200, 50});
-    
-    CoffeeSeed coffeeSeed;
-    CoffeeSeedManager coffeeSeedManager = {0};
-    
-    CoffeePlant coffeePlant;
-    CoffeePlantManager coffeePlantManager = {0};
-    
-    
-    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 300});
-    coffeeSeedManager.numSeeds++;
-    spawnCoffeeSeed(&coffeeSeedManager.coffeeSeed[coffeeSeedManager.numSeeds], (Vector2){100, 350});
-    coffeeSeedManager.numSeeds++;
+   
     
     
 
@@ -66,65 +44,30 @@ int main() {
     while (!WindowShouldClose()) {
         
 
-        if(scene == 0){
+    switch(scene){
+        case 0:
         BeginDrawing();
         ClearBackground(RAYWHITE);
         drawMap();
         scene = menuScene();
+        EndDrawing();
 
         
-        }
+        break;
         
-        if(scene != 0){
-        if (checkCollision(player.collider, hoe.collider) && IsKeyDown(KEY_E) && player.isHandEmpty) {
-            
-            hoe.isActive = false;
-            hoe.isEquipped = true;
-            player.isHandEmpty = false;// Mark hoe as inactive (picked up)
-            // Perform actions associated with picking up the hoe (e.g., increase score)
-        }
-        if (checkCollision(player.collider, waterCan.collider) && IsKeyDown(KEY_E) && player.isHandEmpty) {
-            
-            waterCan.isActive = false;
-            waterCan.isEquipped = true;
-            player.isHandEmpty = false;// Mark hoe as inactive (picked up)
-            // Perform actions associated with picking up the hoe (e.g., increase score)
-        }
-
-        if(hoe.isEquipped && IsKeyDown(KEY_Q)){
-            
-            hoe.isActive = true;
-            hoe.isEquipped = false;
-            hoe.position.x = player.position.x;
-            hoe.collider.x = player.position.x;
-            hoe.position.y = player.position.y;
-            hoe.collider.y = player.position.y;
-            
-            player.isHandEmpty = true;
-        }
-        if(waterCan.isEquipped && IsKeyDown(KEY_Q)){
-            
-            waterCan.isActive = true;
-            waterCan.isEquipped = false;
-            waterCan.position.x = player.position.x;
-            waterCan.collider.x = player.position.x;
-            waterCan.position.y = player.position.y;
-            waterCan.collider.y = player.position.y;
-            
-            player.isHandEmpty = true;
-        }
-
+        case 1:
+        
         
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
           
-        clickOnTile(&player, &hoe, &waterCan);
+        clickOnTile(&player);
         }
         
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
         // Draw the map
-        updateMap(&coffeeSeedManager);
+        //updateMap();
         drawMap();
        
    
@@ -132,21 +75,21 @@ int main() {
         
         //Draw hoe  
         //updateHoe(&hoe);
-        drawHoe(&hoe);
-        drawWaterCan(&waterCan);
+        //drawHoe(&hoe);
+        //drawWaterCan(&waterCan);
         
         
-        drawShop(&shop);
+        //drawShop(&shop);
         
-        for (int i = 0; i < coffeeSeedManager.numSeeds; i++) {
-            CoffeeSeed *coffeeSeed = &coffeeSeedManager.coffeeSeed[i];
-        if(checkCollision(shop.collider, coffeeSeed->collider)){
-            coffeeSeed->isActive = false;
-            coffeeSeed->collider.x = 1000;
-            coffeeSeed->collider.y = 1000;
-            coins++;
-            
-        }}
+        //for (int i = 0; i < coffeeSeedManager.numSeeds; i++) {
+        //    CoffeeSeed *coffeeSeed = &coffeeSeedManager.coffeeSeed[i];
+        //if(checkCollision(shop.collider, coffeeSeed->collider)){
+        //    coffeeSeed->isActive = false;
+        //    coffeeSeed->collider.x = 1000;
+        //    coffeeSeed->collider.y = 1000;
+        //    coins++;
+        //    
+        //}}
         
         //draw plants
         
@@ -154,11 +97,11 @@ int main() {
         
         
         
-        interactWithCoffeePlants(&player, &coffeePlantManager, map, lastChangeTimes);
-        drawCoffeePlant(&coffeePlantManager);
+        //interactWithCoffeePlants(&player, &coffeePlantManager, map, lastChangeTimes);
+        //drawCoffeePlant(&coffeePlantManager);
         
-        drawCoffeeSeed(&coffeeSeedManager);
-        interactWithCoffeeSeeds(&player, &coffeeSeedManager);
+        //drawCoffeeSeed(&coffeeSeedManager);
+        //interactWithCoffeeSeeds(&player, &coffeeSeedManager);
         
         
         
@@ -171,17 +114,18 @@ int main() {
         DrawText(TextFormat("ver. 240126"), screenWidth - 150, 600, 20, BLUE);
         DrawText(TextFormat("coins: %i", coins), 80, 15, 20, BLUE);
   
-        }
+        
      
         EndDrawing();
+        break;
         
     }
-    
+}
     unloadPlayer(&player);
-    unloadHoe(&hoe);
-    unloadWaterCan(&waterCan);
-    unloadCoffeeSeeds(&coffeeSeed);
-    unloadShop(&shop);
+    //unloadHoe(&hoe);
+    //unloadWaterCan(&waterCan);
+    //unloadCoffeeSeeds(&coffeeSeed);
+    //unloadShop(&shop);
     unloadTextures();
     CloseWindow();
 
