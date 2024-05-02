@@ -34,7 +34,7 @@ void loadMap(const char *filename) {
 }
 
 
-void drawMap(){
+/*void drawMap(){
     for (int row = 0; row < MAX_ROWS; row++) {
             for (int col = 0; col < MAX_COLS; col++) {
                 // Adjust the size and position based on your needs
@@ -63,6 +63,39 @@ void drawMap(){
                 // You can also add additional logic for player, enemies, etc.
             }
         }
+} */
+
+void drawMap(Camera2D camera){
+    BeginMode2D(camera);
+    for (int row = 0; row < MAX_ROWS; row++) {
+            for (int col = 0; col < MAX_COLS; col++) {
+                // Adjust the size and position based on your needs
+                Rectangle block = {
+                    col * 64,  // X position
+                    row * 64,  // Y position
+                    64,        // Width
+                    64         // Height
+                };
+
+
+                // Draw different textures based on the map values
+                switch(map[row][col]){
+                    case 1: //grass
+                    DrawTexture(grassTexture, block.x, block.y, WHITE);
+                    break;
+                    case 2: //sand
+                    DrawTexture(sandTexture, block.x, block.y, WHITE);
+
+
+
+                }
+
+                // Add more conditions based on your game's needs
+
+                // You can also add additional logic for player, enemies, etc.
+            }
+        }
+        EndMode2D();
 }
 void clickOnTile(Player *player){
     
