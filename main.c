@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <raylib.h>
+#include "include/raylib.h"
 #include "src/scripts/player.c"
 #include "src/scripts/checkCollision.c"
 #include "src/scripts/menu.c"
@@ -34,7 +34,12 @@ int main() {
     initPlayer(&player, screenWidth, screenHeight, 213.7f); // Initial position and speed
     
    
-    
+    Camera2D camera = { 0 };
+    camera.target = (Vector2){0,0};
+    //camera.target.y = player.position.y - 100;
+    camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
     
 
 
@@ -48,7 +53,7 @@ int main() {
         case 0:
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        drawMap();
+        drawMap(camera);
         scene = menuScene();
         EndDrawing();
 
@@ -68,10 +73,10 @@ int main() {
 
         // Draw the map
         //updateMap();
-        drawMap();
+        drawMap(camera);
        
    
-        DrawTexture(emptyHand, 0, 0, WHITE);
+        //DrawTexture(emptyHand, 0, 0, WHITE);
         
         //Draw hoe  
         //updateHoe(&hoe);

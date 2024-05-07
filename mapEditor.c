@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <raylib.h>
+#include "include/raylib.h"
 #include "src/scripts/player.c"
 #include "src/scripts/checkCollision.c"
 #include "src/scripts/menu.c"
