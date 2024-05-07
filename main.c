@@ -15,7 +15,6 @@ int main() {
     // Load the map from the text file
     loadMap("src/map.txt");
     int scene = 0;
-    //int numSeeds = 0;
     
     int coins = 0;
     
@@ -76,40 +75,6 @@ int main() {
         drawMap(camera);
        
    
-        //DrawTexture(emptyHand, 0, 0, WHITE);
-        
-        //Draw hoe  
-        //updateHoe(&hoe);
-        //drawHoe(&hoe);
-        //drawWaterCan(&waterCan);
-        
-        
-        //drawShop(&shop);
-        
-        //for (int i = 0; i < coffeeSeedManager.numSeeds; i++) {
-        //    CoffeeSeed *coffeeSeed = &coffeeSeedManager.coffeeSeed[i];
-        //if(checkCollision(shop.collider, coffeeSeed->collider)){
-        //    coffeeSeed->isActive = false;
-        //    coffeeSeed->collider.x = 1000;
-        //    coffeeSeed->collider.y = 1000;
-        //    coins++;
-        //    
-        //}}
-        
-        //draw plants
-        
-        
-        
-        
-        
-        //interactWithCoffeePlants(&player, &coffeePlantManager, map, lastChangeTimes);
-        //drawCoffeePlant(&coffeePlantManager);
-        
-        //drawCoffeeSeed(&coffeeSeedManager);
-        //interactWithCoffeeSeeds(&player, &coffeeSeedManager);
-        
-        
-        
         float deltaTime = GetFrameTime();
         updatePlayer(&player, deltaTime);
         drawPlayer(&player);
@@ -127,10 +92,6 @@ int main() {
     }
 }
     unloadPlayer(&player);
-    //unloadHoe(&hoe);
-    //unloadWaterCan(&waterCan);
-    //unloadCoffeeSeeds(&coffeeSeed);
-    //unloadShop(&shop);
     unloadTextures();
     CloseWindow();
 
