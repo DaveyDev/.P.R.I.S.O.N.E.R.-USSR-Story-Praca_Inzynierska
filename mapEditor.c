@@ -27,7 +27,7 @@ int main() {
     
     loadTextures();
     
-     Camera2D camera = { 0 };
+    Camera2D camera = { 0 };
     camera.target = (Vector2){0,0};
     //camera.target.y = player.position.y - 100;
     camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
