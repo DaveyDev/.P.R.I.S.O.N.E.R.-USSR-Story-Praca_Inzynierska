@@ -1,12 +1,5 @@
+#include "player.h"
 
-typedef struct {
-    Vector2 position;
-    Texture2D texture;
-    float speed;
-    Rectangle collider;
-    bool isHandEmpty;
-    
-} Player;
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
     player-> position.x = screenWidth/2;

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/raylib.h"
+#include "src/raylib.h"
 #include "src/scripts/player.c"
 #include "src/scripts/checkCollision.c"
 #include "src/scripts/menu.c"
@@ -13,7 +13,7 @@
 
 int main() {
     // Load the map from the text file
-    loadMap("src/map.txt");
+    loadMap("src/map.map");
     //int scene = 0;
     //int numSeeds = 0;
     
