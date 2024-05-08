@@ -13,7 +13,7 @@
 
 int main() {
     // Load the map from the text file
-    loadMap("src/map.map");
+    loadMap("src/map/map.map");
     //int scene = 0;
     //int numSeeds = 0;
     
