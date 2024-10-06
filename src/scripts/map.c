@@ -111,7 +111,7 @@ void updateMap(Camera2D camera) {
             if (objects[row][col] == 0) {
                 objects[row][col] = 1;  // Toggle to Stone
             } else if (objects[row][col] == 1) {
-                objects[row][col] = 0;  // Toggle to Tree
+                objects[row][col] = 0;  // Toggle to Tree 
             } 
         }
     }
