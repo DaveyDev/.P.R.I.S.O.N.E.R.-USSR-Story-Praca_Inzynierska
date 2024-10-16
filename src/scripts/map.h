@@ -16,5 +16,6 @@ void loadMap(const char *filename);
 void drawMap(Camera2D camera);
 void updateMap(Camera2D camera);
 void freeMap();  // Function to free allocated memory
+int calcutaleTile(int row, int col);
 
 #endif // MAP_H

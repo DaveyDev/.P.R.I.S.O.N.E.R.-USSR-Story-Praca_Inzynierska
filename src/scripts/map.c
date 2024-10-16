@@ -48,6 +48,13 @@ void loadMap(const char *filename) {
     fclose(file);
 }
 
+int calculateTile(int row, int col){
+
+    int neighbourTiles[] = {};
+
+    return 0;
+}
+
 void drawMap(Camera2D camera){
     BeginMode2D(camera);
     for (int row = 0; row < rows; row++) {
@@ -64,6 +71,7 @@ void drawMap(Camera2D camera){
                 case 1: 
                     //DrawRectangle(block.x, block.y, 32, 32, GRAY);
                     ;
+                    calculateTile(row, col);
                     Rectangle tileSource = { 2 * 32, 1 * 32, 32, 32 };
                     DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y}, WHITE);
                     break;
@@ -74,11 +82,23 @@ void drawMap(Camera2D camera){
                     DrawTextureRec(grassTileset, tileSource1, (Vector2){ block.x, block.y}, WHITE);
                     break;
             }
+            
+        }
+    }
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            Rectangle block = {
+                col * 32,  // X position
+                row * 32,  // Y position
+                32,        // Width
+                32         // Height
+            };
 
             // Draw different objects based on the objects array values
             switch(objects[row][col]){
                 case 1:  // Stone
                     DrawCircle(block.x + 16, block.y + 16, 10, DARKGRAY);  // Example for a stone
+                    DrawTexture(treesTileset, block.x - 16, block.y - 128, WHITE);
                     break;
                 case 2:  // Tree
                     DrawCircle(block.x + 16, block.y + 16, 10, GREEN);  // Example for a tree

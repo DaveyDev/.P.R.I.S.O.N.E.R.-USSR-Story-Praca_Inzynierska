@@ -5,6 +5,8 @@
 
 // Declare the textures (extern means they are defined elsewhere)
 extern Texture2D grassTileset;
+extern Texture2D treesTileset;
+
 
 // Function declarations
 void loadTextures();
