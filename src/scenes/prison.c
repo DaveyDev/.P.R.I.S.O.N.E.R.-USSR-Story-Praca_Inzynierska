@@ -37,16 +37,9 @@ void prisonScene() {
     if (IsKeyDown(KEY_DOWN)) camera.target.y += cameraSpeed;
     if (IsKeyDown(KEY_UP)) camera.target.y -= cameraSpeed;
 
-    // Apply zoom in/out with the mouse wheel
-    //camera.zoom += GetMouseWheelMove() * 0.1f;
-
-    // Prevent zoom from being too small or too large
-    //if (camera.zoom < 0.1f) camera.zoom = 0.1f;
-    //if (camera.zoom > 3.0f) camera.zoom = 3.0f;
-
-    // Update and draw the map
-    updateMap(camera);
+    
     drawMap(camera);
+    updateMap(camera);
 
     if(IsKeyDown(KEY_A)) {
         *currentScene = MENU;

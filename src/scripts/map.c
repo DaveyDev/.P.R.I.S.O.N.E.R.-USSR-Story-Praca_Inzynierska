@@ -13,6 +13,38 @@ int rows = 0;
 int cols = 0;
 //time_t **lastChangeTimes = NULL;
 
+// Define your tile types
+enum TileType {
+    Grass = 1,
+    Dirt = 2
+};
+
+// Define a struct to represent tile neighbors and atlas coordinates
+typedef struct {
+    int neighbors[4];    // Stores the 4 neighbors (top-left, top-right, bottom-left, bottom-right)
+    Vector2 atlasCoord;  // Stores the atlas coordinates
+} TileMapping;
+
+TileMapping neighbours_to_atlas_coord[] = {
+    {{Grass, Grass, Grass, Grass}, {2, 1}},
+    {{Dirt, Dirt, Dirt, Grass}, {1, 3}},
+    {{Dirt, Dirt, Grass, Dirt}, {0, 0}},
+    {{Dirt, Grass, Dirt, Dirt}, {0, 2}},
+    {{Grass, Dirt, Dirt, Dirt}, {3, 3}},
+    {{Dirt, Grass, Dirt, Grass}, {1, 0}},
+    {{Grass, Dirt, Grass, Dirt}, {3, 2}},
+    {{Dirt, Dirt, Grass, Grass}, {3, 0}},
+    {{Grass, Grass, Dirt, Dirt}, {1, 2}},
+    {{Dirt, Grass, Grass, Grass}, {1, 1}},
+    {{Grass, Dirt, Grass, Grass}, {2, 0}},
+    {{Grass, Grass, Dirt, Grass}, {2, 2}},
+    {{Grass, Grass, Grass, Dirt}, {3, 1}},
+    {{Dirt, Grass, Grass, Dirt}, {2, 3}},
+    {{Grass, Dirt, Dirt, Grass}, {0, 1}},
+    {{Dirt, Dirt, Dirt, Dirt}, {0, 3}}
+};
+
+
 void loadMap(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -48,17 +80,70 @@ void loadMap(const char *filename) {
     fclose(file);
 }
 
-int calculateTile(int row, int col){
+Rectangle calculateTile(int row, int col) {
+    // Get the tile types for the 2x2 neighbors
+    int topLeft = map[row][col];
+    int topRight = map[row][col + 1];
+    int bottomLeft = map[row + 1][col];
+    int bottomRight = map[row + 1][col + 1];
 
-    int neighbourTiles[] = {};
+    int neighbours[4] = {topLeft, topRight, bottomLeft, bottomRight};
 
-    return 0;
+    // Loop through the mappings and find a match
+    for (int i = 0; i < sizeof(neighbours_to_atlas_coord) / sizeof(neighbours_to_atlas_coord[0]); i++) {
+        if (neighbours[0] == neighbours_to_atlas_coord[i].neighbors[0] &&
+            neighbours[1] == neighbours_to_atlas_coord[i].neighbors[1] &&
+            neighbours[2] == neighbours_to_atlas_coord[i].neighbors[2] &&
+            neighbours[3] == neighbours_to_atlas_coord[i].neighbors[3]) {
+            
+            // Return the corresponding atlas coordinates
+            Vector2 atlasCoord = neighbours_to_atlas_coord[i].atlasCoord;
+            return (Rectangle){ atlasCoord.x * 32, atlasCoord.y * 32, 32, 32 };
+        }
+    }
+
+    // Default if no match is found
+    return (Rectangle){ 0, 0, 32, 32 };
 }
+
+// Define a function to calculate the tree source rectangle based on its index in the atlas
+void drawTree(int treeIndex, Rectangle block) {
+    // Assuming each tree is 64x64 pixels and they are arranged in a row
+    int treeWidth = 64; //widht of tte tree
+    int treeHeight = 144;  // height of the tree
+    int treesPerRow = treesTileset.width / treeWidth; // Calculate how many trees fit in one row
+
+    // Calculate the x and y coordinates in the atlas
+    int row = treeIndex / treesPerRow;
+    int col = treeIndex % treesPerRow;
+
+    Rectangle treeSource;
+    treeSource = (Rectangle){ col * treeWidth, row * treeHeight, treeWidth, treeHeight };
+    DrawTextureRec(treesTileset, treeSource, (Vector2){ block.x - 16, block.y - 120 }, WHITE);  // Adjust y offset as needed
+      
+}
+// Define a function to calculate the tree source rectangle based on its index in the atlas
+void drawWall(int wallIndex, Rectangle block) {
+    // Assuming each tree is 64x64 pixels and they are arranged in a row
+    int treeWidth = 32; //widht of tte tree
+    int treeHeight = 32;  // height of the tree
+    int treesPerRow = treesTileset.width / treeWidth; // Calculate how many trees fit in one row
+
+    // Calculate the x and y coordinates in the atlas
+    int row = wallIndex / treesPerRow;
+    int col = wallIndex % treesPerRow;
+
+    Rectangle wallSource;
+    wallSource = (Rectangle){ col * treeWidth, row * treeHeight, treeWidth, treeHeight };
+    DrawTextureRec(wallSet, wallSource, (Vector2){ block.x, block.y}, WHITE);  // Adjust y offset as needed
+      
+}
+
 
 void drawMap(Camera2D camera){
     BeginMode2D(camera);
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
+    for (int row = 0; row < rows - 1; row++) {
+        for (int col = 0; col < cols - 1; col++) {
             Rectangle block = {
                 col * 32,  // X position
                 row * 32,  // Y position
@@ -66,22 +151,12 @@ void drawMap(Camera2D camera){
                 32         // Height
             };
 
-            // Draw different textures based on the map values
-            switch(map[row][col]){
-                case 1: 
-                    //DrawRectangle(block.x, block.y, 32, 32, GRAY);
-                    ;
-                    calculateTile(row, col);
-                    Rectangle tileSource = { 2 * 32, 1 * 32, 32, 32 };
-                    DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y}, WHITE);
-                    break;
-                case 2:
-                    //DrawRectangle(block.x, block.y, 32, 32, LIGHTGRAY);
-                    ;
-                    Rectangle tileSource1 = { 0 * 32, 3 * 32, 32, 32 };
-                    DrawTextureRec(grassTileset, tileSource1, (Vector2){ block.x, block.y}, WHITE);
-                    break;
-            }
+            // Get the tile type from the map and calculate the corresponding source rectangle
+            int tileType = map[row][col];
+            Rectangle tileSource = calculateTile(row, col);
+
+           // Grass tile
+            DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x + 16, block.y + 16}, WHITE);
             
         }
     }
@@ -96,13 +171,21 @@ void drawMap(Camera2D camera){
 
             // Draw different objects based on the objects array values
             switch(objects[row][col]){
-                case 1:  // Stone
-                    DrawCircle(block.x + 16, block.y + 16, 10, DARKGRAY);  // Example for a stone
-                    DrawTexture(treesTileset, block.x - 16, block.y - 128, WHITE);
+                
+                case 1:  // Tree
+                    // Display a specific tree from the treeset
+                    drawTree(0, block);
+                    //drawWall(1, block);
                     break;
                 case 2:  // Tree
-                    DrawCircle(block.x + 16, block.y + 16, 10, GREEN);  // Example for a tree
+                    drawTree(1, block);
                     break;
+
+                case 11:  // Wall
+                    drawWall(0, block);
+                    break;
+
+                
             }
         }
     }
@@ -113,8 +196,11 @@ void updateMap(Camera2D camera) {
     Vector2 mousePos = GetMousePosition();
     Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
 
+    
+
     int col = (int)(worldMousePos.x / 32); 
     int row = (int)(worldMousePos.y / 32);
+
 
     if (row >= 0 && row < rows && col >= 0 && col < cols) {
         // Left click to toggle between tiles (map)
