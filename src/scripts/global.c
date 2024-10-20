@@ -1,5 +1,11 @@
 #include "global.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define MAX_RESOLUTIONS 3 // Adjust based on the number of resolutions available
+
 
 
 AppScene *currentScene = NULL;
@@ -13,6 +19,7 @@ Vector2 mousePoint = {};
 Color buttonColor = (Color){0, 0, 0, 50};
 Color noColor = (Color){0, 0, 0, 0};
 Color bgColor = (Color){0, 150, 100, 255};
+
 
 
 // Initialize resolutions
@@ -34,4 +41,31 @@ void initGlobals() {
         *currentScene = MENU; // Initialize the value
     }
 
+}
+
+
+// Function to load properties from game.properties
+void loadProperties(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Could not open properties file\n");
+        return;
+    }
+
+    char line[128];
+    while (fgets(line, sizeof(line), file)) {
+        char key[64], value[64];
+        sscanf(line, "%63[^=]=%63[^\n]", key, value);
+
+        if (strcmp(key, "resolution") == 0) {
+            currentResolutionIndex = atoi(value); // Convert string to int
+            if (currentResolutionIndex < 0 || currentResolutionIndex >= MAX_RESOLUTIONS) {
+                currentResolutionIndex = 0; // Default to first resolution if out of range
+            }
+        } else if (strcmp(key, "fullscreen") == 0) {
+            //fullscreen = (strcmp(value, "true") == 0);
+        }
+    }
+
+    fclose(file);
 }

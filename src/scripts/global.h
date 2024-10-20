@@ -28,5 +28,7 @@ extern const int numResolutions;  // Declare the number of resolutions
 
 
 void initGlobals();
+void loadProperties(const char *filename);
+
 
 #endif

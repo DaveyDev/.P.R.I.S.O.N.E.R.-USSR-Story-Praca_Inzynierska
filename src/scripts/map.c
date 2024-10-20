@@ -4,6 +4,7 @@
 #include "../raylib.h"
 #include "map.h"
 #include "textures.h"
+#include "map/objects.h"
 
 
 // Global variables to store the map, objects, and their dimensions
@@ -106,40 +107,6 @@ Rectangle calculateTile(int row, int col) {
     return (Rectangle){ 0, 0, 32, 32 };
 }
 
-// Define a function to calculate the tree source rectangle based on its index in the atlas
-void drawTree(int treeIndex, Rectangle block) {
-    // Assuming each tree is 64x64 pixels and they are arranged in a row
-    int treeWidth = 64; //widht of tte tree
-    int treeHeight = 144;  // height of the tree
-    int treesPerRow = treesTileset.width / treeWidth; // Calculate how many trees fit in one row
-
-    // Calculate the x and y coordinates in the atlas
-    int row = treeIndex / treesPerRow;
-    int col = treeIndex % treesPerRow;
-
-    Rectangle treeSource;
-    treeSource = (Rectangle){ col * treeWidth, row * treeHeight, treeWidth, treeHeight };
-    DrawTextureRec(treesTileset, treeSource, (Vector2){ block.x - 16, block.y - 120 }, WHITE);  // Adjust y offset as needed
-      
-}
-// Define a function to calculate the tree source rectangle based on its index in the atlas
-void drawWall(int wallIndex, Rectangle block) {
-    // Assuming each tree is 64x64 pixels and they are arranged in a row
-    int treeWidth = 32; //widht of tte tree
-    int treeHeight = 32;  // height of the tree
-    int treesPerRow = treesTileset.width / treeWidth; // Calculate how many trees fit in one row
-
-    // Calculate the x and y coordinates in the atlas
-    int row = wallIndex / treesPerRow;
-    int col = wallIndex % treesPerRow;
-
-    Rectangle wallSource;
-    wallSource = (Rectangle){ col * treeWidth, row * treeHeight, treeWidth, treeHeight };
-    DrawTextureRec(wallSet, wallSource, (Vector2){ block.x, block.y}, WHITE);  // Adjust y offset as needed
-      
-}
-
-
 void drawMap(Camera2D camera){
     BeginMode2D(camera);
     for (int row = 0; row < rows - 1; row++) {
@@ -160,6 +127,7 @@ void drawMap(Camera2D camera){
             
         }
     }
+   
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
             Rectangle block = {
@@ -182,8 +150,9 @@ void drawMap(Camera2D camera){
                     break;
 
                 case 11:  // Wall
-                    drawWall(0, block);
+                    drawWall(5, block);
                     break;
+                
 
                 
             }
@@ -201,26 +170,29 @@ void updateMap(Camera2D camera) {
     int col = (int)(worldMousePos.x / 32); 
     int row = (int)(worldMousePos.y / 32);
 
+    // Early exit if the mouse is out of bounds
+    if (row < 0 || row >= rows || col < 0 || col >= cols) {
+        return;
+    }
 
-    if (row >= 0 && row < rows && col >= 0 && col < cols) {
-        // Left click to toggle between tiles (map)
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            if (map[row][col] == 1) {
-                map[row][col] = 2;
-            } else if (map[row][col] == 2) {
-                map[row][col] = 1;
-            }
-        }
-
-        // Right click to toggle between objects (objects array)
-        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-            if (objects[row][col] == 0) {
-                objects[row][col] = 1;  // Toggle to Stone
-            } else if (objects[row][col] == 1) {
-                objects[row][col] = 0;  // Toggle to Tree 
-            } 
+    
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (map[row][col] == Grass) {
+            map[row][col] = Dirt;
+        } else if (map[row][col] == Dirt) {
+            map[row][col] = Grass;
         }
     }
+
+    // Right click to toggle between objects (objects array)
+    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+        if (objects[row][col] == 0) {
+            objects[row][col] = 1;  // Toggle to tree
+        } else if (objects[row][col] == 1) {
+            objects[row][col] = 0;   
+        } 
+    }
+    
 }
 
 

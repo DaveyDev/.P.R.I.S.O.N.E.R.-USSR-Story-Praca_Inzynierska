@@ -3,7 +3,7 @@
 #include "scenes.h"
 #include <stdio.h>
 #include "../scripts/global.h"
-#include "../scripts/player.h"
+#include "../scripts/player/player.h"
 #include "../scripts/styles.h"
 #include <string.h>  // For strcpy and strcat
 

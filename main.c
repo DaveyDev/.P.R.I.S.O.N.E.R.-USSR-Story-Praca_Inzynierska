@@ -3,7 +3,7 @@
 
 #include "src/raygui.h"
 #include "src/raylib.h"
-#include "src/scripts/player.h"
+#include "src/scripts/player/player.h"
 #include "src/scenes/scenes.h"
 #include "src/scripts/global.h"
 #include "src/scripts/styles.h"
@@ -18,7 +18,8 @@ int main(){
     // Raylib Initialization
     //const int screenWidth = 1024;
     //const int screenHeight = 768;
-    
+    loadProperties("game.properties");
+
     
     InitWindow(resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, ".P.R.I.S.O.N.E.R.");
     SetTargetFPS(60);
