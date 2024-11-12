@@ -4,10 +4,12 @@
 #include "../raylib.h"
 
 // Enum definition for the different game screens
-typedef enum AppScene { MENU = 0, OPTIONS, GAME, ENDSCREEN} AppScene;
+typedef enum AppScene { MENU = 0, OPTIONS, GAME, ENDSCREEN, EDITOR} AppScene;
 
 
 
+void mapsEditorScene();
+void menuMapEditorScene();
 void menuScene();
 void optionsScene();
 void prisonScene();
