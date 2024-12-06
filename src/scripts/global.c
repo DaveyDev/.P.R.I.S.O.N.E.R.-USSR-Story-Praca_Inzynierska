@@ -1,3 +1,4 @@
+//Wiktor
 #include "global.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -5,6 +6,14 @@
 #include <stdbool.h>
 
 #define MAX_RESOLUTIONS 3 // Adjust based on the number of resolutions available
+
+
+// Global variables to store the map, objects, and their dimensions
+int **map = NULL;
+int **objects = NULL;
+int rows = 0;
+int cols = 0;
+//time_t **lastChangeTimes = NULL;
 
 
 

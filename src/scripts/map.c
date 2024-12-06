@@ -1,30 +1,15 @@
+//Wiktor
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "../raylib.h"
 #include "map.h"
 #include "textures.h"
+#include "global.h"
 #include "map/objects.h"
 
 
-// Global variables to store the map, objects, and their dimensions
-int **map = NULL;
-int **objects = NULL;
-int rows = 0;
-int cols = 0;
-//time_t **lastChangeTimes = NULL;
 
-// Define your tile types
-enum TileType {
-    Grass = 1,
-    Dirt = 2
-};
-
-// Define a struct to represent tile neighbors and atlas coordinates
-typedef struct {
-    int neighbors[4];    // Stores the 4 neighbors (top-left, top-right, bottom-left, bottom-right)
-    Vector2 atlasCoord;  // Stores the atlas coordinates
-} TileMapping;
 
 TileMapping neighbours_to_atlas_coord[] = {
     {{Grass, Grass, Grass, Grass}, {2, 1}},
@@ -178,18 +163,18 @@ void updateMap(Camera2D camera) {
     
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         if (map[row][col] == Grass) {
-            map[row][col] = Dirt;
+            //map[row][col] = Dirt;
         } else if (map[row][col] == Dirt) {
-            map[row][col] = Grass;
+            //map[row][col] = Grass;
         }
     }
 
     // Right click to toggle between objects (objects array)
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
         if (objects[row][col] == 0) {
-            objects[row][col] = 1;  // Toggle to tree
+            //objects[row][col] = 1;  // Toggle to tree
         } else if (objects[row][col] == 1) {
-            objects[row][col] = 0;   
+            //objects[row][col] = 0;   
         } 
     }
     

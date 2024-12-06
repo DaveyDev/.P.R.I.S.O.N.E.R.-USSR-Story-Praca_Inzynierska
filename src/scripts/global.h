@@ -1,3 +1,4 @@
+//Wiktor
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
@@ -6,6 +7,13 @@
 
 extern AppScene *currentScene;
 extern int maxFPS;
+
+// Global variables
+extern int **map;
+extern int **objects;
+extern int rows;
+extern int cols;
+
 
 extern Vector2 mousePoint;
 extern Color buttonColor;

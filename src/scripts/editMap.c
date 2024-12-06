@@ -4,9 +4,11 @@
 
 #include "../raylib.h"
 #include "map.h"
+#include "global.h"
 #include "map/objects.h"
+#include "editMap.h"
 
-/*
+
 void editMap(Camera2D cameraE) 
 {
      Vector2 mousePos = GetMousePosition();
@@ -29,4 +31,3 @@ void editMap(Camera2D cameraE)
         } 
     }
 }
-*/

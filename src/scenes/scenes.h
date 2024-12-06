@@ -1,3 +1,4 @@
+//Wiktor
 #ifndef SCENES_H
 #define SCENES_H
 

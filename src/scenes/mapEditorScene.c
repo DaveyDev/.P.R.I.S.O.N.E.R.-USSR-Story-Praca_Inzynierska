@@ -3,6 +3,7 @@
 #include "scenes.h"
 #include "../scripts/map.h"
 #include "../scripts/global.h"
+#include "../scripts/editMap.h"
 
 bool wasMapLoadedE = false;
 
@@ -41,6 +42,7 @@ void mapsEditorScene() {
     
     drawMap(cameraE);
     updateMap(cameraE);
+    editMap(cameraE);
 
     if(IsKeyDown(KEY_A)) {
         *currentScene = MENU;

@@ -1,3 +1,4 @@
+//Wiktor
 #ifndef STYLES_H
 #define STYLES_H
 
