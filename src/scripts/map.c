@@ -104,7 +104,7 @@ void drawMap(Camera2D camera){
             };
 
             // Get the tile type from the map and calculate the corresponding source rectangle
-            int tileType = map[row][col];
+            //int tileType = map[row][col];
             Rectangle tileSource = calculateTile(row, col);
 
            // Grass tile
@@ -122,27 +122,12 @@ void drawMap(Camera2D camera){
                 32         // Height
             };
 
-            // Draw different objects based on the objects array values
-            switch(objects[row][col]){
-                
-                case 1:  // Tree
-                    // Display a specific tree from the treeset
-                    drawTree(0, block);
-                    //drawWall(1, block);
-                    break;
-                case 2:  // Tree
-                    drawTree(1, block);
-                    break;
-
-                case 11:  // Wall
-                    drawWall(5, block);
-                    break;
-                
-
-                
-            }
+            drawObjects(objects, rows, cols, treesTileset, wallSet, camera);
+            //drawWall(row, col, wallSet);
         }
     }
+
+    
     EndMode2D();
 }
 
@@ -171,11 +156,7 @@ void updateMap(Camera2D camera) {
 
     // Right click to toggle between objects (objects array)
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-        if (objects[row][col] == 0) {
-            //objects[row][col] = 1;  // Toggle to tree
-        } else if (objects[row][col] == 1) {
-            //objects[row][col] = 0;   
-        } 
+        updateObjects(objects, rows, cols, worldMousePos);
     }
     
 }

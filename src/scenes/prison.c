@@ -41,6 +41,7 @@ void prisonScene() {
     
     drawMap(camera);
     updateMap(camera);
+    //editMap(camera);
 
     if(IsKeyDown(KEY_A)) {
         *currentScene = MENU;

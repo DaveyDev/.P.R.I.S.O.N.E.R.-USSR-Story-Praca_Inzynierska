@@ -12,7 +12,7 @@ void loadTextures() {
     // Load the tileset texture
     grassTileset = LoadTexture("data/textures/grassTileset.png");
     treesTileset = LoadTexture("data/textures/treeSet.png");
-    wallSet = LoadTexture("data/textures/stonewall.png");
+    wallSet = LoadTexture("data/textures/wallTileset.png");
 
 }
 
