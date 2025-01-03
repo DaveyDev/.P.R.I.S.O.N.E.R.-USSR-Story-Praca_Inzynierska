@@ -5,7 +5,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../lib/raylib.h"
+#include "../../../lib/raylib.h"
 
 
 // Declare pointers for the map and map dimensions

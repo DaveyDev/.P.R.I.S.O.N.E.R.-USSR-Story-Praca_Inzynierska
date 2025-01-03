@@ -1,7 +1,7 @@
 //Wiktor
 #include "../../lib/raylib.h"
 #include "scenes.h"
-#include "../scripts/map.h"
+#include "../scripts/map/map.h"
 #include "../scripts/global.h"
 
 bool wasMapLoaded = false;

@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../../lib/raylib.h"
+#include "../../../lib/raylib.h"
 #include "map.h"
-#include "global.h"
-#include "map/objects.h"
+#include "../global.h"
+#include "objects.h"
 #include "editMap.h"
 
 

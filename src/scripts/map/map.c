@@ -2,11 +2,11 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../lib/raylib.h"
+#include "../../../lib/raylib.h"
 #include "map.h"
-#include "textures.h"
-#include "global.h"
-#include "map/objects.h"
+#include "../textures.h"
+#include "../global.h"
+#include "objects.h"
 
 
 

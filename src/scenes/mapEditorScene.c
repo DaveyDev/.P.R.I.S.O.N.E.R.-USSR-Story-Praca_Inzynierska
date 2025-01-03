@@ -1,9 +1,9 @@
 //Hubert
 #include "../../lib/raylib.h"
 #include "scenes.h"
-#include "../scripts/map.h"
+#include "../scripts/map/map.h"
 #include "../scripts/global.h"
-#include "../scripts/editMap.h"
+#include "../scripts/map/editMap.h"
 
 bool wasMapLoadedE = false;
 
