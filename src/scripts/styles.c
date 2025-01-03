@@ -1,6 +1,6 @@
 //Wiktor
-#include "../raygui.h"
-#include "../raylib.h"
+#include "../../lib/raygui.h"
+#include "../../lib/raylib.h"
 
 // Implementation of the InitGuiStyles function
 void initGuiStyle() {

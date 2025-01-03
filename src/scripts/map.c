@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../raylib.h"
+#include "../../lib/raylib.h"
 #include "map.h"
 #include "textures.h"
 #include "global.h"
@@ -104,7 +104,7 @@ void drawMap(Camera2D camera){
             };
 
             // Get the tile type from the map and calculate the corresponding source rectangle
-            //int tileType = map[row][col];
+            int tileType = map[row][col];
             Rectangle tileSource = calculateTile(row, col);
 
            // Grass tile

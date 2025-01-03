@@ -1,6 +1,6 @@
 //Hubert
-#include "../raylib.h"
-#include "../raygui.h"
+#include "../../lib/raylib.h"
+#include "../../lib/raygui.h"
 #include "scenes.h"
 #include <stdio.h>
 #include "../scripts/global.h"

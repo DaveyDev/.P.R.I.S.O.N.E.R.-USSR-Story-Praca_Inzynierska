@@ -2,7 +2,7 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-#include "../../raylib.h"
+#include "../../../lib/raylib.h"
 
 // Function declarations for object handling
 void drawTree(int treeIndex, Rectangle block);

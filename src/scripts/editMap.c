@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../raylib.h"
+#include "../../lib/raylib.h"
 #include "map.h"
 #include "global.h"
 #include "map/objects.h"

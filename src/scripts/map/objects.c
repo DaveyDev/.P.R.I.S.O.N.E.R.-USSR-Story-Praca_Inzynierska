@@ -1,6 +1,6 @@
 //Wiktor
 #include "objects.h"
-#include "../../raylib.h"
+#include "../../../lib/raylib.h"
 #include "../textures.h"
 #include <stdlib.h>
 #include "../global.h"

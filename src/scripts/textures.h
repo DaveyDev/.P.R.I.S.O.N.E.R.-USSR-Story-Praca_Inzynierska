@@ -2,7 +2,7 @@
 #ifndef TEXTURES_H
 #define TEXTURES_H
 
-#include "../raylib.h"
+#include "../../lib/raylib.h"
 
 // Declare the textures (extern means they are defined elsewhere)
 extern Texture2D grassTileset;
