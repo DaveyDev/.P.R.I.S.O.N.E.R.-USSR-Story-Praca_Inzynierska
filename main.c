@@ -9,6 +9,7 @@
 #include "src/scripts/global.h"
 #include "src/scripts/styles.h"
 #include "src/scripts/textures.h"
+#include "src/scripts/translation.h"
 
 bool exitMenu = false;
 
@@ -52,6 +53,9 @@ int main(){
 
         BeginDrawing();
 
+        // Function to print a language-specific greeting
+    
+    
         
         switch (*currentScene){
             case MENU:

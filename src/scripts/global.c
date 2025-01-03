@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include "translation.h"
 
 #define MAX_RESOLUTIONS 3 // Adjust based on the number of resolutions available
 
@@ -42,6 +43,9 @@ Resolution resolutions[] = {
 int currentResolutionIndex = 0;
 const int numResolutions = sizeof(resolutions) / sizeof(resolutions[0]);  // Now numResolutions is defined properly
 
+char language[16] = "ENG";       // Default language
+
+
 
 
 void initGlobals() {
@@ -50,6 +54,16 @@ void initGlobals() {
         *currentScene = MENU; // Initialize the value
     }
 
+}
+
+// Function to map language code to enum
+Language getLanguageEnum(const char *langCode) {
+    if (strcmp(langCode, "ENG") == 0) {
+        return LANG_ENGLISH;
+    } else if (strcmp(langCode, "PL") == 0) {
+        return LANG_POLISH;
+    } 
+    return LANG_ENGLISH; // Default to unknown if not recognized
 }
 
 
@@ -73,7 +87,13 @@ void loadProperties(const char *filename) {
             }
         } else if (strcmp(key, "fullscreen") == 0) {
             //fullscreen = (strcmp(value, "true") == 0);
+        } else if (strcmp(key, "language") == 0) {
+            strncpy(language, value, sizeof(language) - 1);
+            language[sizeof(language) - 1] = '\0'; // Ensure null termination
+            currentLanguage = getLanguageEnum(language); // Map to enum
         }
+
+        
     }
 
     fclose(file);

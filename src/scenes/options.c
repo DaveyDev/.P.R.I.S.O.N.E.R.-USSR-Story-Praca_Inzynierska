@@ -87,8 +87,14 @@ void optionsScene() {
     handleFullscreenToggle();
 
     // Back Button
-    Rectangle exitBtn = {GetScreenWidth() / 2 - 100, GetScreenHeight() / 2 + 160, 200, 50};
-    if (GuiButton(exitBtn, "BACK")) {
+    Rectangle exitBtn = {GetScreenWidth() / 2 - 100, GetScreenHeight() / 2 + 200, 200, 50};
+    if (GuiButton(exitBtn, "SAVE")) {
+        //saveSettings();
+    }
+
+    // Save Button
+    Rectangle saveBtn = {GetScreenWidth() / 2 - 100, GetScreenHeight() / 2 + 260, 200, 50};
+    if (GuiButton(saveBtn, "BACK")) {
         *currentScene = MENU;  // Assuming MENU is the constant for your main menu
     }
 }
