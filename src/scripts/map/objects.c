@@ -98,7 +98,7 @@ void drawWall(int row, int col, Texture2D wallSet) {
     DrawTextureRec(wallSet, wallSource, (Vector2){ block.x, block.y }, WHITE);
 }
 
-
+/*
 // Function to draw all objects in the map
 void drawObjects(int **objects, int rows, int cols, Texture2D treesTileset, Texture2D wallSet, Camera2D camera) {
     BeginMode2D(camera);
@@ -136,6 +136,7 @@ void drawObjects(int **objects, int rows, int cols, Texture2D treesTileset, Text
     }
     EndMode2D();
 }
+*/
 
 // Update the objects based on input
 void updateObjects(int **objects, int rows, int cols, Vector2 worldMousePos) {

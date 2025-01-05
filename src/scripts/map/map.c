@@ -67,6 +67,13 @@ void loadMap(const char *filename) {
 }
 
 Rectangle calculateTile(int row, int col) {
+
+
+    // Ensure we're not going out of bounds
+    if (row >= rows - 1 || col >= cols - 1) {
+        return (Rectangle){ 0, 0, 32, 32 };  // Return default if out of bounds
+    } 
+
     // Get the tile types for the 2x2 neighbors
     int topLeft = map[row][col];
     int topRight = map[row][col + 1];
@@ -165,29 +172,32 @@ void drawMap(Camera2D camera) {
 
     BeginMode2D(camera);
 
-    // Render tiles and objects in a single loop
     for (int row = startRow; row <= endRow; row++) {
-        for (int col = startCol; col <= endCol; col++) {
-            Rectangle block = { col * 32, row * 32, 32, 32 };
+    if (row < 0 || row >= rows) continue; // Skip out-of-bounds rows
+    for (int col = startCol; col <= endCol; col++) {
+        if (col < 0 || col >= cols) continue; // Skip out-of-bounds columns
+        
+        Rectangle block = { col * 32, row * 32, 32, 32 };
 
-            // Draw tiles
-            int tileType = map[row][col];
-            Rectangle tileSource = calculateTile(row, col);
-            DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y }, WHITE);
+        // Draw tiles
+        int tileType = map[row][col];
+        Rectangle tileSource = calculateTile(row, col);
+        DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y }, WHITE);
 
-            // Draw objects
-            if (objects[row][col] != 0) {
-                switch (objects[row][col]) {
-                    case 1: drawTree(0, block); break;
-                    case 2: drawTree(1, block); break;
-                    case 3: drawTree(2, block); break;
-                    case 4: drawTree(3, block); break;
-                    case 5: drawTree(0, block); break;
-                    case 11: drawWall(row, col, wallSet); break;
-                }
+        // Draw objects
+        if (objects[row][col] != 0) {
+            switch (objects[row][col]) {
+                case 1: drawTree(0, block); break;
+                case 2: drawTree(1, block); break;
+                case 3: drawTree(2, block); break;
+                case 4: drawTree(3, block); break;
+                case 5: drawTree(0, block); break;
+                case 11: drawWall(row, col, wallSet); break;
             }
         }
     }
+}
+
 
     EndMode2D();
 }
