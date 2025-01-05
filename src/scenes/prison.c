@@ -3,6 +3,7 @@
 #include "scenes.h"
 #include "../scripts/map/map.h"
 #include "../scripts/global.h"
+#include "../scripts/player/player.h"
 
 bool wasMapLoaded = false;
 
@@ -29,6 +30,11 @@ void prisonScene() {
         isCameraInitialized = true;  // Mark camera as initialized
     }
 
+    // Initialize the player
+    //Player player;
+    //initPlayer(&player, GetScreenWidth(), GetScreenHeight(), 200.0f); // Call the function
+
+
     // Set camera movement speed
     float cameraSpeed = 200.0f * GetFrameTime();  // Adjust speed here
 
@@ -42,9 +48,13 @@ void prisonScene() {
     drawMap(camera);
     updateMap(camera);
     //editMap(camera);
+    //drawPlayer(&player);
 
-    if(IsKeyDown(KEY_A)) {
+    DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
+
+    if(IsKeyDown(KEY_Q)) {
         *currentScene = MENU;
         isCameraInitialized = false;  // Mark camera as initialized
+        //unloadPlayer(&player);
     }
 }

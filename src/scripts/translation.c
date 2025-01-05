@@ -9,7 +9,7 @@
 Language currentLanguage = LANG_POLISH;
 cJSON *translations = NULL;
 
-void LoadTranslations(const char *languageFile) {
+void loadTranslations(const char *languageFile) {
     FILE *file = fopen(languageFile, "r");
     if (!file) {
         printf("Nie można otworzyć pliku tłumaczeń: %s\n", languageFile);
@@ -34,7 +34,7 @@ void LoadTranslations(const char *languageFile) {
     }
 }
 
-const char *GetTranslation(const char *key) {
+const char *getTranslation(const char *key) {
     if (!translations) return key;
 
     cJSON *entry = cJSON_GetObjectItem(translations, key);
@@ -43,7 +43,7 @@ const char *GetTranslation(const char *key) {
     return entry->valuestring;
 }
 
-void FreeTranslations() {
+void freeTranslations() {
     if (translations) {
         cJSON_Delete(translations);
     }

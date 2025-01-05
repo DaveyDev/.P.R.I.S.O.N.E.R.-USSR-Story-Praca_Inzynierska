@@ -20,7 +20,7 @@ extern cJSON *translations;
  * 
  * @param languageFile The file path for the language JSON file (e.g., "translations/eng.json").
  */
-void LoadTranslations(const char *languageFile);
+void loadTranslations(const char *languageFile);
 
 /**
  * Retrieves the translation for a given key.
@@ -28,11 +28,11 @@ void LoadTranslations(const char *languageFile);
  * @param key The translation key (e.g., "menu_start").
  * @return The translated string or the key if no translation is found.
  */
-const char *GetTranslation(const char *key);
+const char *getTranslation(const char *key);
 
 /**
  * Frees the memory allocated for translations.
  */
-void FreeTranslations(void);
+void freeTranslations(void);
 
 #endif // TRANSLATIONS_H

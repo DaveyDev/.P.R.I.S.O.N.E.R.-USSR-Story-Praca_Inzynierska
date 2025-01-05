@@ -24,15 +24,16 @@ int main(){
 
     
     InitWindow(resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, ".P.R.I.S.O.N.E.R.");
-    SetTargetFPS(60);
+    SetTargetFPS(600);
     initGuiStyle();
     
     loadTextures();
 
-    Player player;
-    initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
+    //Player player;
+    //initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
     initGlobals();
     
+    loadTranslations("data/lang/polish.json");
 
     while (!WindowShouldClose()) {
 
@@ -78,6 +79,7 @@ int main(){
     
     }
 
+    freeTranslations();
     unloadTextures();
     CloseWindow(); // Close window and OpenGL context
 
