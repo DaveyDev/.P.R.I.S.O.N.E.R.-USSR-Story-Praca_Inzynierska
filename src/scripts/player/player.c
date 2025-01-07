@@ -36,10 +36,17 @@ void updatePlayer(Player *player, float deltaTime) {
 
 
 
-
+/*
 void drawPlayer(Player *player) {
     DrawTexture(player->texture, player->position.x, player->position.y, WHITE);
 }
+*/
+void drawPlayer(Player *player) {
+    Vector2 position = {player->position.x, player->position.y};
+    float scale = 2.0f; // Scale factor (2x)
+    DrawTextureEx(player->texture, position, 0.0f, scale, WHITE);
+}
+
 
 void unloadPlayer(Player *player) {
     UnloadTexture(player->texture);
