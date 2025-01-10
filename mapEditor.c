@@ -2,8 +2,8 @@
 #include <stdio.h>
 #define RAYGUI_IMPLEMENTATION
 
-#include "src/raygui.h"
-#include "src/raylib.h"
+#include "lib/raygui.h"
+#include "lib/raylib.h"
 #include "src/scripts/player/player.h"
 #include "src/scenes/scenes.h"
 #include "src/scripts/global.h"
