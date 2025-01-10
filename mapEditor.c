@@ -28,26 +28,10 @@ int main(){
     
     loadTextures();
 
-    //Player player;
-    //initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
     initGlobals();
     
 
     while (!WindowShouldClose()) {
-
-        //BeginDrawing();
-        //ClearBackground(RAYWHITE);
-
-
-        //float deltaTime = GetFrameTime();
-        //updatePlayer(&player, deltaTime);
-        //drawPlayer(&player);
-
-        //int countFPS = GetFPS();
-        //DrawText(TextFormat("FPS: %i", countFPS), screenWidth - 100, 15, 20, BLUE);
-        //DrawText(TextFormat("ver. 021024"), screenWidth - 150, screenHeight - 100, 20, BLUE);
-
-        //EndDrawing();
 
 
         BeginDrawing();

@@ -4,6 +4,8 @@
 
 #include "../scenes/scenes.h"
 
+#define MAX_MAP_NAME_LENGTH 128 //mapName
+#define TILE_SIZE 32 //TILE_SIZE
 
 extern AppScene *currentScene;
 extern int maxFPS;
@@ -13,6 +15,7 @@ extern int **map;
 extern int **objects;
 extern int rows;
 extern int cols;
+extern char mapName[MAX_MAP_NAME_LENGTH];
 
 
 extern Vector2 mousePoint;
