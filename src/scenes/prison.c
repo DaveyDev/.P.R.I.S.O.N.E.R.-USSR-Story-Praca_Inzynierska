@@ -31,8 +31,8 @@ void prisonScene() {
     }
 
     // Initialize the player
-    Player player;
-    initPlayer(&player, GetScreenWidth(), GetScreenHeight(), 200.0f); // Call the function
+    //Player player;
+    //initPlayer(&player, GetScreenWidth(), GetScreenHeight(), 200.0f); // Call the function
 
 
     // Set camera movement speed
@@ -48,7 +48,7 @@ void prisonScene() {
     drawMap(camera);
     updateMap(camera);
     //editMap(camera);
-    drawPlayer(&player);
+    //drawPlayer(&player);
 
     DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
 
