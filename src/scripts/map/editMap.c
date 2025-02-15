@@ -11,7 +11,7 @@
 
 void editMap(Camera2D cameraE) 
 {
-     Vector2 mousePos = GetMousePosition();
+    Vector2 mousePos = GetMousePosition();
     Vector2 worldMousePos = GetScreenToWorld2D(mousePos, cameraE);
 
     int col = (int)(worldMousePos.x / 32); 
@@ -30,4 +30,10 @@ void editMap(Camera2D cameraE)
             objects[row][col] = 0;   
         } 
     }
+}
+
+
+void setTile(Vector2 mouseTilePos, int selectedTile, int selectedObject){
+
+    printf("set tile function was called\n");
 }

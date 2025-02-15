@@ -14,7 +14,6 @@ bool isCameraInitializedE = false;
 // Editor variables
 int selectedTile = 1;   // Default selected tile
 int selectedObject = 0; // Default selected object
-Vector2 mouseTilePos;
 
 void mapsEditorScene() {
     ClearBackground(GRAY);
@@ -54,14 +53,14 @@ void mapsEditorScene() {
 
     // Mouse position in world coordinates
     Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), cameraE);
-    mouseTilePos = (Vector2){(int)(mouseWorldPos.x / TILE_SIZE), (int)(mouseWorldPos.y / TILE_SIZE)};
+    Vector2 mouseTilePos = (Vector2){(int)(mouseWorldPos.x / TILE_SIZE), (int)(mouseWorldPos.y / TILE_SIZE)};
 
     // Highlight the tile under the mouse
     DrawRectangleLines(mouseTilePos.x * TILE_SIZE, mouseTilePos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE, RED);
 
     // Place tile/object on left mouse click
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        setTile(mouseTilePos.x, mouseTilePos.y, selectedTile, selectedObject);
+        setTile(mouseTilePos, selectedTile, selectedObject);
     }
 
     // Tile/Object selection (Basic example)
@@ -75,7 +74,7 @@ void mapsEditorScene() {
     if (IsKeyPressed(KEY_FOUR)) selectedObject = 2; // Example: Change object to 2
 
     // Save/Load functionality
-    if (IsKeyPressed(KEY_S)) saveMap("data/levels/test1.map");
+    //if (IsKeyPressed(KEY_S)) saveMap("data/levels/test1.map");
     //if (IsKeyPressed(KEY_L)) loadMap("data/levels/test1.map");
 
     if(IsKeyDown(KEY_A)) {
