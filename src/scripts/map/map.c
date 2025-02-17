@@ -132,11 +132,15 @@ void drawMap(Camera2D camera) {
         // Draw objects
         if (objects[row][col] != 0) {
             switch (objects[row][col]) {
+
                 case 1: drawTree(0, block); break;
                 case 2: drawTree(1, block); break;
                 case 3: drawTree(2, block); break;
                 case 4: drawTree(3, block); break;
                 case 5: drawStone(0, block); break;
+                case 6: drawStone(1, block); break;
+                case 7: drawStone(2, block); break;
+                case 8: drawStone(3, block); break;
                 case 11: drawWall(row, col, wallSet); break;
             }
         }
