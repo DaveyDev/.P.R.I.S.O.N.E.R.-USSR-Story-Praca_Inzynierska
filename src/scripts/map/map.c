@@ -98,62 +98,7 @@ Rectangle calculateTile(int row, int col) {
     // Default if no match is found
     return (Rectangle){ 0, 0, 32, 32 };
 }
-/*
-void drawMap(Camera2D camera) {
-    int screenWidth = GetScreenWidth();
-    int screenHeight = GetScreenHeight();
 
-    // Calculate visible tile range
-    int startCol = (int)((camera.target.x - screenWidth / 2.0f / camera.zoom) / 32);
-    int startRow = (int)((camera.target.y - screenHeight / 2.0f / camera.zoom) / 32);
-    int endCol = (int)((camera.target.x + screenWidth / camera.zoom) / 32);
-    int endRow = (int)((camera.target.y + screenHeight / camera.zoom) / 32);
-
-    // Clamp to map bounds to prevent out-of-bounds drawing
-    if (startCol < 0) startCol = 0;
-    if (startRow < 0) startRow = 0;
-    if (endCol >= cols) endCol = cols - 1;
-    if (endRow >= rows) endRow = rows - 1;
-
-    BeginMode2D(camera);
-
-    for (int row = startRow; row <= endRow; row++) {
-        for (int col = startCol; col <= endCol; col++) {
-            Rectangle block = {
-                col * 32,  // X position
-                row * 32,  // Y position
-                32,        // Width
-                32         // Height
-            };
-
-            // Get the tile type and source rectangle
-            int tileType = map[row][col];
-            Rectangle tileSource = calculateTile(row, col);
-
-            // Draw the tile
-            DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y }, WHITE);
-        }
-    }
-
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            Rectangle block = {
-                col * 32,  // X position
-                row * 32,  // Y position
-                32,        // Width
-                32         // Height
-            };
-
-            drawObjects(objects, rows, cols, treesTileset, wallSet, camera);
-            //drawWall(row, col, wallSet);
-        }
-    }
-
-    
-
-    EndMode2D();
-}
-*/
 void drawMap(Camera2D camera) {
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
@@ -191,7 +136,7 @@ void drawMap(Camera2D camera) {
                 case 2: drawTree(1, block); break;
                 case 3: drawTree(2, block); break;
                 case 4: drawTree(3, block); break;
-                case 5: drawTree(0, block); break;
+                case 5: drawStone(0, block); break;
                 case 11: drawWall(row, col, wallSet); break;
             }
         }

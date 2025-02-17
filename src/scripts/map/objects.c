@@ -39,20 +39,21 @@ void drawTree(int treeIndex, Rectangle block) {
     Rectangle treeSource = { col * treeWidth, row * treeHeight, treeWidth, treeHeight };
     DrawTextureRec(treesTileset, treeSource, (Vector2){ block.x - 16, block.y - 120 }, WHITE);  // Adjust y offset as needed
 }
-/*
-// Draw wall function
-void drawWall(int wallIndex, Rectangle block) {
-    int wallWidth = 32;  // Width of the wall tile
-    int wallHeight = 32; // Height of the wall tile
-    int wallsPerRow = wallSet.width / wallWidth;
+
+void drawStone(int stoneIndex, Rectangle block) {
+    int stoneWidth = 32;  // Width of the tree in the texture atlas
+    int stoneHeight = 32; // Height of the tree in the texture atlas
+    int treesPerRow = treesTileset.width / stoneWidth;
 
     // Calculate the x and y coordinates in the atlas
-    int row = wallIndex / wallsPerRow;
-    int col = wallIndex % wallsPerRow;
+    int row = stoneIndex / treesPerRow;
+    int col = stoneIndex % treesPerRow;
 
-    Rectangle wallSource = { col * wallWidth, row * wallHeight, wallWidth, wallHeight };
-    DrawTextureRec(wallSet, wallSource, (Vector2){ block.x, block.y }, WHITE);
-}*/
+    Rectangle stoneSource = { col * stoneWidth, row * stoneHeight, stoneWidth, stoneHeight };
+    DrawTextureRec(stonesTileset, stoneSource, (Vector2){ block.x, block.y}, WHITE);  // Adjust y offset as needed
+}
+
+
 Rectangle calculateWallTile(int row, int col) {
     int topWall = objects[row-1][col];
     int bottomWall = objects[row+1][col];

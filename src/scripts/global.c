@@ -16,6 +16,7 @@ int rows = 0;
 int cols = 0;
 char mapName[MAX_MAP_NAME_LENGTH] = "\0";
 //time_t **lastChangeTimes = NULL;
+bool windowShouldClose = false;
 
 
 

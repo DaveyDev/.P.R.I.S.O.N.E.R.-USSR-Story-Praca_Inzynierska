@@ -16,6 +16,7 @@ extern int **objects;
 extern int rows;
 extern int cols;
 extern char mapName[MAX_MAP_NAME_LENGTH];
+extern bool windowShouldClose;
 
 
 extern Vector2 mousePoint;

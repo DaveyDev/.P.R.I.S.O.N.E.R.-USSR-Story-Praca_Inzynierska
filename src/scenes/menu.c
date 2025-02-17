@@ -47,7 +47,7 @@ void menuScene(){
      *currentScene = OPTIONS;
     }
     if (GuiButton(exitBtn, getTranslation("menu_exit"))) {
-     CloseWindow();
+     windowShouldClose = true;
     }
 
     

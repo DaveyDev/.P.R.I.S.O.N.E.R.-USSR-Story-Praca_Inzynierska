@@ -20,6 +20,9 @@ extern cJSON *translations;
  * 
  * @param languageFile The file path for the language JSON file (e.g., "translations/eng.json").
  */
+
+void loadLanguage();
+
 void loadTranslations(const char *languageFile);
 
 /**

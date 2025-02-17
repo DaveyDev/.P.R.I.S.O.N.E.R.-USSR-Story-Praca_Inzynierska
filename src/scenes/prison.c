@@ -10,6 +10,7 @@ bool wasMapLoaded = false;
 // Persistent camera state variables
 Camera2D camera = { 0 };   // Define the camera outside of the function
 bool isCameraInitialized = false;
+Player player;
 
 void prisonScene() {
     ClearBackground(RED);
@@ -18,6 +19,8 @@ void prisonScene() {
     if (!wasMapLoaded) {
         loadMap("data/levels/test1.map");
         wasMapLoaded = true;
+        
+        initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
     }
 
     // Initialize the camera only once
@@ -39,22 +42,23 @@ void prisonScene() {
     float cameraSpeed = 200.0f * GetFrameTime();  // Adjust speed here
 
     // Move the camera based on arrow keys
-    if (IsKeyDown(KEY_RIGHT)) camera.target.x += cameraSpeed;
-    if (IsKeyDown(KEY_LEFT)) camera.target.x -= cameraSpeed;
-    if (IsKeyDown(KEY_DOWN)) camera.target.y += cameraSpeed;
-    if (IsKeyDown(KEY_UP)) camera.target.y -= cameraSpeed;
+    //if (IsKeyDown(KEY_RIGHT)) camera.target.x += cameraSpeed;
+    //if (IsKeyDown(KEY_LEFT) && camera.target.x >= 16) camera.target.x -= cameraSpeed;
+    //if (IsKeyDown(KEY_DOWN)) camera.target.y += cameraSpeed;
+    //if (IsKeyDown(KEY_UP) && camera.target.y >= 16) camera.target.y -= cameraSpeed;
 
     
     drawMap(camera);
     updateMap(camera);
     //editMap(camera);
-    //drawPlayer(&player);
+    drawPlayer(&player);
+    updatePlayer(&player, GetFrameTime());
 
     DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
 
-    if(IsKeyDown(KEY_Q)) {
+    if(IsKeyDown(KEY_ESCAPE)) {
         *currentScene = MENU;
         isCameraInitialized = false;  // Mark camera as initialized
-        //unloadPlayer(&player);
-    }
+        unloadPlayer(&player);
+    } 
 }

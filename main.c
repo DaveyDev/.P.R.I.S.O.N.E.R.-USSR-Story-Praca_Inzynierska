@@ -18,11 +18,8 @@ int main(){
 
 
     // Raylib Initialization
-    //const int screenWidth = 1024;
-    //const int screenHeight = 768;
     loadProperties("game.properties");
 
-    
     InitWindow(resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, ".P.R.I.S.O.N.E.R.");
     SetTargetFPS(600);
     initGuiStyle();
@@ -32,32 +29,13 @@ int main(){
     //Player player;
     //initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
     initGlobals();
-    
-    loadTranslations("data/lang/polish.json");
-
-    while (!WindowShouldClose()) {
-
-        //BeginDrawing();
-        //ClearBackground(RAYWHITE);
+    loadLanguage();
 
 
-        //float deltaTime = GetFrameTime();
-        //updatePlayer(&player, deltaTime);
-        //drawPlayer(&player);
-
-        //int countFPS = GetFPS();
-        //DrawText(TextFormat("FPS: %i", countFPS), screenWidth - 100, 15, 20, BLUE);
-        //DrawText(TextFormat("ver. 021024"), screenWidth - 150, screenHeight - 100, 20, BLUE);
-
-        //EndDrawing();
-
+    while (!windowShouldClose) {
 
         BeginDrawing();
 
-        // Function to print a language-specific greeting
-    
-    
-        
         switch (*currentScene){
             case MENU:
                 menuScene();
@@ -73,10 +51,8 @@ int main(){
                 break;
         }   
             
-
         EndDrawing();
 
-    
     }
 
     freeTranslations();

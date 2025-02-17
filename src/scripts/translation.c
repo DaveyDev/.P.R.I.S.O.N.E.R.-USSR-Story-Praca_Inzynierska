@@ -9,10 +9,15 @@
 Language currentLanguage = LANG_POLISH;
 cJSON *translations = NULL;
 
+void loadLanguage(){
+    if(currentLanguage == LANG_ENGLISH) loadTranslations("data/lang/english.json");
+    if(currentLanguage == LANG_POLISH) loadTranslations("data/lang/polish.json");
+}
+
 void loadTranslations(const char *languageFile) {
     FILE *file = fopen(languageFile, "r");
     if (!file) {
-        printf("Nie można otworzyć pliku tłumaczeń: %s\n", languageFile);
+        printf("cannot open language file: %s\n", languageFile);
         return;
     }
 
@@ -30,7 +35,7 @@ void loadTranslations(const char *languageFile) {
     free(data);
 
     if (!translations) {
-        printf("Błąd podczas parsowania JSON\n");
+        printf("error parsing JSON\n");
     }
 }
 

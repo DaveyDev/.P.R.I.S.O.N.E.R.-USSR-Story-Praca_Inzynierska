@@ -7,6 +7,7 @@
 #include "../scripts/player/player.h"
 #include "../scripts/styles.h"
 #include <string.h>  // For strcpy and strcat
+#include "../scripts/translation.h"
 
 // Define options text and font size
 const char *optionsTxt = "OPTIONS";
@@ -89,6 +90,7 @@ void optionsScene() {
     // Back Button
     Rectangle exitBtn = {GetScreenWidth() / 2 - 100, GetScreenHeight() / 2 + 200, 200, 50};
     if (GuiButton(exitBtn, "SAVE")) {
+        //loadTranslations("data/lang/polish.json");
         //saveSettings();
     }
 
