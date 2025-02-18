@@ -4,6 +4,9 @@
 #include "../scripts/map/map.h"
 #include "../scripts/global.h"
 #include "../scripts/player/player.h"
+#include "../scripts/animation.h"
+
+
 
 bool wasMapLoaded = false;
 
@@ -11,6 +14,7 @@ bool wasMapLoaded = false;
 Camera2D camera = { 0 };   // Define the camera outside of the function
 bool isCameraInitialized = false;
 Player player;
+
 
 void prisonScene() {
     ClearBackground(RED);
@@ -56,9 +60,10 @@ void prisonScene() {
 
     DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
 
-    if(IsKeyDown(KEY_ESCAPE)) {
-        *currentScene = MENU;
-        isCameraInitialized = false;  // Mark camera as initialized
-        unloadPlayer(&player);
+    if(IsKeyPressed(KEY_ESCAPE)) {
+        *currentScene = PAUSE;
+        //isCameraInitialized = false;  // Mark camera as initialized
+        //unloadPlayer(&player);
+       
     } 
 }

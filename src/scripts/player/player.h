@@ -2,12 +2,14 @@
 #define PLAYER_H
 
 #include "../../../lib/raylib.h"
+#include "../animation.h"
 
 typedef struct {
     Vector2 position;
-    Texture2D texture;
+    Texture2D playerTexture;
     float speed;
     Rectangle collider;
+    SpriteAnimation playerAnimation;
 
 } Player;
 

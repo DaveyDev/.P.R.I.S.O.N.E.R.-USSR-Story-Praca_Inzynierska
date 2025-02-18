@@ -46,6 +46,9 @@ int main(){
             case GAME:
                 prisonScene();
                 break;
+            case PAUSE:
+                pauseScene();
+                break;
             default:
                 WindowShouldClose();
                 break;

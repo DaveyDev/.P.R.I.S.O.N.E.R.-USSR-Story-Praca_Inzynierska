@@ -1,6 +1,15 @@
 {
-    "menu_start": "GRAJ",
-    "menu_options": "OPCJE",
-    "menu_exit": "WYJŚCIE"
-  }
-  
+  "menu_start": "GRAJ",
+  "menu_options": "OPCJE",
+  "menu_exit": "WYJŚCIE",
+  "menu_title": ".P.R.I.S.O.N.E.R.",
+  "menu_subtitle": "USSR Story",
+  "options_title": "OPCJE",
+  "options_resolution": "Rozdzielczość",
+  "options_fullscreen": "Pełny ekran",
+  "general_save": "ZAPISZ",
+  "general_back": "WRÓĆ",
+  "pause_resume": "KONTYNUUJ GRĘ",
+  "pause_exit": "PRZERWIJ GRĘ",
+  "dialogue_main_character_test1": "spierdalaj z mojej ziemi"
+}

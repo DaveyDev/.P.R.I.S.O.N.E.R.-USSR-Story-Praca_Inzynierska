@@ -9,6 +9,7 @@ extern Texture2D grassTileset;
 extern Texture2D treesTileset;
 extern Texture2D stonesTileset;
 extern Texture2D wallSet;
+extern Texture2D playerSet;
 
 
 

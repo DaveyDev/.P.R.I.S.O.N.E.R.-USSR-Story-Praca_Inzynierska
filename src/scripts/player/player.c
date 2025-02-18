@@ -7,7 +7,17 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> speed = speed;
     player-> collider  = (Rectangle){player-> position.x, player->position.y, 64, 64};
 
-    player-> texture = LoadTexture("data/textures/player.png");
+    player-> playerTexture = LoadTexture("data/textures/playerSet.png");
+    player-> playerAnimation = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
+        (Rectangle){0, 0, 32, 64}, 
+        (Rectangle){32, 0, 32, 64},
+        (Rectangle){64, 0, 32, 64},
+        (Rectangle){96, 0, 32, 64},
+        (Rectangle){128, 0, 32, 64},
+        (Rectangle){160, 0, 32, 64},
+        (Rectangle){192, 0, 32, 64},
+        (Rectangle){224, 0, 32, 64}
+    }, 8);
     
 }
 
@@ -44,10 +54,14 @@ void drawPlayer(Player *player) {
 void drawPlayer(Player *player) {
     Vector2 position = {player->position.x, player->position.y};
     float scale = 2.0f; // Scale factor (2x)
-    DrawTextureEx(player->texture, position, 0.0f, scale, WHITE);
+    //DrawTextureEx(player->playerTexture, position, 0.0f, scale, WHITE);
+    Rectangle dest = {player-> position.x, player->position.y, 64, 128};
+    Vector2 origin = {0};
+    drawSpriteAnimationPro(player-> playerAnimation, dest, origin, 0, WHITE);
 }
 
 
 void unloadPlayer(Player *player) {
-    UnloadTexture(player->texture);
+    UnloadTexture(player->playerTexture);
+    disposeSpriteAnimation(player-> playerAnimation);
 }

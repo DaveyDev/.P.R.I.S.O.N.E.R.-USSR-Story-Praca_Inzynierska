@@ -1,6 +1,16 @@
 {
-    "menu_start": "Start",
-    "menu_options": "Options",
-    "menu_exit": "Exit"
-  }
+    "menu_start": "PLAY",
+    "menu_options": "OPTIONS",
+    "menu_exit": "EXIT",
+	"menu_title": ".P.R.I.S.O.N.E.R.",
+	"menu_subtitle": "USSR Story",
+	"options_title": "OPTIONS",
+	"options_resolution": "Resolution",
+	"options_fullscreen": "Fullscreen",
+	"general_save": "SAVE",
+	"general_back": "BACK",
+	"pause_resume": "RESUME GAME",
+	"pause_exit": "EXIT TO MENU",
+	"dialogue_main_character_test1": "could you please leave my land"
+}
   
