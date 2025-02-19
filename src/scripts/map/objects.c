@@ -40,25 +40,33 @@ void drawTree(int treeIndex, Rectangle block) {
     DrawTextureRec(treesTileset, treeSource, (Vector2){ block.x - 16, block.y - 120 }, WHITE);  // Adjust y offset as needed
 }
 
-void drawStone(int stoneIndex, Rectangle block) {
-    int stoneWidth = 32;  // Width of the tree in the texture atlas
-    int stoneHeight = 32; // Height of the tree in the texture atlas
-    int treesPerRow = treesTileset.width / stoneWidth;
+void drawPlaceable(int placeableIndex, Rectangle block) {
+    int placeableWidth = 32;  // Width of the tree in the texture atlas
+    int placeableHeight = 32; // Height of the tree in the texture atlas
+    int stonesPerRow = placeableTileset.width / placeableWidth;
 
     // Calculate the x and y coordinates in the atlas
-    int row = stoneIndex / treesPerRow;
-    int col = stoneIndex % treesPerRow;
+    int row = placeableIndex / stonesPerRow;
+    int col = placeableIndex % stonesPerRow;
 
-    Rectangle stoneSource = { col * stoneWidth, row * stoneHeight, stoneWidth, stoneHeight };
-    DrawTextureRec(stonesTileset, stoneSource, (Vector2){ block.x, block.y}, WHITE);  // Adjust y offset as needed
+    Rectangle stoneSource = { col * placeableWidth, row * placeableHeight, placeableWidth, placeableHeight };
+    DrawTextureRec(placeableTileset, stoneSource, (Vector2){ block.x, block.y}, WHITE);  // Adjust y offset as needed
 }
 
 
 Rectangle calculateWallTile(int row, int col) {
-    int topWall = objects[row-1][col];
-    int bottomWall = objects[row+1][col];
-    int leftWall = objects[row][col-1];
-    int rightWall = objects[row][col+1];
+    
+    //int topWall = (objects[row-1][col] == StoneWall) ? StoneWall : 0;
+    int bottomWall = (objects[row+1][col] == StoneWall) ? StoneWall : 0;
+    //int leftWall = (objects[row][col-1] == StoneWall) ? StoneWall : 0;
+    int rightWall = (objects[row][col+1] == StoneWall) ? StoneWall : 0;
+
+    int topWall = (row > 0 && objects[row-1][col] == StoneWall) ? StoneWall : 0;
+    //int bottomWall = (row < maxRows - 1 && objects[row+1][col] == StoneWall) ? StoneWall : 0;
+    int leftWall = (col > 0 && objects[row][col-1] == StoneWall) ? StoneWall : 0;
+    //int rightWall = (col < maxCols - 1 && objects[row][col+1] == StoneWall) ? StoneWall : 0;
+
+
 
     int neighbours[4] = {topWall, bottomWall, leftWall, rightWall};
 

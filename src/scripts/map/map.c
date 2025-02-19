@@ -137,10 +137,14 @@ void drawMap(Camera2D camera) {
                 case 2: drawTree(1, block); break;
                 case 3: drawTree(2, block); break;
                 case 4: drawTree(3, block); break;
-                case 5: drawStone(0, block); break;
-                case 6: drawStone(1, block); break;
-                case 7: drawStone(2, block); break;
-                case 8: drawStone(3, block); break;
+                case 5: drawPlaceable(0, block); break;
+                case 6: drawPlaceable(1, block); break;
+                case 7: drawPlaceable(2, block); break;
+                case 8: drawPlaceable(3, block); break;
+                case 9: drawPlaceable(4, block); break;
+                case 10: drawPlaceable(16, block); break;
+                case 12: drawPlaceable(32, block); break;
+                case 13: drawPlaceable(33, block); break;
                 case 11: drawWall(row, col, wallSet); break;
             }
         }

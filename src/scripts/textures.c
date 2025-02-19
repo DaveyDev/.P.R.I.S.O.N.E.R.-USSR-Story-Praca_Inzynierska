@@ -4,7 +4,7 @@
 // Define the tileset texture
 Texture2D grassTileset;
 Texture2D treesTileset;
-Texture2D stonesTileset;
+Texture2D placeableTileset;
 Texture2D wallSet;
 Texture2D playerSet;
 
@@ -15,7 +15,7 @@ void loadTextures() {
     grassTileset = LoadTexture("data/textures/grassTileset.png");
     treesTileset = LoadTexture("data/textures/treeSet.png");
     wallSet = LoadTexture("data/textures/wallTileset.png");
-    stonesTileset = LoadTexture("data/textures/stonesTileset.png");
+    placeableTileset = LoadTexture("data/textures/placeableTileset.png");
     playerSet = LoadTexture("data/textures/playerSet.png");
 
 }
@@ -25,7 +25,7 @@ void unloadTextures() {
     UnloadTexture(grassTileset);
     UnloadTexture(treesTileset);
     UnloadTexture(wallSet);
-    UnloadTexture(stonesTileset);
+    UnloadTexture(placeableTileset);
     UnloadTexture(playerSet);
 
 
