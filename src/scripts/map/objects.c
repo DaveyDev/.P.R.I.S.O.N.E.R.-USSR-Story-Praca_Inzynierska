@@ -53,19 +53,25 @@ void drawPlaceable(int placeableIndex, Rectangle block) {
     DrawTextureRec(placeableTileset, stoneSource, (Vector2){ block.x, block.y}, WHITE);  // Adjust y offset as needed
 }
 
+bool isWallLike(int object) {
+    return (object == StoneWall || object == 2016); // Add more IDs if needed
+}
 
 Rectangle calculateWallTile(int row, int col) {
     
-    //int topWall = (objects[row-1][col] == StoneWall) ? StoneWall : 0;
-    int bottomWall = (objects[row+1][col] == StoneWall) ? StoneWall : 0;
-    //int leftWall = (objects[row][col-1] == StoneWall) ? StoneWall : 0;
-    int rightWall = (objects[row][col+1] == StoneWall) ? StoneWall : 0;
+    
 
-    int topWall = (row > 0 && objects[row-1][col] == StoneWall) ? StoneWall : 0;
-    //int bottomWall = (row < maxRows - 1 && objects[row+1][col] == StoneWall) ? StoneWall : 0;
-    int leftWall = (col > 0 && objects[row][col-1] == StoneWall) ? StoneWall : 0;
-    //int rightWall = (col < maxCols - 1 && objects[row][col+1] == StoneWall) ? StoneWall : 0;
+    //int bottomWall = (objects[row+1][col] == StoneWall) ? StoneWall : 0;
+    //int rightWall = (objects[row][col+1] == StoneWall) ? StoneWall : 0;
 
+    //int topWall = (row > 0 && objects[row-1][col] == StoneWall) ? StoneWall : 0;
+    //int leftWall = (col > 0 && objects[row][col-1] == StoneWall) ? StoneWall : 0;
+    
+
+    int topWall = (row > 0 && isWallLike(objects[row-1][col])) ? StoneWall : 0;
+    int bottomWall = (isWallLike(objects[row+1][col])) ? StoneWall : 0;
+    int leftWall = (col > 0 && isWallLike(objects[row][col-1])) ? StoneWall : 0;
+    int rightWall = (isWallLike(objects[row][col+1])) ? StoneWall : 0;
 
 
     int neighbours[4] = {topWall, bottomWall, leftWall, rightWall};
