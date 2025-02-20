@@ -130,7 +130,7 @@ void drawMap(Camera2D camera) {
         DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y }, WHITE);
 
         // Draw objects
-        if (objects[row][col] != 0) {
+        /*if (objects[row][col] != 0) {
             switch (objects[row][col]) {
 
                 case 1: drawTree(0, block); break;
@@ -146,6 +146,18 @@ void drawMap(Camera2D camera) {
                 case 12: drawPlaceable(32, block); break;
                 case 13: drawPlaceable(33, block); break;
                 case 11: drawWall(row, col, wallSet); break;
+            }
+        }*/
+        //test
+        if (objects[row][col] != 0) {
+            if (objects[row][col] >= 1000 && objects[row][col] <= 1999) {
+                drawTree(objects[row][col] - 1000, block);  // Normalize index for drawTree
+            } else if (objects[row][col] >= 2000 && objects[row][col] <= 2999) {
+                drawPlaceable(objects[row][col] - 2000, block);
+            } else if (objects[row][col] == 11) {
+                drawWall(row, col, wallSet);
+            } else {
+                drawPlaceable(15, block); //change that later
             }
         }
     }
