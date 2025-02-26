@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "../global.h"
 #include <stdio.h>
+#include "../idList.h"
 
 WallMapping wall_neighbours_to_atlas_coord[] = { // top, bottom, left, right
     {{StoneWall, StoneWall, StoneWall, StoneWall}, {1, 1}, {1, 1}},
@@ -54,7 +55,7 @@ void drawPlaceable(int placeableIndex, Rectangle block) {
 }
 
 bool isWallLike(int object) {
-    return (object == StoneWall || object == 2016); // Add more IDs if needed
+    return (object == StoneWall || object == GREY_DOOR || object == LIGHTGREY_DOOR); // Add more IDs if needed
 }
 
 Rectangle calculateWallTile(int row, int col) {
