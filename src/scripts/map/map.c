@@ -135,6 +135,8 @@ void drawMap(Camera2D camera) {
                 drawTree(objects[row][col] - 1000, block);  // Normalize index for drawTree
             } else if (objects[row][col] >= 2000 && objects[row][col] <= 2999) {
                 drawPlaceable(objects[row][col] - 2000, block);
+            } else if (objects[row][col] >= 3000 && objects[row][col] <= 3999) {
+                //drawItem(objects[row][col] - 3000, block);
             } else if (objects[row][col] == 11) {
                 drawWall(row, col, wallSet);
             } else {
