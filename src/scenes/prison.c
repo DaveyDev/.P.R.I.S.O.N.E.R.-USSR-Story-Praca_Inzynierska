@@ -45,13 +45,8 @@ void prisonScene() {
     // Set camera movement speed
     float cameraSpeed = 200.0f * GetFrameTime();  // Adjust speed here
 
-    // Move the camera based on arrow keys
-    //if (IsKeyDown(KEY_RIGHT)) camera.target.x += cameraSpeed;
-    //if (IsKeyDown(KEY_LEFT) && camera.target.x >= 16) camera.target.x -= cameraSpeed;
-    //if (IsKeyDown(KEY_DOWN)) camera.target.y += cameraSpeed;
-    //if (IsKeyDown(KEY_UP) && camera.target.y >= 16) camera.target.y -= cameraSpeed;
-
-    if(player.position.x < GetScreenWidth()/2 - 64  && player.position.x > 0 && camera.target.x > 16){
+    //camera follows player magic
+    if(player.position.x < GetScreenWidth()/2 - 64  && player.position.x > 0 && camera.target.x > 16 ){
         camera.target.x = camera.target.x - player.speed * GetFrameTime();
         player.position.x = player.position.x + player.speed * GetFrameTime();
     }
