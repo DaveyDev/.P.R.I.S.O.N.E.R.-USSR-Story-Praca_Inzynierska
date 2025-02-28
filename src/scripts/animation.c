@@ -36,6 +36,7 @@ void disposeSpriteAnimation(SpriteAnimation animation)
 	free(animation.rectangles);
 }
 
+
 void drawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 origin, float rotation, Color tint)
 {
 	int index = (int)((GetTime() - animation.timeStarted) * animation.framesPerSecond) % animation.rectanglesLength;

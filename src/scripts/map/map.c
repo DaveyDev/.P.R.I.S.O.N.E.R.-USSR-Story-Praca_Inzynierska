@@ -128,7 +128,7 @@ void drawMap(Camera2D camera) {
         int tileType = map[row][col];
         Rectangle tileSource = calculateTile(row, col);
         DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y }, WHITE);
-
+        
         // Draw objects
         if (objects[row][col] != 0) {
             if (objects[row][col] >= 1000 && objects[row][col] <= 1999) {

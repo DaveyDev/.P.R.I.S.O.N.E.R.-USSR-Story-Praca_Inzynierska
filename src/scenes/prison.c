@@ -51,6 +51,24 @@ void prisonScene() {
     //if (IsKeyDown(KEY_DOWN)) camera.target.y += cameraSpeed;
     //if (IsKeyDown(KEY_UP) && camera.target.y >= 16) camera.target.y -= cameraSpeed;
 
+    if(player.position.x < GetScreenWidth()/2 - 64  && player.position.x > 0 && camera.target.x > 16){
+        camera.target.x = camera.target.x - player.speed * GetFrameTime();
+        player.position.x = player.position.x + player.speed * GetFrameTime();
+    }
+    if(player.position.x >  GetScreenWidth()/2 && player.position.x < GetScreenHeight()){
+        camera.target.x = camera.target.x + player.speed * GetFrameTime();
+        player.position.x = player.position.x - player.speed * GetFrameTime();
+    }
+    if(player.position.y < GetScreenHeight()/2 - 64  && player.position.y > 0 && camera.target.y > 16){
+        camera.target.y = camera.target.y - player.speed * GetFrameTime();
+        player.position.y = player.position.y + player.speed * GetFrameTime();
+    }
+    if(player.position.y >  GetScreenHeight()/2 && player.position.y < GetScreenHeight()){
+        camera.target.y = camera.target.y + player.speed * GetFrameTime();
+        player.position.y = player.position.y - player.speed * GetFrameTime();
+    }
+    //camera.target.y = player.position.y;
+
     
     drawMap(camera);
     updateMap(camera);

@@ -4,12 +4,14 @@
 #include "../../../lib/raylib.h"
 #include "../animation.h"
 
+
 typedef struct {
     Vector2 position;
     Texture2D playerTexture;
     float speed;
     Rectangle collider;
-    SpriteAnimation playerAnimation;
+    SpriteAnimation playerAnimation[2];
+    
 
 } Player;
 
