@@ -30,6 +30,16 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
         (Rectangle){192, 64, 32, 64},
         (Rectangle){224, 64, 32, 64}
     }, 8);
+    player-> playerAnimation[2] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
+        (Rectangle){0, 128, 32, 64}, 
+        (Rectangle){32, 128, 32, 64},
+        (Rectangle){64, 128, 32, 64},
+        (Rectangle){96, 128, 32, 64},
+        (Rectangle){128, 128, 32, 64},
+        (Rectangle){160, 128, 32, 64},
+        (Rectangle){192, 128, 32, 64},
+        (Rectangle){224, 128, 32, 64}
+    }, 8);
     
 }
 
@@ -67,6 +77,8 @@ void drawPlayer(Player *player) {
 
     if (IsKeyDown(KEY_DOWN) || IsKeyDown('S')) {
         drawSpriteAnimationPro(player-> playerAnimation[1], dest, origin, 0, WHITE);
+    } else if (IsKeyDown(KEY_UP) || IsKeyDown('W')) {
+        drawSpriteAnimationPro(player-> playerAnimation[2], dest, origin, 0, WHITE);
     } else {
         drawSpriteAnimationPro(player-> playerAnimation[0], dest, origin, 0, WHITE);
 
@@ -78,5 +90,7 @@ void unloadPlayer(Player *player) {
     UnloadTexture(player->playerTexture);
     disposeSpriteAnimation(player-> playerAnimation[0]);
     disposeSpriteAnimation(player-> playerAnimation[1]);
+    disposeSpriteAnimation(player-> playerAnimation[2]);
+
 
 }

@@ -58,7 +58,7 @@ void prisonScene() {
         camera.target.y = camera.target.y - player.speed * GetFrameTime();
         player.position.y = player.position.y + player.speed * GetFrameTime();
     }
-    if(player.position.y >  GetScreenHeight()/2 && player.position.y < GetScreenHeight()){
+    if(player.position.y >  GetScreenHeight()/2 && player.position.y < GetScreenHeight() && camera.target.y < cols * 32){
         camera.target.y = camera.target.y + player.speed * GetFrameTime();
         player.position.y = player.position.y - player.speed * GetFrameTime();
     }

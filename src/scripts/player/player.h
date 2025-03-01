@@ -10,7 +10,7 @@ typedef struct {
     Texture2D playerTexture;
     float speed;
     Rectangle collider;
-    SpriteAnimation playerAnimation[2];
+    SpriteAnimation playerAnimation[3];
     
 
 } Player;
