@@ -7,6 +7,7 @@ Texture2D treesTileset;
 Texture2D placeableTileset;
 Texture2D wallSet;
 Texture2D playerSet;
+Texture2D itemsSet;
 
 
 
@@ -17,6 +18,7 @@ void loadTextures() {
     wallSet = LoadTexture("data/textures/wallTileset.png");
     placeableTileset = LoadTexture("data/textures/placeableTileset.png");
     playerSet = LoadTexture("data/textures/playerSet.png");
+    itemsSet = LoadTexture("data/textures/itemsSet.png");
 
 }
 
@@ -27,6 +29,7 @@ void unloadTextures() {
     UnloadTexture(wallSet);
     UnloadTexture(placeableTileset);
     UnloadTexture(playerSet);
+    UnloadTexture(itemsSet);
 
 
 }

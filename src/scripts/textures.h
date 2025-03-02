@@ -10,6 +10,7 @@ extern Texture2D treesTileset;
 extern Texture2D placeableTileset;
 extern Texture2D wallSet;
 extern Texture2D playerSet;
+extern Texture2D itemsSet;
 
 
 

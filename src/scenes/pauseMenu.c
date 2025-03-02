@@ -6,6 +6,7 @@
 #include "../scripts/global.h"
 #include "../scripts/map/map.h"
 #include "../scripts/translation.h"
+#include "../scripts/items.h"
 
 
 
@@ -46,10 +47,11 @@ void pauseScene(){
 
     
     if (GuiButton(optionsBtn, getTranslation("pause_resume"))) {
-     *currentScene = GAME;
+        *currentScene = GAME;
     }
     if (GuiButton(exitBtn, getTranslation("pause_exit"))) {
-     *currentScene = MENU;
+        saveItems();
+        *currentScene = MENU;
     }
 
 
@@ -59,6 +61,8 @@ void pauseScene(){
         //unloadPlayer(&player);
        
     } 
+
+    
     
     
     

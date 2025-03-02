@@ -5,6 +5,7 @@
 #include "../scripts/global.h"
 #include "../scripts/player/player.h"
 #include "../scripts/animation.h"
+#include "../scripts/items.h"
 
 
 
@@ -19,9 +20,11 @@ Player player;
 void prisonScene() {
     ClearBackground(RED);
 
+
     // Load the map if not already loaded
     if (!wasMapLoaded) {
         loadMap("data/levels/test1.map");
+        loadItems();
         wasMapLoaded = true;
         
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
@@ -36,12 +39,9 @@ void prisonScene() {
         camera.zoom = (resolutions[currentResolutionIndex].height / 600.0f) * 2.0f;
         isCameraInitialized = true;  // Mark camera as initialized
     }
-
-    // Initialize the player
-    //Player player;
-    //initPlayer(&player, GetScreenWidth(), GetScreenHeight(), 200.0f); // Call the function
-
-
+    
+    
+    
     // Set camera movement speed
     float cameraSpeed = 200.0f * GetFrameTime();  // Adjust speed here
 
@@ -67,9 +67,13 @@ void prisonScene() {
     
     drawMap(camera);
     updateMap(camera);
-    //editMap(camera);
+
+    drawItems(camera);
+    updateItems(camera);
+
     drawPlayer(&player);
     updatePlayer(&player, GetFrameTime());
+    
 
     DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
 

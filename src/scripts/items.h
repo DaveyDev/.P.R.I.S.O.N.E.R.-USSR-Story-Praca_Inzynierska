@@ -1,9 +1,10 @@
+//Wiktor
 #ifndef ITEMS_H
 #define ITEMS_H
 
 #include "../../lib/raylib.h"
 
-#define MAX_ITEMS 100
+#define MAX_ITEMS 1024
 #define NAME_LEN 50
 
 
@@ -16,6 +17,12 @@ typedef struct {
     
     
 } Item;
+
+// Function declarations
+void loadItems();  // Load items from items.dat
+void drawItems(Camera2D camera);  // Draw items on screen
+void updateItems(Camera2D camera);
+void saveItems();
 
 
 #endif

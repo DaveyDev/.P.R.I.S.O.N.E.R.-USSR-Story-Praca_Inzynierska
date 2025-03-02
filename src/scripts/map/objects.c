@@ -114,45 +114,7 @@ void drawWall(int row, int col, Texture2D wallSet) {
     DrawTextureRec(wallSet, wallSource, (Vector2){ block.x, block.y }, WHITE);
 }
 
-/*
-// Function to draw all objects in the map
-void drawObjects(int **objects, int rows, int cols, Texture2D treesTileset, Texture2D wallSet, Camera2D camera) {
-    BeginMode2D(camera);
-    
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            Rectangle block = { col * 32, row * 32, 32, 32 };
 
-            
-
-
-            switch (objects[row][col]) {
-                case 1:  // Tree
-                    drawTree(0, block);  // Adjust tree index if needed
-                    break;
-                case 2:  // Another tree
-                    drawTree(1, block);
-                    break;
-                case 3:  // Another tree
-                    drawTree(2, block);
-                    break;
-                case 4:  // Another tree
-                    drawTree(3, block);
-                    break;
-                case 5:  // Another tree
-                    drawTree(0, block);
-                    break;
-                case 11:  // Wall
-                    //drawWall(0, block);
-                    //drawWall(row, col, objects, rows, cols, wallSet, block);
-                    drawWall(row, col, wallSet);
-                    break;
-            }
-        }
-    }
-    EndMode2D();
-}
-*/
 
 // Update the objects based on input
 void updateObjects(int **objects, int rows, int cols, Vector2 worldMousePos) {
