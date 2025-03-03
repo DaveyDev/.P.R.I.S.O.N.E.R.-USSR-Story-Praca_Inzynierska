@@ -83,4 +83,10 @@ void prisonScene() {
         //unloadPlayer(&player);
        
     } 
+    if(IsKeyPressed(KEY_E)) {
+        *currentScene = INVENTORY;
+        //isCameraInitialized = false;  // Mark camera as initialized
+        //unloadPlayer(&player);
+       
+    } 
 }

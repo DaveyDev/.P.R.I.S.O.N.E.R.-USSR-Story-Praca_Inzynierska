@@ -61,14 +61,6 @@ bool isWallLike(int object) {
 Rectangle calculateWallTile(int row, int col) {
     
     
-
-    //int bottomWall = (objects[row+1][col] == StoneWall) ? StoneWall : 0;
-    //int rightWall = (objects[row][col+1] == StoneWall) ? StoneWall : 0;
-
-    //int topWall = (row > 0 && objects[row-1][col] == StoneWall) ? StoneWall : 0;
-    //int leftWall = (col > 0 && objects[row][col-1] == StoneWall) ? StoneWall : 0;
-    
-
     int topWall = (row > 0 && isWallLike(objects[row-1][col])) ? StoneWall : 0;
     int bottomWall = (isWallLike(objects[row+1][col])) ? StoneWall : 0;
     int leftWall = (col > 0 && isWallLike(objects[row][col-1])) ? StoneWall : 0;

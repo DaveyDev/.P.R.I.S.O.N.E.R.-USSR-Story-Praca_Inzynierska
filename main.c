@@ -49,6 +49,9 @@ int main(){
             case PAUSE:
                 pauseScene();
                 break;
+            case INVENTORY:
+                inventoryScene();
+                break;
             default:
                 WindowShouldClose();
                 break;
