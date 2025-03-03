@@ -11,6 +11,7 @@ typedef enum {
     COAL_ORE = 2002,
     GOLD_ORE = 2003,
     URANIUM_ORE = 2004,
+    BETTER_STONE = 2005,
 
     GREY_DOOR = 2016,
     LIGHTGREY_DOOR = 2017,
