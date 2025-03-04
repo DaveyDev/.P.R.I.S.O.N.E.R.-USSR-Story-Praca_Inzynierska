@@ -56,6 +56,7 @@ void initGlobals() {
         *currentScene = MENU; // Initialize the value
     }
 
+    
 }
 
 // Function to map language code to enum

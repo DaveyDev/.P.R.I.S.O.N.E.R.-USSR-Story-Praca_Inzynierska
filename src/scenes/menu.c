@@ -41,7 +41,7 @@ void menuScene(){
 
 
     if (GuiButton(playBtn, getTranslation("menu_start"))) {
-     *currentScene = GAME;
+     *currentScene = STARTGAME;
     }
     if (GuiButton(optionsBtn, getTranslation("menu_options"))) {
      *currentScene = OPTIONS;

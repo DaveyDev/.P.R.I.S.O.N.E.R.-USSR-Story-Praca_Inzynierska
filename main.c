@@ -52,6 +52,9 @@ int main(){
             case INVENTORY:
                 inventoryScene();
                 break;
+            case STARTGAME:
+                startGameScene();
+                break;
             default:
                 WindowShouldClose();
                 break;

@@ -6,12 +6,13 @@
 typedef enum {
 
     //PLACEABLE
-    STONE = 2000,
-    IRON_ORE = 2001,
+    SIMPLE_STONE = 2000,
+    COPPER_ORE = 2001,
     COAL_ORE = 2002,
-    GOLD_ORE = 2003,
+    IRON_ORE = 2003,
     URANIUM_ORE = 2004,
-    BETTER_STONE = 2005,
+    STONE = 2005,
+    SULFUR_ORE = 2006,
 
     GREY_DOOR = 2016,
     LIGHTGREY_DOOR = 2017,
