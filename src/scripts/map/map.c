@@ -66,6 +66,28 @@ void loadMap(const char *filename) {
     fclose(file);
 }
 
+void saveMap(const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: Could not open file for writing.\n");
+        return;
+    }
+
+    // Write the number of rows and columns
+    fprintf(file, "%d %d\n", rows, cols);
+
+    // Write tile and object data in "tile:object" format
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            fprintf(file, "%d:%d ", map[row][col], objects[row][col]);
+        }
+        fprintf(file, "\n"); // Newline after each row
+    }
+
+    fclose(file);
+}
+
+
 Rectangle calculateTile(int row, int col) {
 
 
