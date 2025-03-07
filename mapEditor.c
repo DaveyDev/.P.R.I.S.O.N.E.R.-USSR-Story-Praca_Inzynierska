@@ -47,6 +47,9 @@ int main(){
             case EDITOR:
                 mapsEditorScene();
                 break;
+            case CREATE_MAP:
+                createMapScene();
+                break;
             default:
                 WindowShouldClose();
                 break;

@@ -33,7 +33,6 @@ Color noColor = (Color){0, 0, 0, 0};
 Color bgColor = (Color){0, 150, 100, 255};
 
 
-
 // Initialize resolutions
 Resolution resolutions[] = {
     {800, 600},

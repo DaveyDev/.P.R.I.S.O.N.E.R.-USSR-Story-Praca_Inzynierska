@@ -23,7 +23,7 @@ void prisonScene() {
 
     // Load the map if not already loaded
     if (!wasMapLoaded) {
-        loadMap("data/levels/test1.map");
+        loadMap("data/levels/test/test.map");
         loadItems();
         wasMapLoaded = true;
         

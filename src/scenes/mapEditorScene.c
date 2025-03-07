@@ -21,7 +21,7 @@ void mapsEditorScene() {
 
     if (!wasMapLoadedE) {
         char mapPath[256];
-        snprintf(mapPath, sizeof(mapPath), "data/levels/%s.map", mapName);
+        snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
         loadMap(mapPath);
         wasMapLoadedE = true;
     }
@@ -35,10 +35,10 @@ void mapsEditorScene() {
     }
 
     float cameraSpeed = 200.0f * GetFrameTime();
-    if (IsKeyDown(KEY_RIGHT)) cameraE.target.x += cameraSpeed;
-    if (IsKeyDown(KEY_LEFT)) cameraE.target.x -= cameraSpeed;
-    if (IsKeyDown(KEY_DOWN)) cameraE.target.y += cameraSpeed;
-    if (IsKeyDown(KEY_UP)) cameraE.target.y -= cameraSpeed;
+    if (IsKeyDown(KEY_D)) cameraE.target.x += cameraSpeed;
+    if (IsKeyDown(KEY_A)) cameraE.target.x -= cameraSpeed;
+    if (IsKeyDown(KEY_S)) cameraE.target.y += cameraSpeed;
+    if (IsKeyDown(KEY_W)) cameraE.target.y -= cameraSpeed;
 
     drawMap(cameraE);
     updateMap(cameraE);
@@ -47,7 +47,8 @@ void mapsEditorScene() {
     Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), cameraE);
     Vector2 mouseTilePos = (Vector2){(int)(mouseWorldPos.x / TILE_SIZE), (int)(mouseWorldPos.y / TILE_SIZE)};
 
-    
+    if(IsKeyPressed(KEY_Q)) selectedTile -= 1000;
+    if(IsKeyPressed(KEY_E)) selectedTile += 1000;
 
     if (IsKeyPressed(KEY_SPACE)) {
         mode = (mode + 1) % 3;
@@ -79,7 +80,9 @@ void mapsEditorScene() {
     DrawRectangleRec(saveButton, BLUE);
     DrawText("Save", saveButton.x + 10, saveButton.y + 5, 20, WHITE);
     if (CheckCollisionPointRec(GetMousePosition(), saveButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        saveMap("data/levels/test1.map");
+        char mapPath[256];
+        snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
+        saveMap(mapPath);
         printf("saved map");
     }
 
