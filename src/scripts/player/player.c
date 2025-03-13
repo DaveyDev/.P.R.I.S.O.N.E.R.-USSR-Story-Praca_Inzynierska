@@ -1,10 +1,11 @@
 #include "player.h"
+#include "../map/objects.h"
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
     player-> position.x = screenWidth/2;
     player-> position.y = screenHeight/2;
     player-> speed = speed;
-    player-> collider  = (Rectangle){player-> position.x + 16, player->position.y + 50, 32, 80};
+    player-> collider  = (Rectangle){player-> position.x + 32, player->position.y + 50, 16, 2};
     
     player-> playerTexture = LoadTexture("data/textures/playerSet.png");
     player-> playerAnimation[0] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
@@ -45,7 +46,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     
 }
 
-void updatePlayer(Player *player, float deltaTime) { //for testing purpose only 
+/*void updatePlayer(Player *player, float deltaTime) { //for testing purpose only 
     float speedPerSecond = player->speed * deltaTime;
     // Handle player input (e.g., arrow keys or WASD)
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D') && player-> position.x < GetScreenWidth() - 64) {
@@ -67,6 +68,43 @@ void updatePlayer(Player *player, float deltaTime) { //for testing purpose only
     player-> collider.x = player-> position.x + 16;
     player-> collider.y = player-> position.y + 50;
 }
+*/
+void updatePlayer(Player *player, float deltaTime, int **objects, int rows, int cols, Camera2D camera) {
+    float speedPerSecond = player->speed * deltaTime;
+    Rectangle newCollider = player->collider;
+
+    if ((IsKeyDown(KEY_RIGHT) || IsKeyDown('D'))) {
+        newCollider.x += speedPerSecond;
+        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+            player->position.x += speedPerSecond;
+        }
+    }
+    if ((IsKeyDown(KEY_LEFT) || IsKeyDown('A'))) {
+        newCollider.x -= speedPerSecond;
+        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+            player->position.x -= speedPerSecond;
+        }
+    }
+    if ((IsKeyDown(KEY_DOWN) || IsKeyDown('S'))) {
+        newCollider.y += speedPerSecond;
+        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+            player->position.y += speedPerSecond;
+        }
+    }
+    if ((IsKeyDown(KEY_UP) || IsKeyDown('W'))) {
+        newCollider.y -= speedPerSecond;
+        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+            player->position.y -= speedPerSecond;
+        }
+    }
+
+    // Update collider position
+    Vector2 worldPos = GetScreenToWorld2D((Vector2){player->position.x, player->position.y}, camera);
+    player->collider.x = worldPos.x + 4;
+    player->collider.y = worldPos.y + 48;
+}
+
+
 
 
 
@@ -99,3 +137,34 @@ void unloadPlayer(Player *player) {
     disposeSpriteAnimation(player-> playerAnimation[4]);
 
 }
+
+
+bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int rows, int cols) {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int objectID = objects[row][col];
+
+            // Skip empty spaces
+            if (objectID == 0) continue;
+
+            // If it's a wall or other rectangular object
+            if (isWallLike(objectID) || (objectID >= 2000 && objectID <= 2999)) {
+                Rectangle objectCollider = { col * 32, row * 32, 32, 32 };
+                if (CheckCollisionRecs(playerCollider, objectCollider)) {
+                    return true;
+                }
+            }
+            // If it's a tree (circular collision, IDs 1000-1999)
+            else if (objectID >= 1000 && objectID <= 1999) {
+                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 }; // Center of the tree
+                float circleRadius = 8.0f; // Adjust radius as needed
+                if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false; // No collision
+}
+
+

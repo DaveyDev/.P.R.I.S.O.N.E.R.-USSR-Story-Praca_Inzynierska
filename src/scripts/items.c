@@ -13,7 +13,7 @@ int itemCount = 0; // Keep track of the number of loaded items
 
 // Function to load items from items.dat
 void loadItems() {
-    FILE *file = fopen("data/levels/items.dat", "r");
+    FILE *file = fopen("data/levels/test/items.dat", "r");
     if (file == NULL) {
         fprintf(stderr, "Error opening file: items.dat\n");
         return;
@@ -110,7 +110,7 @@ void updateItems(Camera2D camera) {
 }
 
 void saveItems() {
-    FILE *file = fopen("data/levels/items.dat", "w");
+    FILE *file = fopen("data/levels/test/items.dat", "w");
     if (file == NULL) {
         fprintf(stderr, "Error opening file for writing: items.dat\n");
         return;

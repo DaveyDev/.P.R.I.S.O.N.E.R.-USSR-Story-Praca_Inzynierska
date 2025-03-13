@@ -4,6 +4,7 @@
 #include "../scripts/map/map.h"
 #include "../scripts/global.h"
 #include "../scripts/map/editMap.h"
+#include "../scripts/items.h"
 
 bool wasMapLoadedE = false;
 
@@ -23,7 +24,9 @@ void mapsEditorScene() {
         char mapPath[256];
         snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
         loadMap(mapPath);
+        loadItems();
         wasMapLoadedE = true;
+        
     }
 
     if (!isCameraInitializedE) {
@@ -34,7 +37,10 @@ void mapsEditorScene() {
         isCameraInitializedE = true;
     }
 
-    float cameraSpeed = 200.0f * GetFrameTime();
+    float cameraSpeed;
+    if(IsKeyDown(KEY_LEFT_SHIFT)) cameraSpeed = 400.0f * GetFrameTime();
+    else cameraSpeed = 200.0f * GetFrameTime();
+
     if (IsKeyDown(KEY_D)) cameraE.target.x += cameraSpeed;
     if (IsKeyDown(KEY_A)) cameraE.target.x -= cameraSpeed;
     if (IsKeyDown(KEY_S)) cameraE.target.y += cameraSpeed;
@@ -43,6 +49,8 @@ void mapsEditorScene() {
     drawMap(cameraE);
     updateMap(cameraE);
     editMap(cameraE);
+    drawItems(cameraE);
+    updateItems(cameraE);
 
     Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), cameraE);
     Vector2 mouseTilePos = (Vector2){(int)(mouseWorldPos.x / TILE_SIZE), (int)(mouseWorldPos.y / TILE_SIZE)};
