@@ -148,7 +148,7 @@ bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int rows
             if (objectID == 0) continue;
 
             // If it's a wall or other rectangular object
-            if (isWallLike(objectID) || (objectID >= 2000 && objectID <= 2999)) {
+            if (isWallLike(objectID)) {
                 Rectangle objectCollider = { col * 32, row * 32, 32, 32 };
                 if (CheckCollisionRecs(playerCollider, objectCollider)) {
                     return true;
@@ -158,6 +158,12 @@ bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int rows
             else if (objectID >= 1000 && objectID <= 1999) {
                 Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 }; // Center of the tree
                 float circleRadius = 8.0f; // Adjust radius as needed
+                if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
+                    return true;
+                }
+            } else if (objectID >= 2000 && objectID <= 2999){
+                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 }; // Center of the tree
+                float circleRadius = 12.0f; // Adjust radius as needed
                 if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
                     return true;
                 }
