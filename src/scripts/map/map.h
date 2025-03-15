@@ -10,6 +10,8 @@
 
 // Declare pointers for the map and map dimensions
 extern int **map;  // A pointer to a 2D array
+extern int **objects;   // Objects (e.g., trees, placeables)
+extern int **details;   // Additional layer (e.g., doors, overlays)
 extern int rows, cols;  // Map dimensions
 //extern time_t **lastChangeTimes;
 //extern int objects;

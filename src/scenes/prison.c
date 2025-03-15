@@ -25,7 +25,7 @@ void prisonScene() {
     // Load the map if not already loaded
     if (!wasMapLoaded) {
         loadMap("data/levels/test/test.map");
-        loadItems();
+        loadItems("data/levels/test/items.dat");
         wasMapLoaded = true;
         
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
@@ -71,7 +71,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     updateItems(camera);
 
     drawPlayer(&player);
-    updatePlayer(&player, GetFrameTime(), objects, rows, cols, camera);
+    updatePlayer(&player, GetFrameTime(), objects, details, rows, cols, camera);
 
 
 

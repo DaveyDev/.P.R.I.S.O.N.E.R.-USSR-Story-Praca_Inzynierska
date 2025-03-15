@@ -22,9 +22,11 @@ void mapsEditorScene() {
 
     if (!wasMapLoadedE) {
         char mapPath[256];
+        char itemPath[256];
         snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
+        snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
         loadMap(mapPath);
-        loadItems();
+        loadItems(itemPath);
         wasMapLoadedE = true;
         
     }
@@ -101,6 +103,7 @@ void mapsEditorScene() {
     if (CheckCollisionPointRec(GetMousePosition(), exitButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         *currentScene = MENU;
         isCameraInitializedE = false;
+        wasMapLoadedE = false;
     }
 
     DrawText(TextFormat("Tile: %d", selectedTile), 10, 40, 20, WHITE);

@@ -12,6 +12,7 @@
 // Global variables to store the map, objects, and their dimensions
 int **map = NULL;
 int **objects = NULL;
+int **details = NULL;
 int rows = 0;
 int cols = 0;
 char mapName[MAX_MAP_NAME_LENGTH] = "\0";

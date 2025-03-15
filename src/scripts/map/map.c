@@ -11,6 +11,7 @@
 
 
 
+
 TileMapping neighbours_to_atlas_coord[] = {
     {{Grass, Grass, Grass, Grass}, {2, 1}},
     {{Dirt, Dirt, Dirt, Grass}, {1, 3}},
@@ -31,6 +32,7 @@ TileMapping neighbours_to_atlas_coord[] = {
 };
 
 
+
 void loadMap(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -44,22 +46,25 @@ void loadMap(const char *filename) {
     // Allocate memory for the map, objects, and the lastChangeTimes arrays
     map = (int **)malloc(rows * sizeof(int *));
     objects = (int **)malloc(rows * sizeof(int *));
-    //lastChangeTimes = (time_t **)malloc(rows * sizeof(time_t *));
+    details = (int **)malloc(rows * sizeof(int *));
+    
     
     for (int i = 0; i < rows; i++) {
         map[i] = (int *)malloc(cols * sizeof(int));
         objects[i] = (int *)malloc(cols * sizeof(int)); // Additional array for objects
-        //lastChangeTimes[i] = (time_t *)malloc(cols * sizeof(time_t));
+        details[i] = (int *)malloc(cols * sizeof(int)); //2nd layer read
     }
 
     // Read the tile and object values into the map and objects arrays
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
-            int tile, object;
-            fscanf(file, "%d:%d", &tile, &object);  // Read tile:object format
+            int tile, object, detail;
+            //fscanf(file, "%d:%d", &tile, &object);  // Read tile:object format
+            fscanf(file, "%d:%d:%d", &tile, &object, &detail);
             map[row][col] = tile;
-            objects[row][col] = object;  // Store object
-            //lastChangeTimes[row][col] = 0;  // Initialize time values if needed
+            objects[row][col] = object;  // Store 1st map layer
+            details[row][col] = detail;  // Store 2nd map layer
+            
         }
     }
 
@@ -79,7 +84,9 @@ void saveMap(const char *filename) {
     // Write tile and object data in "tile:object" format
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
-            fprintf(file, "%d:%d ", map[row][col], objects[row][col]);
+            //fprintf(file, "%d:%d ", map[row][col], objects[row][col]);
+            fprintf(file, "%d:%d:%d ", map[row][col], objects[row][col], details[row][col]);
+
         }
         fprintf(file, "\n"); // Newline after each row
     }
@@ -164,6 +171,17 @@ void drawMap(Camera2D camera) {
             } else {
                 drawPlaceable(15, block); //change that later
             }
+
+        
+
+
+        } 
+        
+        // Draw 2nd layer (e.g., doors, decals)
+        if (details[row][col] != 0) {
+            if (details[row][col] >= 2000 && details[row][col] <= 2999) {
+                    drawPlaceable(details[row][col] - 2000, block);
+            } 
         }
     }
 }
@@ -206,13 +224,13 @@ void updateMap(Camera2D camera) {
 
 
 void freeMap() {
-    // Free the allocated memory for the map, objects, and lastChangeTimes arrays
+    // Free the allocated memory for the map, 1st and 2nd layer
     for (int i = 0; i < rows; i++) {
         free(map[i]);
         free(objects[i]);
-        //free(lastChangeTimes[i]);
+        free(details[i]);
     }
     free(map);
     free(objects);
-    //free(lastChangeTimes);
+    free(details);
 }

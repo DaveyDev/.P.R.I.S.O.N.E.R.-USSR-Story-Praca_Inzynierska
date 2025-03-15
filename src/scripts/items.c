@@ -12,10 +12,10 @@ Item items[MAX_ITEMS];
 int itemCount = 0; // Keep track of the number of loaded items
 
 // Function to load items from items.dat
-void loadItems() {
-    FILE *file = fopen("data/levels/test/items.dat", "r");
+void loadItems(const char *filename) {
+    FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        fprintf(stderr, "Error opening file: items.dat\n");
+        fprintf(stderr, "Error opening file: %s\n", filename);
         return;
     }
 
@@ -30,7 +30,10 @@ void loadItems() {
         // Parse line into id, quantity, posx, posy
         int id, quantity;
         float posx, posy;
-        sscanf(line, "%d:%d:%f:%f", &id, &quantity, &posx, &posy);
+        if (sscanf(line, "%d:%d:%f:%f", &id, &quantity, &posx, &posy) != 4) {
+            fprintf(stderr, "Error parsing line: %s\n", line);
+            continue;
+        }
 
         // Assign values to the current item in the array
         items[itemCount].id = id;
@@ -39,7 +42,7 @@ void loadItems() {
         items[itemCount].itemPos.y = posy;
 
         // Read item name (assuming it's the rest of the line after coordinates)
-        char *nameStart = strchr(line, ' '); // Find first space
+        char *nameStart = strchr(line, ' ');
         if (nameStart != NULL) {
             strncpy(items[itemCount].itemName, nameStart + 1, NAME_LEN - 1); // Copy name, excluding space
             items[itemCount].itemName[NAME_LEN - 1] = '\0'; // Ensure null termination
@@ -53,6 +56,7 @@ void loadItems() {
 
     fclose(file);
 }
+
 
 // Function to draw items on the screen
 // Function to draw items on the screen relative to the camera

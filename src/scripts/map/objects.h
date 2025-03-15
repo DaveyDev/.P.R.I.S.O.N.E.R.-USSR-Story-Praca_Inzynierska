@@ -13,7 +13,7 @@ void drawObjects(int **objects, int rows, int cols, Texture2D treesTileset, Text
 void updateObjects(int **objects, int rows, int cols, Vector2 worldMousePos);
 void freeObjects(int **objects, int rows);
 bool isWallLike(int object);
-
+bool isWallLikeDetail(int detail);
 // Define your tile types
 enum WallType {
     StoneWall = 11,

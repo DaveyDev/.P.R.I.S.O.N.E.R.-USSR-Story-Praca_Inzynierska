@@ -69,31 +69,31 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> collider.y = player-> position.y + 50;
 }
 */
-void updatePlayer(Player *player, float deltaTime, int **objects, int rows, int cols, Camera2D camera) {
+void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     Rectangle newCollider = player->collider;
 
     if ((IsKeyDown(KEY_RIGHT) || IsKeyDown('D'))) {
         newCollider.x += speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
             player->position.x += speedPerSecond;
         }
     }
     if ((IsKeyDown(KEY_LEFT) || IsKeyDown('A'))) {
         newCollider.x -= speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
             player->position.x -= speedPerSecond;
         }
     }
     if ((IsKeyDown(KEY_DOWN) || IsKeyDown('S'))) {
         newCollider.y += speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
             player->position.y += speedPerSecond;
         }
     }
     if ((IsKeyDown(KEY_UP) || IsKeyDown('W'))) {
         newCollider.y -= speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, rows, cols)) {
+        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
             player->position.y -= speedPerSecond;
         }
     }
@@ -138,39 +138,70 @@ void unloadPlayer(Player *player) {
 
 }
 
+bool isDoorOpen(int detailID){
+    return false;
+}
 
-bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int rows, int cols) {
+bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols) {
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
             int objectID = objects[row][col];
+            int detailID = details[row][col];
 
             // Skip empty spaces
-            if (objectID == 0) continue;
+            if (objectID == 0 && detailID == 0) continue;
 
-            // If it's a wall or other rectangular object
+            Rectangle objectCollider = { col * 32, row * 32, 32, 32 };
+
+            // If object is solid (e.g., wall)
             if (isWallLike(objectID)) {
-                Rectangle objectCollider = { col * 32, row * 32, 32, 32 };
                 if (CheckCollisionRecs(playerCollider, objectCollider)) {
                     return true;
                 }
             }
-            // If it's a tree (circular collision, IDs 1000-1999)
-            else if (objectID >= 1000 && objectID <= 1999) {
-                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 }; // Center of the tree
-                float circleRadius = 8.0f; // Adjust radius as needed
-                if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
-                    return true;
-                }
-            } else if (objectID >= 2000 && objectID <= 2999){
-                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 }; // Center of the tree
-                float circleRadius = 12.0f; // Adjust radius as needed
+
+            // Check trees (circular collision, IDs 1000-1999)
+            if (objectID >= 1000 && objectID <= 1999) {
+                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
+                float circleRadius = 8.0f;
                 if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
                     return true;
                 }
             }
+
+
+            
+           
+            // Check placeables (IDs 2000-2999)
+            if (objectID >= 2000 && objectID <= 2999 && objectID != 2013 && objectID != 2014) {
+                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
+                float circleRadius = 12.0f;
+                if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
+                    return true;
+                }
+            }
+
+            // Special case: Doors (IDs 4000-4999 in details layer)
+            if (detailID >= 2000 && detailID <= 2999) {
+                if (CheckCollisionRecs(playerCollider, objectCollider)) {
+                    if (isDoorOpen(detailID)) {
+                        return false;  // Allow movement if door is open
+                    } else {
+                        //openDoor(row, col); // Trigger door open event
+                        return false;  // No collision, but door opens
+                    }
+                }
+            }
+            
+
+             // Special case: Floors (IDs 5000-5999 in details layer) -> No collision
+            if (detailID == 2013 || detailID == 2014) {
+                return false;  // Ignore collision for special floor tiles
+            }
+
         }
     }
-    return false; // No collision
+    return false; // No collision detected
 }
 
 

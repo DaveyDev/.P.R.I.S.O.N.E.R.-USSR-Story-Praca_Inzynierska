@@ -19,7 +19,7 @@ typedef struct {
 } Item;
 
 // Function declarations
-void loadItems();  // Load items from items.dat
+void loadItems(const char *filename);  // Load items from items.dat
 void drawItems(Camera2D camera);  // Draw items on screen
 void updateItems(Camera2D camera);
 void saveItems();

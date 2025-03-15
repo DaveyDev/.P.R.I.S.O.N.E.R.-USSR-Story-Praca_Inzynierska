@@ -53,10 +53,10 @@ void createEmptyMap(int width, int height) {
     // Write width and height
     fprintf(file, "%d %d\n", width, height);
 
-    // Write map data
+    // Write map data with three layers (tile:object:detail)
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            fprintf(file, "1:0");
+            fprintf(file, "1:0:0");  // Default ground, empty object, empty detail
             if (x < width - 1) fprintf(file, " "); // Space between tiles
         }
         fprintf(file, "\n"); // New line after each row
@@ -65,6 +65,7 @@ void createEmptyMap(int width, int height) {
     fclose(file);
     printf("Map created successfully: %s\n", mapPath);
 }
+
 
 
 

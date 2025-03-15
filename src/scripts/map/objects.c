@@ -6,6 +6,7 @@
 #include "../global.h"
 #include <stdio.h>
 #include "../idList.h"
+#include "../map/map.h"
 
 WallMapping wall_neighbours_to_atlas_coord[] = { // top, bottom, left, right
     {{StoneWall, StoneWall, StoneWall, StoneWall}, {1, 1}, {1, 1}},
@@ -57,14 +58,17 @@ void drawPlaceable(int placeableIndex, Rectangle block) {
 bool isWallLike(int object) {
     return (object == StoneWall || object == GREY_DOOR || object == LIGHTGREY_DOOR); // Add more IDs if needed
 }
+bool isWallLikeDetail(int detail) {
+    return (detail == GREY_DOOR || detail == LIGHTGREY_DOOR); // Add more IDs if needed
+}
 
 Rectangle calculateWallTile(int row, int col) {
     
     
-    int topWall = (row > 0 && isWallLike(objects[row-1][col])) ? StoneWall : 0;
-    int bottomWall = (isWallLike(objects[row+1][col])) ? StoneWall : 0;
-    int leftWall = (col > 0 && isWallLike(objects[row][col-1])) ? StoneWall : 0;
-    int rightWall = (isWallLike(objects[row][col+1])) ? StoneWall : 0;
+    int topWall = (row > 0 && isWallLike(objects[row-1][col]) || isWallLikeDetail(details[row-1][col])) ? StoneWall : 0;
+    int bottomWall = (isWallLike(objects[row+1][col]) || isWallLikeDetail(details[row+1][col])) ? StoneWall : 0;
+    int leftWall = (col > 0 && isWallLike(objects[row][col-1]) || isWallLikeDetail(details[row][col-1])) ? StoneWall : 0;
+    int rightWall = (isWallLike(objects[row][col+1]) || isWallLikeDetail(details[row][col+1])) ? StoneWall : 0;
 
 
     int neighbours[4] = {topWall, bottomWall, leftWall, rightWall};
