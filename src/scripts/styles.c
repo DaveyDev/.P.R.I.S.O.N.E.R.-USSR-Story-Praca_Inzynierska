@@ -1,12 +1,15 @@
 //Wiktor
 #include "../../lib/raygui.h"
 #include "../../lib/raylib.h"
+#include "global.h"
 
 // Implementation of the InitGuiStyles function
 void initGuiStyle() {
         // Set general button styles: no border and larger text
     GuiSetStyle(BUTTON, BORDER_WIDTH, 0);  // No border
     GuiSetStyle(DEFAULT, TEXT_SIZE, 30);    // Bigger text size
+    GuiSetFont(baseFont);   // set font
+
 
     GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, ColorToInt(BLANK));  // Transparent button
     GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, ColorToInt((Color){ 0, 0, 0, 50 }));

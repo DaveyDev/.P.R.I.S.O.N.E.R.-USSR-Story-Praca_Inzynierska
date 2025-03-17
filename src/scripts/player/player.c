@@ -1,5 +1,7 @@
 #include "player.h"
 #include "../map/objects.h"
+#include "../map/objects.h"
+#include "../idList.h"
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
     player-> position.x = screenWidth/2;
@@ -46,29 +48,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     
 }
 
-/*void updatePlayer(Player *player, float deltaTime) { //for testing purpose only 
-    float speedPerSecond = player->speed * deltaTime;
-    // Handle player input (e.g., arrow keys or WASD)
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D') && player-> position.x < GetScreenWidth() - 64) {
-        player-> position.x += speedPerSecond;
-    } 
-    
-    if (IsKeyDown(KEY_LEFT) || IsKeyDown('A') && player-> position.x > 0) {
-        player->position.x -= speedPerSecond;
-    }
 
-    if (IsKeyDown(KEY_DOWN) || IsKeyDown('S') && player-> position.y < GetScreenHeight() - 140) {
-        player->position.y += speedPerSecond;
-    } 
-    
-    if (IsKeyDown(KEY_UP) || IsKeyDown('W') && player-> position.y > - 48 ) {
-        player->position.y -= speedPerSecond;
-    }
-    
-    player-> collider.x = player-> position.x + 16;
-    player-> collider.y = player-> position.y + 50;
-}
-*/
 void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     Rectangle newCollider = player->collider;
@@ -138,9 +118,7 @@ void unloadPlayer(Player *player) {
 
 }
 
-bool isDoorOpen(int detailID){
-    return false;
-}
+
 
 bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols) {
     for (int row = 0; row < rows; row++) {
@@ -169,11 +147,11 @@ bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **de
                 }
             }
 
-
+            
             
            
             // Check placeables (IDs 2000-2999)
-            if (objectID >= 2000 && objectID <= 2999 && objectID != 2013 && objectID != 2014) {
+            if (objectID >= 2000 && objectID <= 2999 && objectID != WOODEN_FLOOR && objectID != STONE_FLOOR) {
                 Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
                 float circleRadius = 12.0f;
                 if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
@@ -181,22 +159,21 @@ bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **de
                 }
             }
 
-            // Special case: Doors (IDs 4000-4999 in details layer)
-            if (detailID >= 2000 && detailID <= 2999) {
-                if (CheckCollisionRecs(playerCollider, objectCollider)) {
-                    if (isDoorOpen(detailID)) {
-                        return false;  // Allow movement if door is open
-                    } else {
-                        //openDoor(row, col); // Trigger door open event
-                        return false;  // No collision, but door opens
-                    }
-                }
-            }
-            
 
              // Special case: Floors (IDs 5000-5999 in details layer) -> No collision
-            if (detailID == 2013 || detailID == 2014) {
-                return false;  // Ignore collision for special floor tiles
+            //if (detailID == WOODEN_FLOOR || detailID == STONE_FLOOR) {
+                //return false;  // Ignore collision for special floor tiles
+            //}
+
+            if(detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR){
+                if (CheckCollisionRecs(playerCollider, objectCollider)) {
+                    openDoor(row, col);
+                    
+            }
+            }
+            if(!CheckCollisionRecs(playerCollider, objectCollider) && detailID == OPEN_GREY_DOOR || 
+            !CheckCollisionRecs(playerCollider, objectCollider) && detailID == OPEN_LIGHTGREY_DOOR){
+                closeDoor(row, col);
             }
 
         }

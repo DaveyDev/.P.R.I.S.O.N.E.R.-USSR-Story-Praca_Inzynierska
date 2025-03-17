@@ -59,7 +59,7 @@ bool isWallLike(int object) {
     return (object == StoneWall || object == GREY_DOOR || object == LIGHTGREY_DOOR); // Add more IDs if needed
 }
 bool isWallLikeDetail(int detail) {
-    return (detail == GREY_DOOR || detail == LIGHTGREY_DOOR); // Add more IDs if needed
+    return (detail == GREY_DOOR || detail == LIGHTGREY_DOOR || detail == OPEN_GREY_DOOR || detail == OPEN_LIGHTGREY_DOOR); // Add more IDs if needed
 }
 
 Rectangle calculateWallTile(int row, int col) {
@@ -137,4 +137,16 @@ void freeObjects(int **objects, int rows) {
         free(objects[i]);
     }
     free(objects);
+}
+
+
+void openDoor(int row, int col){
+    if(details[row][col] == GREY_DOOR) details[row][col] = OPEN_GREY_DOOR;
+    if(details[row][col] == LIGHTGREY_DOOR) details[row][col] = OPEN_LIGHTGREY_DOOR;
+
+}
+void closeDoor(int row, int col){
+    if(details[row][col] == OPEN_GREY_DOOR) details[row][col] = GREY_DOOR;
+    if(details[row][col] == OPEN_LIGHTGREY_DOOR) details[row][col] = LIGHTGREY_DOOR;
+
 }

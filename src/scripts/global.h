@@ -24,6 +24,8 @@ extern Color buttonColor;
 extern Color noColor;
 extern Color bgColor;
 
+extern Font baseFont;
+
 // Define a struct for screen resolutions
 typedef struct {
     int width;

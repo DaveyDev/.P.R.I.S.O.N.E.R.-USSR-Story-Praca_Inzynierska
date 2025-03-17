@@ -18,7 +18,7 @@ int cols = 0;
 char mapName[MAX_MAP_NAME_LENGTH] = "\0";
 //time_t **lastChangeTimes = NULL;
 bool windowShouldClose = false;
-
+Font baseFont;
 
 
 AppScene *currentScene = NULL;
@@ -31,7 +31,7 @@ int bestScore = 0;
 Vector2 mousePoint = {};
 Color buttonColor = (Color){0, 0, 0, 50};
 Color noColor = (Color){0, 0, 0, 0};
-Color bgColor = (Color){0, 150, 100, 255};
+Color bgColor = (Color){100, 150, 100, 255};
 
 
 // Initialize resolutions
@@ -55,7 +55,7 @@ void initGlobals() {
     if (currentScene != NULL) {
         *currentScene = MENU; // Initialize the value
     }
-
+    baseFont = LoadFont("data/font/KingthingsTrypewriter2.ttf");
     
 }
 

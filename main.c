@@ -22,13 +22,16 @@ int main(){
 
     InitWindow(resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, ".P.R.I.S.O.N.E.R.");
     SetTargetFPS(600);
+
+    
+    initGlobals();
     initGuiStyle();
     
     loadTextures();
 
     //Player player;
     //initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
-    initGlobals();
+    
     loadLanguage();
 
 

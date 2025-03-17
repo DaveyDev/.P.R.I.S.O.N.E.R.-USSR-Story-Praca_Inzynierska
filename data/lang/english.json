@@ -1,4 +1,6 @@
 {
+	"game_title": ".P.R.I.S.O.N.E.R.",
+	"game_subtitle": "USSR Story",
     "menu_start": "PLAY",
     "menu_options": "OPTIONS",
     "menu_exit": "EXIT",
@@ -9,6 +11,7 @@
 	"options_fullscreen": "Fullscreen",
 	"general_save": "SAVE",
 	"general_back": "BACK",
+	"general_saves": "SAVES",
 	"pause_resume": "RESUME GAME",
 	"pause_exit": "EXIT TO MENU",
 	"startgame_newgame": "NEW GAME",

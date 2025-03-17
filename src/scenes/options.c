@@ -25,20 +25,28 @@ void updateResolutionString(char *resolutionText) {
 // Function to handle resolution change
 void handleResolutionChange() {
     // Draw the label "Resolution:" on the left side
-    DrawText("Resolution:", GetScreenWidth() / 2 - 200, GetScreenHeight() / 2, 20, WHITE);
+    //DrawText("Resolution:", GetScreenWidth() / 2 - 200, GetScreenHeight() / 2, 20, WHITE);
+    Vector2 resolutionLabelPos = {
+        GetScreenWidth() / 2 - 200,
+        GetScreenHeight() / 2
+    };
+    DrawTextEx(baseFont, "Resolution:", resolutionLabelPos, 20, 2, WHITE);
+
 
     // Prepare to draw the current resolution
     char resolutionText[32];
     updateResolutionString(resolutionText); // Update resolution text
 
     // Center the resolution text dynamically
-    int resolutionTextX = GetScreenWidth() / 2 + 100; // X position for resolution text
-    int resolutionTextY = GetScreenHeight() / 2;      // Y position for resolution text
-    DrawText(resolutionText, resolutionTextX, resolutionTextY, 20, WHITE);
+    Vector2 resolutionPos = { 
+        GetScreenWidth() / 2 + 100,
+        GetScreenHeight() / 2
+    };
+    DrawTextEx(baseFont, resolutionText, resolutionPos, 20, 2, WHITE);
 
     // Check if the mouse is over the resolution text
     int textWidth = MeasureText(resolutionText, 20);  // Measure the width of the resolution text
-    Rectangle resolutionBounds = {resolutionTextX, resolutionTextY, textWidth, 20};  // Bounds of the resolution text
+    Rectangle resolutionBounds = {resolutionPos.x, resolutionPos.y, textWidth, 20};  // Bounds of the resolution text
 
     if (CheckCollisionPointRec(GetMousePosition(), resolutionBounds)) {
         // Allow switching resolution with mouse wheel or clicks if mouse is over the resolution
@@ -59,7 +67,14 @@ void handleResolutionChange() {
 // Function to handle fullscreen toggle
 void handleFullscreenToggle() {
     // Draw the label "Fullscreen:" on the left side
-    DrawText("Fullscreen:", GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 + 80, 20, WHITE);
+    //DrawText("Fullscreen:", GetScreenWidth() / 2 - 200, GetScreenHeight() / 2 + 80, 20, WHITE);
+    
+    Vector2 fullscreenPos = { 
+        GetScreenWidth() / 2 - 200, 
+        GetScreenHeight() / 2 + 80 
+    };
+    DrawTextEx(baseFont, "Fullscreen:", fullscreenPos, 20, 2, WHITE);
+
 
     // Draw the fullscreen checkbox on the right side of the same line
     if (GuiCheckBox((Rectangle){GetScreenWidth() / 2 + 100, GetScreenHeight() / 2 + 80, 20, 20}, "ON", &fullscreenCheckBox)) {
@@ -79,7 +94,13 @@ void optionsScene() {
     ClearBackground(bgColor);
 
     // Draw title text, centered at the top
-    DrawText(optionsTxt, GetScreenWidth() / 2 - MeasureText(optionsTxt, optionsTxtFontSize) / 2, GetScreenHeight() / 16, optionsTxtFontSize, WHITE);
+    //DrawText(optionsTxt, GetScreenWidth() / 2 - MeasureText(optionsTxt, optionsTxtFontSize) / 2, GetScreenHeight() / 16, optionsTxtFontSize, WHITE);
+    Vector2 optionsTxtPos = { 
+        GetScreenWidth() / 2 - MeasureTextEx(baseFont, optionsTxt, optionsTxtFontSize, 2).x / 2, 
+        GetScreenHeight() / 16 
+    };
+    DrawTextEx(baseFont, optionsTxt, optionsTxtPos, optionsTxtFontSize, 2, WHITE);
+
 
     // Handle resolution change
     handleResolutionChange();

@@ -8,6 +8,7 @@ Texture2D placeableTileset;
 Texture2D wallSet;
 Texture2D playerSet;
 Texture2D itemsSet;
+Texture2D mainMenuBackground;
 
 
 
@@ -19,6 +20,8 @@ void loadTextures() {
     placeableTileset = LoadTexture("data/textures/placeableTileset.png");
     playerSet = LoadTexture("data/textures/playerSet.png");
     itemsSet = LoadTexture("data/textures/itemsSet.png");
+    mainMenuBackground = LoadTexture("data/textures/mainMenuBackground.png");
+
 
 }
 
@@ -30,6 +33,7 @@ void unloadTextures() {
     UnloadTexture(placeableTileset);
     UnloadTexture(playerSet);
     UnloadTexture(itemsSet);
+    UnloadTexture(mainMenuBackground);
 
 
 }

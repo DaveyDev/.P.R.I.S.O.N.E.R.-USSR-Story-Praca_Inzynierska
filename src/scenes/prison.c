@@ -85,15 +85,15 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
             if (isWallLike(objectID)) {
                 Rectangle objectCollider = { col * 32, row * 32, 32, 32 };
-                DrawRectangleRec(objectCollider, RED);
+                //DrawRectangleRec(objectCollider, RED);
             } else if (objectID >= 1000 && objectID <= 1999) { // Trees (circular)
                 Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
                 float circleRadius = 8.0f;
-                DrawCircleV(circleCenter, circleRadius, BLUE);
+                //DrawCircleV(circleCenter, circleRadius, BLUE);
             } else if (objectID >= 2000 && objectID <= 2999) { // Trees (circular)
                 Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
                 float circleRadius = 12.0f;
-                DrawCircleV(circleCenter, circleRadius, BLUE);
+                //DrawCircleV(circleCenter, circleRadius, BLUE);
             }
         }
     }

@@ -14,6 +14,9 @@ void updateObjects(int **objects, int rows, int cols, Vector2 worldMousePos);
 void freeObjects(int **objects, int rows);
 bool isWallLike(int object);
 bool isWallLikeDetail(int detail);
+void openDoor(int row, int col);
+void closeDoor(int row, int col);
+
 // Define your tile types
 enum WallType {
     StoneWall = 11,
