@@ -8,9 +8,11 @@
 #include "../scripts/styles.h"
 #include <string.h>  // For strcpy and strcat
 #include "../scripts/translation.h"
+#include "../scripts/textures.h"
+
 
 // Define options text and font size
-const char *optionsTxt = "OPTIONS";
+//const char *optionsTxt = "OPTIONS";
 const int optionsTxtFontSize = 30;
 
 // Define fullscreen state
@@ -93,13 +95,38 @@ void optionsScene() {
     // Clear the background
     ClearBackground(bgColor);
 
+    Vector2 position = { 0, 0 };  // Position where the texture will be drawn
+    float scaleMenu = (float)GetScreenHeight() / 800.0f;
+    DrawTextureEx(mainMenuBackground, position, 0.0f, scaleMenu, WHITE);
+
+
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+
+    // Calculate 1/16 smaller than window size
+    int rectWidth = screenWidth * 15 / 16;
+    int rectHeight = screenHeight * 15 / 16;
+
+    // Center position (rectangle's center)
+    Vector2 rectPosition = { screenWidth / 2, screenHeight / 2 };
+    // Origin at the center
+    Vector2 origin = { rectWidth / 2, rectHeight / 2 };
+
+    // Draw the rectangle centered on screen
+    DrawRectanglePro((Rectangle){ rectPosition.x, rectPosition.y, rectWidth, rectHeight }, 
+                 origin, 0, greySeeThroughColor);
+
+
+
+
+
     // Draw title text, centered at the top
     //DrawText(optionsTxt, GetScreenWidth() / 2 - MeasureText(optionsTxt, optionsTxtFontSize) / 2, GetScreenHeight() / 16, optionsTxtFontSize, WHITE);
     Vector2 optionsTxtPos = { 
-        GetScreenWidth() / 2 - MeasureTextEx(baseFont, optionsTxt, optionsTxtFontSize, 2).x / 2, 
+        GetScreenWidth() / 2 - MeasureTextEx(baseFont, getTranslation("options_title"), optionsTxtFontSize, 2).x / 2, 
         GetScreenHeight() / 16 
     };
-    DrawTextEx(baseFont, optionsTxt, optionsTxtPos, optionsTxtFontSize, 2, WHITE);
+    DrawTextEx(baseFont, getTranslation("options_title"), optionsTxtPos, optionsTxtFontSize, 2, WHITE);
 
 
     // Handle resolution change
@@ -110,14 +137,14 @@ void optionsScene() {
 
     // Back Button
     Rectangle exitBtn = {GetScreenWidth() / 2 - 100, GetScreenHeight() / 2 + 200, 200, 50};
-    if (GuiButton(exitBtn, "SAVE")) {
+    if (GuiButton(exitBtn, getTranslation("general_save"))) {
         //loadTranslations("data/lang/polish.json");
         //saveSettings();
     }
 
     // Save Button
     Rectangle saveBtn = {GetScreenWidth() / 2 - 100, GetScreenHeight() / 2 + 260, 200, 50};
-    if (GuiButton(saveBtn, "BACK")) {
+    if (GuiButton(saveBtn, getTranslation("general_back"))) {
         *currentScene = MENU;  // Assuming MENU is the constant for your main menu
     }
 }

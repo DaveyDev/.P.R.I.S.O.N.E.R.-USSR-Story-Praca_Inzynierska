@@ -7,6 +7,7 @@
 #include "../scripts/animation.h"
 #include "../scripts/items.h"
 #include "../scripts/map/objects.h"
+#include "../scripts/textures.h"
 
 
 
@@ -64,7 +65,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
 
     
-    drawMap(camera);
+    drawMap(camera, &player);
     updateMap(camera);
 
     drawItems(camera);
@@ -114,3 +115,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
        
     } 
 }
+
+
+
+

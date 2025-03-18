@@ -48,7 +48,9 @@ void mapsEditorScene() {
     if (IsKeyDown(KEY_S)) cameraE.target.y += cameraSpeed;
     if (IsKeyDown(KEY_W)) cameraE.target.y -= cameraSpeed;
 
-    drawMap(cameraE);
+    Player player;
+
+    drawMap(cameraE, &player);
     updateMap(cameraE);
     editMap(cameraE);
     drawItems(cameraE);

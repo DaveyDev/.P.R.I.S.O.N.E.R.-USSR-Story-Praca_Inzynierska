@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../../lib/raylib.h"
+#include "../player/player.h"
 
 
 // Declare pointers for the map and map dimensions
@@ -33,7 +34,7 @@ extern TileMapping neighbours_to_atlas_coord[];
 
 void loadMap(const char *filename);
 void saveMap(const char *filename);
-void drawMap(Camera2D camera);
+void drawMap(Camera2D camera, Player *player);
 void updateMap(Camera2D camera);
 void freeMap();  // Function to free allocated memory
 Rectangle calcutaleTile(int row, int col);

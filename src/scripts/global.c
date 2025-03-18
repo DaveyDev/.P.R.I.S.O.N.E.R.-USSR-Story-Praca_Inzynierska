@@ -30,6 +30,7 @@ int bestScore = 0;
 
 Vector2 mousePoint = {};
 Color buttonColor = (Color){0, 0, 0, 50};
+Color greySeeThroughColor = (Color){0, 0, 0, 128};
 Color noColor = (Color){0, 0, 0, 0};
 Color bgColor = (Color){100, 150, 100, 255};
 

@@ -9,7 +9,7 @@ Texture2D wallSet;
 Texture2D playerSet;
 Texture2D itemsSet;
 Texture2D mainMenuBackground;
-
+Texture2D pauseMenuBackground;
 
 
 void loadTextures() {
@@ -21,7 +21,7 @@ void loadTextures() {
     playerSet = LoadTexture("data/textures/playerSet.png");
     itemsSet = LoadTexture("data/textures/itemsSet.png");
     mainMenuBackground = LoadTexture("data/textures/mainMenuBackground.png");
-
+    pauseMenuBackground = LoadTexture("data/textures/pauseMenuBackground.png");
 
 }
 
@@ -34,6 +34,6 @@ void unloadTextures() {
     UnloadTexture(playerSet);
     UnloadTexture(itemsSet);
     UnloadTexture(mainMenuBackground);
-
+    UnloadTexture(pauseMenuBackground);
 
 }

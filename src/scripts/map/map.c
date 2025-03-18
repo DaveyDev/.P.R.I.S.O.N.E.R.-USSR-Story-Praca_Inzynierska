@@ -7,7 +7,7 @@
 #include "../textures.h"
 #include "../global.h"
 #include "objects.h"
-
+#include "../player/player.h"
 
 
 
@@ -127,8 +127,11 @@ Rectangle calculateTile(int row, int col) {
     // Default if no match is found
     return (Rectangle){ 0, 0, 32, 32 };
 }
+/*
+void drawMap(Camera2D camera, Player *player) {
 
-void drawMap(Camera2D camera) {
+    
+
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
 
@@ -186,10 +189,11 @@ void drawMap(Camera2D camera) {
     }
 }
 
+    
 
     EndMode2D();
 }
-
+*/
 
 
 void updateMap(Camera2D camera) {
@@ -234,3 +238,67 @@ void freeMap() {
     free(objects);
     free(details);
 }
+
+
+void drawMap(Camera2D camera, Player *player) {
+
+    
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+
+    // Calculate visible tile range
+    int startCol = (int)((camera.target.x - 256 / camera.zoom) / 32);
+    int startRow = (int)((camera.target.y - 256 / camera.zoom) / 32);
+    int endCol = (int)((camera.target.x + screenWidth + 256 / camera.zoom) / 32);
+    int endRow = (int)((camera.target.y + screenHeight + 256 / camera.zoom) / 32);
+
+    // Clamp values to prevent out-of-bounds
+    startCol = (startCol < 0) ? 0 : startCol;
+    startRow = (startRow < 0) ? 0 : startRow;
+    endCol = (endCol >= cols) ? cols - 1 : endCol;
+    endRow = (endRow >= rows) ? rows - 1 : endRow;
+
+
+    BeginMode2D(camera);
+
+    // **Step 1: Draw all background tiles first**
+    for (int row = startRow; row <= endRow; row++) {
+        for (int col = startCol; col <= endCol; col++) {
+            Vector2 position = { col * 32, row * 32 };
+            Rectangle tileSource = calculateTile(row, col);
+            DrawTextureRec(grassTileset, tileSource, position, WHITE);
+        }
+    }
+
+    // **Step 2: Draw objects and the player at the right moment**
+    for (int row = startRow; row <= endRow; row++) {
+        for (int col = startCol; col <= endCol; col++) {
+            Vector2 position = { col * 32, row * 32 };
+            Rectangle block = { position.x, position.y, 32, 32 };
+
+            // **Draw objects**
+            if (objects[row][col] >= 1000 && objects[row][col] <= 1999) {
+                drawTree(objects[row][col] - 1000, block);
+            } else if (objects[row][col] >= 2000 && objects[row][col] <= 2999) {
+                drawPlaceable(objects[row][col] - 2000, block);
+            } else if (objects[row][col] == 11) {
+                drawWall(row, col, wallSet);
+            }
+
+            // **Draw the player at the correct row**
+            if ((int)(player->position.y / 32) == row) {
+                drawPlayer(player);
+                DrawRectangle(player->position.x, player->position.y, 50,50, RED);
+                
+            }
+
+            // **Draw details layer (doors, decals)**
+            if (details[row][col] >= 2000 && details[row][col] <= 2999) {
+                drawPlaceable(details[row][col] - 2000, block);
+            }
+        }
+    }
+
+    EndMode2D();
+}
+

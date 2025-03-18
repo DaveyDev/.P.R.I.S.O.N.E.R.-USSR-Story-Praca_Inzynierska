@@ -12,7 +12,7 @@ extern Texture2D wallSet;
 extern Texture2D playerSet;
 extern Texture2D itemsSet;
 extern Texture2D mainMenuBackground;
-
+extern Texture2D pauseMenuBackground;
 
 
 // Function declarations

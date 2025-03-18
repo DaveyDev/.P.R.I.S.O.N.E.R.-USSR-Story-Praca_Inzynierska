@@ -21,6 +21,7 @@ extern bool windowShouldClose;
 
 extern Vector2 mousePoint;
 extern Color buttonColor;
+extern Color greySeeThroughColor;
 extern Color noColor;
 extern Color bgColor;
 
