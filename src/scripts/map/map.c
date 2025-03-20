@@ -240,7 +240,7 @@ void freeMap() {
 }
 
 
-void drawMap(Camera2D camera, Player *player) {
+void drawMap(Camera2D camera) {
 
     
     int screenWidth = GetScreenWidth();
@@ -257,6 +257,10 @@ void drawMap(Camera2D camera, Player *player) {
     startRow = (startRow < 0) ? 0 : startRow;
     endCol = (endCol >= cols) ? cols - 1 : endCol;
     endRow = (endRow >= rows) ? rows - 1 : endRow;
+
+    // Convert player screen position to world position
+    Vector2 playerWorldPos = GetScreenToWorld2D(player.position, camera);
+    int playerRow = (int)(playerWorldPos.y / 32) + 1;  // Convert world Y to tile row
 
 
     BeginMode2D(camera);
@@ -276,6 +280,19 @@ void drawMap(Camera2D camera, Player *player) {
             Vector2 position = { col * 32, row * 32 };
             Rectangle block = { position.x, position.y, 32, 32 };
 
+
+
+            
+
+            // **Draw the player at the correct row**
+            if (playerRow == row) {
+                EndMode2D();
+                drawPlayer(&player);
+                //DrawRectangle(player.position.x, player.position.y, 50,50, RED);
+                BeginMode2D(camera);
+                
+            }
+
             // **Draw objects**
             if (objects[row][col] >= 1000 && objects[row][col] <= 1999) {
                 drawTree(objects[row][col] - 1000, block);
@@ -285,19 +302,15 @@ void drawMap(Camera2D camera, Player *player) {
                 drawWall(row, col, wallSet);
             }
 
-            // **Draw the player at the correct row**
-            if ((int)(player->position.y / 32) == row) {
-                drawPlayer(player);
-                DrawRectangle(player->position.x, player->position.y, 50,50, RED);
-                
-            }
-
+            
             // **Draw details layer (doors, decals)**
             if (details[row][col] >= 2000 && details[row][col] <= 2999) {
                 drawPlaceable(details[row][col] - 2000, block);
             }
         }
     }
+    
+
 
     EndMode2D();
 }

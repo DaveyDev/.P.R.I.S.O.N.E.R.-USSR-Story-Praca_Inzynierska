@@ -5,6 +5,7 @@
 #include "../animation.h"
 
 
+
 typedef struct {
     Vector2 position;
     Texture2D playerTexture;
@@ -12,9 +13,14 @@ typedef struct {
     Rectangle collider;
     SpriteAnimation playerAnimation[5];
     
+    Vector2 colliderCenter;  // Center of the oval
+    float colliderRadiusX;   // Horizontal radius
+    float colliderRadiusY;   // Vertical radius
+    
 
 } Player;
 
+extern Player player;
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed);
 void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera);

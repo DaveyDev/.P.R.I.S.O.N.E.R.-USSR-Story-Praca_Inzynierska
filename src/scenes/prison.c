@@ -16,7 +16,7 @@ bool wasMapLoaded = false;
 // Persistent camera state variables
 Camera2D camera = { 0 };   // Define the camera outside of the function
 bool isCameraInitialized = false;
-Player player;
+
 
 
 void prisonScene() {
@@ -65,19 +65,20 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
 
     
-    drawMap(camera, &player);
+    drawMap(camera);
     updateMap(camera);
 
     drawItems(camera);
     updateItems(camera);
 
-    drawPlayer(&player);
+    //drawPlayer(&player);
     updatePlayer(&player, GetFrameTime(), objects, details, rows, cols, camera);
 
 
 
     // Draw player collider in green
     DrawRectangleRec(player.collider, GREEN);
+    DrawEllipse(player.colliderCenter.x, player.colliderCenter.y, player.colliderRadiusX, player.colliderRadiusY, BLUE);
 
     // Draw all solid objects
     for (int row = 0; row < rows; row++) {

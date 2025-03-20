@@ -50,7 +50,7 @@ void mapsEditorScene() {
 
     Player player;
 
-    drawMap(cameraE, &player);
+    drawMap(cameraE);
     updateMap(cameraE);
     editMap(cameraE);
     drawItems(cameraE);
