@@ -127,73 +127,7 @@ Rectangle calculateTile(int row, int col) {
     // Default if no match is found
     return (Rectangle){ 0, 0, 32, 32 };
 }
-/*
-void drawMap(Camera2D camera, Player *player) {
 
-    
-
-    int screenWidth = GetScreenWidth();
-    int screenHeight = GetScreenHeight();
-
-    // Calculate visible tile range
-    int startCol = (int)((camera.target.x - 256 / camera.zoom) / 32);
-    int startRow = (int)((camera.target.y - 256 / camera.zoom) / 32);
-    int endCol = (int)((camera.target.x + screenWidth + 256 / camera.zoom) / 32);
-    int endRow = (int)((camera.target.y + screenHeight + 256 / camera.zoom) / 32);
-
-    // Clamp to map bounds
-    startCol = (startCol < 0) ? 0 : startCol;
-    startRow = (startRow < 0) ? 0 : startRow;
-    endCol = (endCol >= cols) ? cols - 1 : endCol;
-    endRow = (endRow >= rows) ? rows - 1 : endRow;
-
-    BeginMode2D(camera);
-
-    for (int row = startRow; row <= endRow; row++) {
-    if (row < 0 || row >= rows) continue; // Skip out-of-bounds rows
-    for (int col = startCol; col <= endCol; col++) {
-        if (col < 0 || col >= cols) continue; // Skip out-of-bounds columns
-        
-        Rectangle block = { col * 32, row * 32, 32, 32 };
-
-        // Draw tiles
-        int tileType = map[row][col];
-        Rectangle tileSource = calculateTile(row, col);
-        DrawTextureRec(grassTileset, tileSource, (Vector2){ block.x, block.y }, WHITE);
-        
-        // Draw objects
-        if (objects[row][col] != 0) {
-            if (objects[row][col] >= 1000 && objects[row][col] <= 1999) {
-                drawTree(objects[row][col] - 1000, block);  // Normalize index for drawTree
-            } else if (objects[row][col] >= 2000 && objects[row][col] <= 2999) {
-                drawPlaceable(objects[row][col] - 2000, block);
-            } else if (objects[row][col] >= 3000 && objects[row][col] <= 3999) {
-                //drawItem( - 3000, block);
-            } else if (objects[row][col] == 11) {
-                drawWall(row, col, wallSet);
-            } else {
-                drawPlaceable(15, block); //change that later
-            }
-
-        
-
-
-        } 
-        
-        // Draw 2nd layer (e.g., doors, decals)
-        if (details[row][col] != 0) {
-            if (details[row][col] >= 2000 && details[row][col] <= 2999) {
-                    drawPlaceable(details[row][col] - 2000, block);
-            } 
-        }
-    }
-}
-
-    
-
-    EndMode2D();
-}
-*/
 
 
 void updateMap(Camera2D camera) {

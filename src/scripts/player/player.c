@@ -2,6 +2,7 @@
 #include "../map/objects.h"
 #include "../map/objects.h"
 #include "../idList.h"
+#include <math.h>
 
 Player player;
 
@@ -13,8 +14,8 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
 
     // Define the oval collider parameters
     player->colliderCenter = (Vector2){player->position.x + 16, player->position.y + 50};
-    player->colliderRadiusX = 10;  // Half the width
-    player->colliderRadiusY = 5;   // Half the height
+    player->colliderRadiusX = 8;  // Half the width
+    player->colliderRadiusY = 4;   // Half the height
     
     player-> playerTexture = LoadTexture("data/textures/playerSet.png");
     player-> playerAnimation[0] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
@@ -55,7 +56,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     
 }
 
-
+/*
 void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     Rectangle newCollider = player->collider;
@@ -90,12 +91,12 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     player->collider.x = worldPos.x + 4;
     player->collider.y = worldPos.y + 48;
 
-    player->colliderCenter.x = worldPos.x + 4;
-    player->colliderCenter.y = worldPos.y + 48;
+    player->colliderCenter.x = worldPos.x + 12;
+    player->colliderCenter.y = worldPos.y + 50;
 }
 
 
-
+*/
 
 
 void drawPlayer(Player *player) {
@@ -131,7 +132,7 @@ void unloadPlayer(Player *player) {
 }
 
 
-
+/*
 bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols) {
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
@@ -192,5 +193,115 @@ bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **de
     }
     return false; // No collision detected
 }
+*/
+bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radiusY, Rectangle rect) {
+    float closestX = fmax(rect.x, fmin(ellipseCenter.x, rect.x + rect.width));
+    float closestY = fmax(rect.y, fmin(ellipseCenter.y, rect.y + rect.height));
+
+    float dx = (closestX - ellipseCenter.x) / radiusX;
+    float dy = (closestY - ellipseCenter.y) / radiusY;
+
+    return (dx * dx + dy * dy) <= 1;
+}
+
+bool CheckCollisionEllipseCircle(Vector2 ellipseCenter, float radiusX, float radiusY, Vector2 circleCenter, float circleRadius) {
+    // Compute the normalized distance between the circle center and the ellipse center
+    float dx = circleCenter.x - ellipseCenter.x;
+    float dy = circleCenter.y - ellipseCenter.y;
+
+    // Normalize the distances based on the ellipse radii
+    float distanceSquared = (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY);
+
+    // Check if the distance is within the circle's radius
+    return distanceSquared <= 1.0f + (circleRadius * circleRadius) / (radiusX * radiusY);
+}
+
+
+
+void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
+    float speedPerSecond = player->speed * deltaTime;
+    Vector2 newColliderCenter = player->colliderCenter;
+
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D')) {
+        newColliderCenter.x += speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            player->position.x += speedPerSecond;
+        }
+    }
+    if (IsKeyDown(KEY_LEFT) || IsKeyDown('A')) {
+        newColliderCenter.x -= speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            player->position.x -= speedPerSecond;
+        }
+    }
+    if (IsKeyDown(KEY_DOWN) || IsKeyDown('S')) {
+        newColliderCenter.y += speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            player->position.y += speedPerSecond;
+        }
+    }
+    if (IsKeyDown(KEY_UP) || IsKeyDown('W')) {
+        newColliderCenter.y -= speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            player->position.y -= speedPerSecond;
+        }
+    }
+
+    // Update collider position
+    Vector2 worldPos = GetScreenToWorld2D((Vector2){player->position.x, player->position.y}, camera);
+    player->collider.x = worldPos.x + 4;
+    player->collider.y = worldPos.y + 48;
+
+    player->colliderCenter.x = worldPos.x + 12;
+    player->colliderCenter.y = worldPos.y + 50;
+}
+
+
+
+
+bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radiusY, int **objects, int **details, int rows, int cols) {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int objectID = objects[row][col];
+            int detailID = details[row][col];
+
+            if (objectID == 0 && detailID == 0) continue;
+
+            Rectangle objectCollider = {col * 32, row * 32, 32, 32};
+
+            if (isWallLike(objectID)) {
+                if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+                    return true;
+                }
+            }
+
+            if (objectID >= 1000 && objectID <= 1999) {
+                Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
+                float circleRadius = 8.0f;
+                if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
+                    return true;
+                }
+            }
+
+            if (objectID >= 2000 && objectID <= 2999 && objectID != WOODEN_FLOOR && objectID != STONE_FLOOR) {
+                Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
+                float circleRadius = 12.0f;
+                if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
+                    return true;
+                }
+            }
+
+            if ((detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) && CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+                openDoor(row, col);
+            }
+
+            if (!CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider) && (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR)) {
+                closeDoor(row, col);
+            }
+        }
+    }
+    return false;
+}
+
 
 

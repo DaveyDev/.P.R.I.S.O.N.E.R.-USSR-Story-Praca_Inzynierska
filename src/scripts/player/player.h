@@ -26,7 +26,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed);
 void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera);
 void drawPlayer(Player *player);
 void unloadPlayer(Player *player);
-bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols);
-
-
+//bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols);
+bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radiusY, int **objects, int **details, int rows, int cols);
+bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radiusY, Rectangle rect);
 #endif  // PLAYER_H

@@ -77,9 +77,10 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
 
     // Draw player collider in green
-    DrawRectangleRec(player.collider, GREEN);
+    BeginMode2D(camera);
     DrawEllipse(player.colliderCenter.x, player.colliderCenter.y, player.colliderRadiusX, player.colliderRadiusY, BLUE);
-
+    DrawRectangleRec(player.collider, GREEN);
+    EndMode2D();
     // Draw all solid objects
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
@@ -87,15 +88,21 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
             if (isWallLike(objectID)) {
                 Rectangle objectCollider = { col * 32, row * 32, 32, 32 };
-                //DrawRectangleRec(objectCollider, RED);
+                BeginMode2D(camera);
+                DrawRectangleRec(objectCollider, RED);
+                EndMode2D();
             } else if (objectID >= 1000 && objectID <= 1999) { // Trees (circular)
                 Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
                 float circleRadius = 8.0f;
-                //DrawCircleV(circleCenter, circleRadius, BLUE);
+                BeginMode2D(camera);
+                DrawCircleV(circleCenter, circleRadius, BLUE);
+                EndMode2D();
             } else if (objectID >= 2000 && objectID <= 2999) { // Trees (circular)
                 Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
                 float circleRadius = 12.0f;
-                //DrawCircleV(circleCenter, circleRadius, BLUE);
+                BeginMode2D(camera);
+                DrawCircleV(circleCenter, circleRadius, BLUE);
+                EndMode2D();
             }
         }
     }
