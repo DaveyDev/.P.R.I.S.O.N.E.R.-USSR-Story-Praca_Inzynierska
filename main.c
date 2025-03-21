@@ -10,6 +10,7 @@
 #include "src/scripts/styles.h"
 #include "src/scripts/textures.h"
 #include "src/scripts/translation.h"
+#include "src/scripts/debugCMD.h"
 
 bool exitMenu = false;
 
@@ -26,6 +27,7 @@ int main(){
     
     initGlobals();
     initGuiStyle();
+    initDebugCMD();
     
     loadTextures();
 
@@ -38,6 +40,8 @@ int main(){
     while (!windowShouldClose) {
 
         BeginDrawing();
+
+        
 
         switch (*currentScene){
             case MENU:
@@ -62,7 +66,12 @@ int main(){
                 WindowShouldClose();
                 break;
         }   
-            
+
+
+        updateDebugCMD();
+        drawDebugCMD(); // Draws the debug command input field
+
+
         EndDrawing();
 
     }

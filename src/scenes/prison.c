@@ -8,6 +8,7 @@
 #include "../scripts/items.h"
 #include "../scripts/map/objects.h"
 #include "../scripts/textures.h"
+#include "../scripts/debugCMD.h"
 
 
 
@@ -77,6 +78,9 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
 
     // Draw player collider in green
+    
+
+    if(isShowCollidersEnabled()){
     BeginMode2D(camera);
     DrawEllipse(player.colliderCenter.x, player.colliderCenter.y, player.colliderRadiusX, player.colliderRadiusY, BLUE);
     DrawRectangleRec(player.collider, GREEN);
@@ -106,7 +110,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
             }
         }
     }
-    
+    }
 
     DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
 

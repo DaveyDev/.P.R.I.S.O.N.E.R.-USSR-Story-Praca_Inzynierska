@@ -14,7 +14,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
 
     // Define the oval collider parameters
     player->colliderCenter = (Vector2){player->position.x + 16, player->position.y + 50};
-    player->colliderRadiusX = 8;  // Half the width
+    player->colliderRadiusX = 7;  // Half the width
     player->colliderRadiusY = 4;   // Half the height
     
     player-> playerTexture = LoadTexture("data/textures/playerSet.png");
@@ -205,15 +205,36 @@ bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radius
 }
 
 bool CheckCollisionEllipseCircle(Vector2 ellipseCenter, float radiusX, float radiusY, Vector2 circleCenter, float circleRadius) {
-    // Compute the normalized distance between the circle center and the ellipse center
+    // Translate the circle position to the ellipse’s local coordinate system
     float dx = circleCenter.x - ellipseCenter.x;
     float dy = circleCenter.y - ellipseCenter.y;
 
-    // Normalize the distances based on the ellipse radii
-    float distanceSquared = (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY);
+    // Convert to normalized ellipse space
+    float normX = dx / radiusX;
+    float normY = dy / radiusY;
 
-    // Check if the distance is within the circle's radius
-    return distanceSquared <= 1.0f + (circleRadius * circleRadius) / (radiusX * radiusY);
+    // Compute the squared distance from the ellipse center in normalized space
+    float distanceSquared = normX * normX + normY * normY;
+
+    // If the point is inside the ellipse, there's definitely a collision
+    if (distanceSquared <= 1.0f) return true;
+
+    // Find the closest point on the ellipse to the circle center
+    float angle = atan2(normY, normX); // Angle from ellipse center to circle center
+    float closestX = radiusX * cos(angle);
+    float closestY = radiusY * sin(angle);
+
+    // Convert back to world space
+    closestX += ellipseCenter.x;
+    closestY += ellipseCenter.y;
+
+    // Compute the actual distance from the closest point on the ellipse to the circle center
+    float distX = circleCenter.x - closestX;
+    float distY = circleCenter.y - closestY;
+    float distance = sqrtf(distX * distX + distY * distY);
+
+    // Check if the closest point is within the circle radius
+    return distance <= circleRadius;
 }
 
 
@@ -252,8 +273,8 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     player->collider.x = worldPos.x + 4;
     player->collider.y = worldPos.y + 48;
 
-    player->colliderCenter.x = worldPos.x + 12;
-    player->colliderCenter.y = worldPos.y + 50;
+    player->colliderCenter.x = worldPos.x + 13;
+    player->colliderCenter.y = worldPos.y + 46;
 }
 
 
