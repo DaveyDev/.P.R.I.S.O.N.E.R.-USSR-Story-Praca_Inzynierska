@@ -56,47 +56,6 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     
 }
 
-/*
-void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
-    float speedPerSecond = player->speed * deltaTime;
-    Rectangle newCollider = player->collider;
-
-    if ((IsKeyDown(KEY_RIGHT) || IsKeyDown('D'))) {
-        newCollider.x += speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
-            player->position.x += speedPerSecond;
-        }
-    }
-    if ((IsKeyDown(KEY_LEFT) || IsKeyDown('A'))) {
-        newCollider.x -= speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
-            player->position.x -= speedPerSecond;
-        }
-    }
-    if ((IsKeyDown(KEY_DOWN) || IsKeyDown('S'))) {
-        newCollider.y += speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
-            player->position.y += speedPerSecond;
-        }
-    }
-    if ((IsKeyDown(KEY_UP) || IsKeyDown('W'))) {
-        newCollider.y -= speedPerSecond;
-        if (!checkCollisionWithObjects(newCollider, objects, details, rows, cols)) {
-            player->position.y -= speedPerSecond;
-        }
-    }
-
-    // Update collider position
-    Vector2 worldPos = GetScreenToWorld2D((Vector2){player->position.x, player->position.y}, camera);
-    player->collider.x = worldPos.x + 4;
-    player->collider.y = worldPos.y + 48;
-
-    player->colliderCenter.x = worldPos.x + 12;
-    player->colliderCenter.y = worldPos.y + 50;
-}
-
-
-*/
 
 
 void drawPlayer(Player *player) {
@@ -132,68 +91,6 @@ void unloadPlayer(Player *player) {
 }
 
 
-/*
-bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols) {
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            int objectID = objects[row][col];
-            int detailID = details[row][col];
-
-            // Skip empty spaces
-            if (objectID == 0 && detailID == 0) continue;
-
-            Rectangle objectCollider = { col * 32, row * 32, 32, 32 };
-
-            // If object is solid (e.g., wall)
-            if (isWallLike(objectID)) {
-                if (CheckCollisionRecs(playerCollider, objectCollider)) {
-                    return true;
-                }
-            }
-
-            // Check trees (circular collision, IDs 1000-1999)
-            if (objectID >= 1000 && objectID <= 1999) {
-                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
-                float circleRadius = 8.0f;
-                if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
-                    return true;
-                }
-            }
-
-            
-            
-           
-            // Check placeables (IDs 2000-2999)
-            if (objectID >= 2000 && objectID <= 2999 && objectID != WOODEN_FLOOR && objectID != STONE_FLOOR) {
-                Vector2 circleCenter = { col * 32 + 16, row * 32 + 16 };
-                float circleRadius = 12.0f;
-                if (CheckCollisionCircleRec(circleCenter, circleRadius, playerCollider)) {
-                    return true;
-                }
-            }
-
-
-             // Special case: Floors (IDs 5000-5999 in details layer) -> No collision
-            //if (detailID == WOODEN_FLOOR || detailID == STONE_FLOOR) {
-                //return false;  // Ignore collision for special floor tiles
-            //}
-
-            if(detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR){
-                if (CheckCollisionRecs(playerCollider, objectCollider)) {
-                    openDoor(row, col);
-                    
-            }
-            }
-            if(!CheckCollisionRecs(playerCollider, objectCollider) && detailID == OPEN_GREY_DOOR || 
-            !CheckCollisionRecs(playerCollider, objectCollider) && detailID == OPEN_LIGHTGREY_DOOR){
-                closeDoor(row, col);
-            }
-
-        }
-    }
-    return false; // No collision detected
-}
-*/
 bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radiusY, Rectangle rect) {
     float closestX = fmax(rect.x, fmin(ellipseCenter.x, rect.x + rect.width));
     float closestY = fmax(rect.y, fmin(ellipseCenter.y, rect.y + rect.height));
