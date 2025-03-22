@@ -10,12 +10,12 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> position.x = screenWidth/2;
     player-> position.y = screenHeight/2;
     player-> speed = speed;
-    player-> collider  = (Rectangle){player-> position.x + 32, player->position.y + 50, 16, 2};
+    player-> collider  = (Rectangle){player-> position.x + 2, player->position.y + 50, 16, 25};
 
     // Define the oval collider parameters
     player->colliderCenter = (Vector2){player->position.x + 16, player->position.y + 50};
     player->colliderRadiusX = 7;  // Half the width
-    player->colliderRadiusY = 4;   // Half the height
+    player->colliderRadiusY = 3;   // Half the height
     
     player-> playerTexture = LoadTexture("data/textures/playerSet.png");
     player-> playerAnimation[0] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
@@ -168,7 +168,7 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     // Update collider position
     Vector2 worldPos = GetScreenToWorld2D((Vector2){player->position.x, player->position.y}, camera);
     player->collider.x = worldPos.x + 4;
-    player->collider.y = worldPos.y + 48;
+    player->collider.y = worldPos.y + 23;
 
     player->colliderCenter.x = worldPos.x + 13;
     player->colliderCenter.y = worldPos.y + 46;

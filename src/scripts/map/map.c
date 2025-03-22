@@ -175,8 +175,6 @@ void freeMap() {
 
 
 void drawMap(Camera2D camera) {
-
-    
     int screenWidth = GetScreenWidth();
     int screenHeight = GetScreenHeight();
 
@@ -196,10 +194,9 @@ void drawMap(Camera2D camera) {
     Vector2 playerWorldPos = GetScreenToWorld2D(player.position, camera);
     int playerRow = (int)(playerWorldPos.y / 32) + 1;  // Convert world Y to tile row
 
-
     BeginMode2D(camera);
 
-    // **Step 1: Draw all background tiles first**
+    // **Step 1: Draw background tiles**
     for (int row = startRow; row <= endRow; row++) {
         for (int col = startCol; col <= endCol; col++) {
             Vector2 position = { col * 32, row * 32 };
@@ -208,44 +205,45 @@ void drawMap(Camera2D camera) {
         }
     }
 
-    // **Step 2: Draw objects and the player at the right moment**
+    // **Step 2: Draw details layer (always under the player)**
     for (int row = startRow; row <= endRow; row++) {
         for (int col = startCol; col <= endCol; col++) {
             Vector2 position = { col * 32, row * 32 };
             Rectangle block = { position.x, position.y, 32, 32 };
 
-
-
+            if (objects[row][col] >= 2000 && objects[row][col] <= 2999) {
+                drawPlaceable(objects[row][col] - 2000, block);
+            }
+            if (details[row][col] >= 2000 && details[row][col] <= 2999) {
+                drawPlaceable(details[row][col] - 2000, block);
+            }
             
+        }
+    }
+
+    // **Step 3: Draw objects and the player at the right moment**
+    for (int row = startRow; row <= endRow; row++) {
+        for (int col = startCol; col <= endCol; col++) {
+            Vector2 position = { col * 32, row * 32 };
+            Rectangle block = { position.x, position.y, 32, 32 };
 
             // **Draw the player at the correct row**
             if (playerRow == row) {
                 EndMode2D();
                 drawPlayer(&player);
-                //DrawRectangle(player.position.x, player.position.y, 50,50, RED);
                 BeginMode2D(camera);
-                
             }
 
             // **Draw objects**
             if (objects[row][col] >= 1000 && objects[row][col] <= 1999) {
                 drawTree(objects[row][col] - 1000, block);
-            } else if (objects[row][col] >= 2000 && objects[row][col] <= 2999) {
-                drawPlaceable(objects[row][col] - 2000, block);
             } else if (objects[row][col] == 11) {
                 drawWall(row, col, wallSet);
             }
-
-            
-            // **Draw details layer (doors, decals)**
-            if (details[row][col] >= 2000 && details[row][col] <= 2999) {
-                drawPlaceable(details[row][col] - 2000, block);
-            }
         }
     }
-    
-
 
     EndMode2D();
 }
+
 
