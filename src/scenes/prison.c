@@ -9,6 +9,8 @@
 #include "../scripts/map/objects.h"
 #include "../scripts/textures.h"
 #include "../scripts/debugCMD.h"
+#include "../scripts/player/inventory.h"
+
 
 
 
@@ -75,6 +77,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     //drawPlayer(&player);
     updatePlayer(&player, GetFrameTime(), objects, details, rows, cols, camera);
 
+    drawInventory();
 
 
     // Draw player collider in green
@@ -121,7 +124,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
        
     } 
     if(IsKeyPressed(KEY_E)) {
-        *currentScene = INVENTORY;
+        //*currentScene = INVENTORY;
         //isCameraInitialized = false;  // Mark camera as initialized
         //unloadPlayer(&player);
        

@@ -56,9 +56,6 @@ int main(){
             case PAUSE:
                 pauseScene();
                 break;
-            case INVENTORY:
-                inventoryScene();
-                break;
             case STARTGAME:
                 startGameScene();
                 break;
