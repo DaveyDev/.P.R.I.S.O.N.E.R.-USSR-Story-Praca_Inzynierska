@@ -78,6 +78,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     updatePlayer(&player, GetFrameTime(), objects, details, rows, cols, camera);
 
     drawInventory();
+    
+
 
 
     // Draw player collider in green
