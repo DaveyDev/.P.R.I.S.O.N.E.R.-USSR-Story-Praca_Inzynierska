@@ -24,14 +24,16 @@ int addItemToInventory(int id, const char *name) {
             inventory[i].id = id;
             strncpy(inventory[i].name, name, sizeof(inventory[i].name) - 1);
             inventory[i].quantity = 1;
+            printf("Inventory slot %d filled with item %d (%s)\n", i, id, name);
             return 1; // Successfully added
         }
     }
+    printf("Failed to add item to inventory: No space\n");
     return 0; // Inventory full
 }
 
 void saveInventory() {
-    FILE *file = fopen("data/inventory.dat", "w");
+    FILE *file = fopen("data/saves/inventory.dat", "w");
     if (!file) {
         fprintf(stderr, "Error saving inventory\n");
         return;
@@ -45,7 +47,7 @@ void saveInventory() {
 }
 
 void loadInventory() {
-    FILE *file = fopen("data/inventory.dat", "r");
+    FILE *file = fopen("data/saves/inventory.dat", "r");
     if (!file) return;
     
     initInventory();
@@ -72,6 +74,7 @@ void drawInventory() {
 
         if (inventory[i].id != -1) {
             DrawText(inventory[i].name, slot.x + 5, slot.y + 5, 10, BLACK);
+            //printf("Inventory Slot %d: %s (ID %d)\n", i, inventory[i].name, inventory[i].id);
         }
     }
 }

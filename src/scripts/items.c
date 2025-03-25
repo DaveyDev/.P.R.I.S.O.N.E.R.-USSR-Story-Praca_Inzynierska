@@ -11,11 +11,20 @@ int itemCount = 0;
 void pickUpItem(int index) {
     if (index < 0 || index >= itemCount) return;
 
+    printf("Attempting to pick up item: %d (%s) at index %d\n", items[index].id, items[index].itemName, index);
+
     if (addItemToInventory(items[index].id, items[index].itemName)) {
+        printf("Item added to inventory successfully!\n");
+
+        // Shift the remaining items in the array to "remove" it
         for (int i = index; i < itemCount - 1; i++) {
-            items[i] = items[i + 1]; // Shift items left
+            items[i] = items[i + 1];
         }
+
         itemCount--; // Reduce item count
+        printf("Item removed from the map. Remaining items: %d\n", itemCount);
+    } else {
+        printf("Inventory is full. Cannot pick up item.\n");
     }
 }
 
@@ -28,11 +37,13 @@ void updateItems(Camera2D camera) {
             Rectangle itemBounds = { items[i].itemPos.x, items[i].itemPos.y, 16, 16 };
             if (CheckCollisionPointRec(worldMousePos, itemBounds)) {
                 pickUpItem(i);
+                //drawInventory();  // Force UI update after pickup
                 break;
             }
         }
     }
 }
+
 
 void saveItems() {
     FILE *file = fopen("data/levels/test/items.dat", "w");

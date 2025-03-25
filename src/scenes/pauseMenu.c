@@ -8,6 +8,7 @@
 #include "../scripts/translation.h"
 #include "../scripts/items.h"
 #include "../scripts/textures.h"
+#include "../scripts/player/inventory.h"
 
 
 
@@ -60,6 +61,7 @@ void pauseScene(){
     }
     if (GuiButton(exitBtn, getTranslation("pause_exit"))) {
         saveItems();
+        saveInventory();
         *currentScene = MENU;
     }
 

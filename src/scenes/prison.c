@@ -33,6 +33,9 @@ void prisonScene() {
         wasMapLoaded = true;
         
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
+        initInventory();
+        loadInventory();
+
     }
 
     // Initialize the camera only once
@@ -123,6 +126,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
         *currentScene = PAUSE;
         //isCameraInitialized = false;  // Mark camera as initialized
         //unloadPlayer(&player);
+        
        
     } 
     if(IsKeyPressed(KEY_E)) {
