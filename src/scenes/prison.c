@@ -80,7 +80,15 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     //drawPlayer(&player);
     updatePlayer(&player, GetFrameTime(), objects, details, rows, cols, camera);
 
-    drawInventory();
+    handleInventoryClick();  // Click inventory to pick up items
+    placeSelectedItem(camera);  // Right-click to place items
+    updateItems(camera);  // Left-click to pick up items
+    drawItems(camera);  // Draw items in the world
+    drawInventory();  // Draw the inventory bar
+    drawSelectedItem();  // Show held item when dragging
+
+
+
     
 
 

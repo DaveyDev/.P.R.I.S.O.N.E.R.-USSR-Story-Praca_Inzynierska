@@ -27,7 +27,7 @@ void pickUpItem(int index) {
         printf("Inventory is full. Cannot pick up item.\n");
     }
 }
-
+/*
 void updateItems(Camera2D camera) {
     Vector2 mousePos = GetMousePosition();
     Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
@@ -42,7 +42,33 @@ void updateItems(Camera2D camera) {
             }
         }
     }
+}*/
+void updateItems(Camera2D camera) {
+    Vector2 mousePos = GetMousePosition();
+    Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
+
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        for (int i = 0; i < itemCount; i++) {
+            Rectangle itemBounds = { items[i].itemPos.x, items[i].itemPos.y, 16, 16 };
+            if (CheckCollisionPointRec(worldMousePos, itemBounds)) {
+                // Try adding the item to the inventory
+                if (addItemToInventory(items[i].id, "Item")) {
+                    // If successful, reduce quantity or remove it
+                    items[i].quantity--;
+                    if (items[i].quantity <= 0) {
+                        // Remove from map by shifting remaining items
+                        for (int j = i; j < itemCount - 1; j++) {
+                            items[j] = items[j + 1];
+                        }
+                        itemCount--; 
+                    }
+                }
+                return;
+            }
+        }
+    }
 }
+
 
 
 void saveItems() {
@@ -108,7 +134,7 @@ void loadItems(const char *filename) {
 
 // Function to draw items on the screen
 // Function to draw items on the screen relative to the camera
-void drawItems(Camera2D camera) {
+/*void drawItems(Camera2D camera) {
     for (int i = 0; i < itemCount; i++) {
         // Convert world coordinates to screen coordinates
         Vector2 screenPos = GetWorldToScreen2D(items[i].itemPos, camera);
@@ -129,5 +155,31 @@ void drawItems(Camera2D camera) {
         Vector2 destPos = { screenPos.x, screenPos.y }; // Calculate scaled destination position
         Rectangle itemDest = { destPos.x, destPos.y, itemsWidth * scale, itemsHeight * scale }; // Define the destination rectangle with scaled width and height
         DrawTexturePro(itemsSet, itemSource, itemDest, (Vector2){0, 0}, 0.0f, WHITE); // Draw the scaled item
+    }
+}*/
+
+void drawItems(Camera2D camera) {
+    for (int i = 0; i < itemCount; i++) {
+        Vector2 screenPos = GetWorldToScreen2D(items[i].itemPos, camera);
+
+        int itemsWidth = 32;
+        int itemsHeight = 32;
+        int itemsPerRow = itemsSet.width / itemsWidth;
+        int itemIndex = items[i].id - 3000;
+
+        int row = itemIndex / itemsPerRow;
+        int col = itemIndex % itemsPerRow;
+
+        Rectangle itemSource = { col * itemsWidth, row * itemsHeight, itemsWidth, itemsHeight };
+        Rectangle itemDest = { screenPos.x, screenPos.y, itemsWidth, itemsHeight };
+
+        DrawTexturePro(itemsSet, itemSource, itemDest, (Vector2){0, 0}, 0.0f, WHITE);
+
+        // If stackable, draw quantity text
+        if (items[i].quantity > 1) {
+            char quantityText[8];
+            snprintf(quantityText, sizeof(quantityText), "x%d", items[i].quantity);
+            DrawText(quantityText, screenPos.x + 10, screenPos.y + 10, 14, BLACK);
+        }
     }
 }
