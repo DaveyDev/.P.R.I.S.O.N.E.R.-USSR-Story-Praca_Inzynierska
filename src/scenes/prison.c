@@ -74,8 +74,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drawMap(camera);
     updateMap(camera);
 
-    drawItems(camera);
-    updateItems(camera);
+    //drawItems(camera);
+    //updateItems(camera);
 
     //drawPlayer(&player);
     updatePlayer(&player, GetFrameTime(), objects, details, rows, cols, camera);

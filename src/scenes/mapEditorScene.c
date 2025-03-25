@@ -5,6 +5,8 @@
 #include "../scripts/global.h"
 #include "../scripts/map/editMap.h"
 #include "../scripts/items.h"
+#include "../scripts/player/inventory.h"
+#include "../scripts/map/objects.h"
 
 bool wasMapLoadedE = false;
 
@@ -28,6 +30,11 @@ void mapsEditorScene() {
         loadMap(mapPath);
         loadItems(itemPath);
         wasMapLoadedE = true;
+
+        initInventory();
+        loadInventory();
+
+       
         
     }
 
@@ -53,8 +60,14 @@ void mapsEditorScene() {
     drawMap(cameraE);
     updateMap(cameraE);
     editMap(cameraE);
-    drawItems(cameraE);
     updateItems(cameraE);
+    drawItems(cameraE);
+    
+
+    
+
+    
+
 
     Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), cameraE);
     Vector2 mouseTilePos = (Vector2){(int)(mouseWorldPos.x / TILE_SIZE), (int)(mouseWorldPos.y / TILE_SIZE)};
@@ -113,8 +126,14 @@ void mapsEditorScene() {
 
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y < GetScreenHeight() - panelHeight) {
+        Vector2 worldMousePos = GetScreenToWorld2D(GetMousePosition(), cameraE);
+
         if (mode == 0) setTile(mouseTilePos, selectedTile, selectedObject);
         if (mode == 1) setTile(mouseTilePos, 0, selectedObject);
+        if (mode == 2) addItem(worldMousePos, selectedTile, 1, "Custom Item"); // Adjust name as needed
+
     }
+
+
 }
 

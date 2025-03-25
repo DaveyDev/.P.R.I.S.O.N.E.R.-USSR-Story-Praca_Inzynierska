@@ -26,7 +26,7 @@ void menuScene(){
     int dynamicSubitleFontSize = subtitleFontSize * (GetScreenWidth() / 800);  // Scale font size relative to base resolution
 
     ClearBackground(bgColor);
-    DrawTexture(mainMenuBackground, 0, 0, WHITE);
+    //DrawTexture(mainMenuBackground, 0, 0, WHITE);
     // Draw the texture with scaling
     Vector2 position = { 0, 0 };  // Position where the texture will be drawn
     float scaleMenu = (float)GetScreenHeight() / 800.0f;

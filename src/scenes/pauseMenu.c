@@ -33,8 +33,26 @@ void pauseScene(){
     ClearBackground(bgColor);
 
     Vector2 position = { -100, 0 };  // Position where the texture will be drawn
-    float scaleMenu = (float)GetScreenHeight() / 1000.0f;
+    float scaleMenu = (float)GetScreenHeight() / 500.0f;
     DrawTextureEx(pauseMenuBackground, position, 0.0f, scaleMenu, WHITE);
+
+    int screenWidth = GetScreenWidth();
+    int screenHeight = GetScreenHeight();
+
+
+        // Calculate 1/16 smaller than window size
+    int rectWidth = screenWidth * 12 / 16;
+    int rectHeight = screenHeight * 12 / 16;
+
+    // Center position (rectangle's center)
+    Vector2 rectPosition = { screenWidth / 2, screenHeight / 2 };
+    // Origin at the center
+    Vector2 origin = { rectWidth / 2, rectHeight / 2 };
+
+    // Draw the rectangle centered on screen
+    DrawRectanglePro((Rectangle){ rectPosition.x, rectPosition.y, rectWidth, rectHeight }, 
+                 origin, 0, greySeeThroughColor);
+
 
     //drawMap(camera);
 

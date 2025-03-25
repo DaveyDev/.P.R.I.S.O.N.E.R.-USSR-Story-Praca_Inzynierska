@@ -183,3 +183,21 @@ void drawItems(Camera2D camera) {
         }
     }
 }
+
+void addItem(Vector2 position, int itemID, int quantity, const char *name) {
+    if (itemCount >= MAX_ITEMS) {
+        printf("Cannot add more items, inventory is full!\n");
+        return;
+    }
+
+    items[itemCount].id = itemID;
+    items[itemCount].quantity = quantity;
+    items[itemCount].itemPos = position;
+    strncpy(items[itemCount].itemName, name, NAME_LEN - 1);
+    items[itemCount].itemName[NAME_LEN - 1] = '\0'; // Ensure null termination
+
+    printf("Added item %d (%s) at (%.2f, %.2f)\n", itemID, name, position.x, position.y);
+
+    itemCount++;
+}
+
