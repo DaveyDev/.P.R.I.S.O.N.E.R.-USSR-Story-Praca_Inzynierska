@@ -69,6 +69,7 @@ void loadMap(const char *filename) {
     }
 
     fclose(file);
+    printf("map loaded succesfully\n");
 }
 
 void saveMap(const char *filename) {

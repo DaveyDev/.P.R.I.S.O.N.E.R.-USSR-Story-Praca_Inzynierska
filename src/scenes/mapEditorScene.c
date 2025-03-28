@@ -8,6 +8,13 @@
 #include "../scripts/player/inventory.h"
 #include "../scripts/map/objects.h"
 
+#include "../scripts/player/player.h"
+#include "../scripts/animation.h"
+#include "../scripts/textures.h"
+#include "../scripts/debugCMD.h"
+
+
+
 bool wasMapLoadedE = false;
 
 // Persistent camera state variables
@@ -28,11 +35,16 @@ void mapsEditorScene() {
         snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
         snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
         loadMap(mapPath);
+        
+        initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
+        player.position.x = -100;
+        player.position.y = -100;
+
         loadItems(itemPath);
         wasMapLoadedE = true;
 
-        initInventory();
-        loadInventory();
+        //initInventory();
+        //loadInventory();
 
        
         

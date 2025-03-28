@@ -5,6 +5,9 @@
 #include "../scripts/map/map.h"
 #include "../scripts/map/editMap.h"
 
+
+
+
 #define MAX_NAME_LENGTH 64
 
 //char mapName[MAX_NAME_LENGTH] = "";  // Store entered map name
