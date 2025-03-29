@@ -201,3 +201,16 @@ void addItem(Vector2 position, int itemID, int quantity, const char *name) {
     itemCount++;
 }
 
+//Hubert
+void drawItemEditor(int itemIndex, Rectangle block) {
+    int itemWidth = 32;  // Width of the tree in the texture atlas
+    int itemHeight = 32; // Height of the tree in the texture atlas
+    int itemsPerRow = itemsSet.width / itemWidth;
+
+    // Calculate the x and y coordinates in the atlas
+    int row = itemIndex / itemsPerRow;
+    int col = itemIndex % itemsPerRow;
+
+    Rectangle itemSource = { col * itemWidth, row * itemHeight, itemWidth, itemHeight };
+    DrawTextureRec(itemsSet, itemSource, (Vector2){ block.x, block.y}, WHITE);  // Adjust y offset as needed
+}

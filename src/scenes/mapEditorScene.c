@@ -135,6 +135,28 @@ void mapsEditorScene() {
 
     DrawText(TextFormat("Tile: %d", selectedTile), 10, 40, 20, WHITE);
     DrawText(TextFormat("Mode: %d", mode), 10, 70, 20, WHITE);
+    
+    Rectangle block = { 150, 30, TILE_SIZE, TILE_SIZE }; // Position next to text
+    
+    // Determine the correct tile to draw
+    int displayTile = selectedTile;
+    if (selectedTile >= 2000 && selectedTile <= 2999) {
+        displayTile -= 2000; // Adjust for placeables
+        drawPlaceable(displayTile, block);
+    } else if (selectedTile >= 1000 && selectedTile <= 1999) {
+        block = (Rectangle){ 150, 150, TILE_SIZE, TILE_SIZE };
+        displayTile -= 1000; // Adjust for trees
+        drawTree(displayTile, block);
+        block = (Rectangle){ 150, 30, TILE_SIZE, TILE_SIZE };
+    }
+    else if (selectedTile >= 3000 && selectedTile <= 3999) {
+        displayTile -= 3000; // Adjust for trees
+        drawItemEditor(displayTile, block);
+    }
+
+// Draw the selected tile next to the text
+    
+    
 
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y < GetScreenHeight() - panelHeight) {

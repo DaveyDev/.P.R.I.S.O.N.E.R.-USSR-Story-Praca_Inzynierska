@@ -22,7 +22,7 @@ void updateItems(Camera2D camera);
 void saveItems();
 void pickUpItem(int index);
 void addItem(Vector2 position, int itemID, int quantity, const char *name);
-
+void drawItemEditor(int itemIndex, Rectangle block);
 
 
 #endif
