@@ -13,7 +13,6 @@ InventoryItem inventory[INVENTORY_SIZE];
 InventoryItem selectedItem = { .id = -1, .quantity = 0 };
 
 
-
 void initInventory() {
     for (int i = 0; i < INVENTORY_SIZE; i++) {
         inventory[i].id = -1; // -1 means empty slot
@@ -128,26 +127,13 @@ void handleInventoryClick() {
     }
 }
 
-/*
+
 void placeSelectedItem(Camera2D camera) {
-    if (selectedItem.id != -1 && IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+    if (selectedItem.id != -1 && IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();
         Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
-
-        if (itemCount < MAX_ITEMS) {
-            items[itemCount].id = selectedItem.id;
-            items[itemCount].quantity = 1;
-            items[itemCount].itemPos = worldPos;
-            itemCount++;
-
-            selectedItem.id = -1; // Remove from hand
-        }
-    }
-}*/
-void placeSelectedItem(Camera2D camera) {
-    if (selectedItem.id != -1 && IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-        Vector2 mousePos = GetMousePosition();
-        Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
+        worldPos.x = worldPos.x - 8; //offset so placing items feels more natural
+        worldPos.y = worldPos.y - 8;
 
         // Check if an item of the same type is already there
         for (int i = 0; i < itemCount; i++) {
@@ -171,6 +157,8 @@ void placeSelectedItem(Camera2D camera) {
         }
     }
 }
+
+
 
 void drawSelectedItem() {
     if (selectedItem.id != -1) {

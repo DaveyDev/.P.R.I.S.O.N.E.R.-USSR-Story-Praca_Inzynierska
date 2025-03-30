@@ -121,6 +121,8 @@ void mapsEditorScene() {
         snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
         saveMap(mapPath);
         printf("saved map");
+        saveItems();
+        printf("saved items");
     }
 
     // Exit Button
