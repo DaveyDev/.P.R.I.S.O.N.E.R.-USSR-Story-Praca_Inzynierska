@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 #include "../../lib/raylib.h"
+#include "items.h"
+#include "player/inventory.h"
 
 #define MAX_INPUT_LENGTH 128
 
@@ -24,6 +26,19 @@ void processCommand() {
     } else if (strcmp(inputBuffer, "colliders false") == 0) {
         showColliders = false;
         printf("Colliders disabled.\n");
+    } else if (strncmp(inputBuffer, "give ", 5) == 0) {
+        int itemID;
+
+        // Try to parse the command format: "give <id>"
+        if (sscanf(inputBuffer + 5, "%d", &itemID) == 1) {
+            if (addItemToInventory(itemID, "Unknown Item")) {
+                printf("Given item with ID: %d\n", itemID);
+            } else {
+                printf("Inventory full! Cannot give item.\n");
+            }
+        } else {
+            printf("Invalid format! Use: give <id>\n");
+        }
     } else {
         printf("Unknown command: %s\n", inputBuffer);
     }

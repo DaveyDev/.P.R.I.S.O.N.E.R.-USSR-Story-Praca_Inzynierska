@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include "../scripts/global.h"
 #include "../scripts/translation.h"
-
+#include "string.h"
+#include "../scripts/newGame.h"
 
 
 
@@ -45,14 +46,22 @@ void startGameScene(){
 
 
     if (GuiButton(playBtn, getTranslation("startgame_newgame"))) {
-     *currentScene = GAME;
+        strcpy(mapName, "test");
+        snprintf(mapPath, sizeof(mapPath), "data/levels/%s/map.map", mapName);
+        snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
+        makeGameSave(mapName);
+        *currentScene = GAME;
     }
     if (GuiButton(optionsBtn, getTranslation("startgame_loadsave"))) {
-     *currentScene = MENU;
+        strcpy(mapName, "save1");
+        snprintf(mapPath, sizeof(mapPath), "data/saves/%s/map.map", mapName);
+        snprintf(itemPath, sizeof(itemPath), "data/saves/%s/items.dat", mapName);
+        *currentScene = GAME;
     }
     if (GuiButton(exitBtn, getTranslation("general_back"))) {
-     *currentScene = MENU;
+        *currentScene = MENU;
     }
+
 
     
     

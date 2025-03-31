@@ -36,7 +36,7 @@ int addItemToInventory(int id, const char *name) {
 }
 
 void saveInventory() {
-    FILE *file = fopen("data/saves/inventory.dat", "w");
+    FILE *file = fopen("data/saves/save1/inventory.dat", "w"); //just temporary 
     if (!file) {
         fprintf(stderr, "Error saving inventory\n");
         return;
@@ -50,7 +50,7 @@ void saveInventory() {
 }
 
 void loadInventory() {
-    FILE *file = fopen("data/saves/inventory.dat", "r");
+    FILE *file = fopen("data/saves/save1/inventory.dat", "r"); //just temporary 
     if (!file) return;
     
     initInventory();

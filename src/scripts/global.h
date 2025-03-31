@@ -38,7 +38,10 @@ extern Resolution resolutions[];
 extern int currentResolutionIndex;
 extern const int numResolutions;  // Declare the number of resolutions
 
+extern char mapPath[256];
+extern char itemPath[256];
 
+extern bool wasMapLoaded;
 
 
 void initGlobals();

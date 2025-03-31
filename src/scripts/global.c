@@ -48,8 +48,10 @@ const int numResolutions = sizeof(resolutions) / sizeof(resolutions[0]);  // Now
 
 char language[16] = "ENG";       // Default language
 
+char mapPath[256] = "\0";
+char itemPath[256] = "\0";
 
-
+bool wasMapLoaded = false;
 
 void initGlobals() {
     currentScene = (AppScene *)malloc(sizeof(AppScene));

@@ -72,7 +72,7 @@ void updateItems(Camera2D camera) {
 
 
 void saveItems() {
-    FILE *file = fopen("data/levels/test/items.dat", "w");
+    FILE *file = fopen("data/saves/save1/items.dat", "w");
     if (!file) {
         fprintf(stderr, "Error saving items\n");
         return;

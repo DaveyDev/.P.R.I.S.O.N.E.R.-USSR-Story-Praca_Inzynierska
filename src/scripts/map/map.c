@@ -37,7 +37,9 @@ void loadMap(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("Error: Could not open file.\n");
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
+        wasMapLoaded = false;
+        *currentScene = MENU;
     }
 
     // Read the number of rows and columns from the file
@@ -69,6 +71,7 @@ void loadMap(const char *filename) {
     }
 
     fclose(file);
+    wasMapLoaded = true;
     printf("map loaded succesfully\n");
 }
 

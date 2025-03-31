@@ -14,7 +14,7 @@
 
 
 
-bool wasMapLoaded = false;
+
 
 // Persistent camera state variables
 Camera2D camera = { 0 };   // Define the camera outside of the function
@@ -28,9 +28,13 @@ void prisonScene() {
 
     // Load the map if not already loaded
     if (!wasMapLoaded) {
-        loadMap("data/levels/test/test.map");
-        loadItems("data/levels/test/items.dat");
-        wasMapLoaded = true;
+        
+        //snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
+
+        //loadMap("data/levels/test/test.map");
+        loadMap(mapPath);
+        loadItems(itemPath);
+         
         
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
         initInventory();
