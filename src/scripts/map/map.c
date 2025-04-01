@@ -149,18 +149,18 @@ void updateMap(Camera2D camera) {
     }
 
     
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        if (map[row][col] == Grass) {
+    //if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        //if (map[row][col] == Grass) {
             //map[row][col] = Dirt;
-        } else if (map[row][col] == Dirt) {
+        //} else if (map[row][col] == Dirt) {
             //map[row][col] = Grass;
-        }
-    }
+        //}
+    //}
 
     // Right click to toggle between objects (objects array)
-    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-        updateObjects(objects, rows, cols, worldMousePos);
-    }
+    //if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+        //updateObjects(objects, rows, cols, worldMousePos);
+    //}
     
 }
 

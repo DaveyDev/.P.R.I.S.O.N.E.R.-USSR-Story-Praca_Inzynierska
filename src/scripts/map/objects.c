@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "../global.h"
 #include <stdio.h>
-#include "../idList.h"
+#include "../items/idList.h"
 #include "../map/map.h"
 
 WallMapping wall_neighbours_to_atlas_coord[] = { // top, bottom, left, right

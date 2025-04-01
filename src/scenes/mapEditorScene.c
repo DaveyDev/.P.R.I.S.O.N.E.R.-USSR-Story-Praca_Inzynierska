@@ -4,14 +4,14 @@
 #include "../scripts/map/map.h"
 #include "../scripts/global.h"
 #include "../scripts/map/editMap.h"
-#include "../scripts/items.h"
+#include "../scripts/items/items.h"
 #include "../scripts/player/inventory.h"
 #include "../scripts/map/objects.h"
 
 #include "../scripts/player/player.h"
 #include "../scripts/animation.h"
 #include "../scripts/textures.h"
-#include "../scripts/debugCMD.h"
+#include "../scripts/cheats/debugCMD.h"
 
 
 

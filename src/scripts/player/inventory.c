@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "inventory.h"
-#include "../items.h"
+#include "../items/items.h"
 #include "../textures.h"
 
 #define INVENTORY_SIZE 5

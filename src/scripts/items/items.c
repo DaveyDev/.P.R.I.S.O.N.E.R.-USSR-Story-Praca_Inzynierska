@@ -1,9 +1,9 @@
 #include "items.h"
-#include "player/inventory.h"
+#include "../player/inventory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "textures.h"
+#include "../textures.h"
 
 Item items[MAX_ITEMS];  // Define the actual storage
 int itemCount = 0;  

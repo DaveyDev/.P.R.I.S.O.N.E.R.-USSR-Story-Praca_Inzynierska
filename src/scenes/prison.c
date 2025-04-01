@@ -5,10 +5,10 @@
 #include "../scripts/global.h"
 #include "../scripts/player/player.h"
 #include "../scripts/animation.h"
-#include "../scripts/items.h"
+#include "../scripts/items/items.h"
 #include "../scripts/map/objects.h"
 #include "../scripts/textures.h"
-#include "../scripts/debugCMD.h"
+#include "../scripts/cheats/debugCMD.h"
 #include "../scripts/player/inventory.h"
 
 
@@ -85,7 +85,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drawInventory();  // Draw the inventory bar
     drawSelectedItem();  // Show held item when dragging
 
-    
+
 
     
 

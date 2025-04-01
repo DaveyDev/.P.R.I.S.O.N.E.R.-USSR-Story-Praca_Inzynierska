@@ -1,7 +1,7 @@
 #ifndef ITEMS_H
 #define ITEMS_H
 
-#include "../../lib/raylib.h"
+#include "../../../lib/raylib.h"
 
 #define MAX_ITEMS 100
 #define NAME_LEN 20

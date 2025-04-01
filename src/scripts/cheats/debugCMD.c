@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "../../lib/raylib.h"
-#include "items.h"
-#include "player/inventory.h"
+#include "../../../lib/raylib.h"
+#include "../items/items.h"
+#include "../player/inventory.h"
 
 #define MAX_INPUT_LENGTH 128
 

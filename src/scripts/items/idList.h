@@ -26,6 +26,15 @@ typedef enum {
     LIGHTGREY_DOOR = 2017,
     OPEN_GREY_DOOR = 2018,
     OPEN_LIGHTGREY_DOOR = 2019,
+    LOCKED_GREY_DOOR = 2020,
+    LOCKED_LIGHTGREY_DOOR = 2021,
+    STOOL = 2022,
+    CABINET = 2023,
+    GREEN_BED_UPPER = 2024,
+    GREEN_BED_BOTTOM = 2025,
+    DARKGREY_EMPTY = 2026,
+    BARBED_WIRE = 2027,
+    OAK_WOODEN_FLOOR = 2028,
 
     
     //ITEMS
@@ -40,6 +49,15 @@ typedef enum {
     AXE = 3008,
     DAGGER = 3009,
     PICKAXE = 3010,
+    WOOD_LOG = 3011,
+    COAL = 3012,
+    IRON_NUGGET = 3013,
+    COPPER_NUGGET = 3014,
+    URANIUM_NUGGET = 3015,
+    GOLD_NUGGET = 3016,
+    REVOLVER = 3017,
+    HANDY_STALIN_PIC = 3018,
+    GREY_KEY = 3019,
 
     // Add more as needed
 } idList;

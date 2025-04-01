@@ -10,7 +10,7 @@
 #include "src/scripts/styles.h"
 #include "src/scripts/textures.h"
 #include "src/scripts/translation.h"
-#include "src/scripts/debugCMD.h"
+#include "src/scripts/cheats/debugCMD.h"
 
 bool exitMenu = false;
 

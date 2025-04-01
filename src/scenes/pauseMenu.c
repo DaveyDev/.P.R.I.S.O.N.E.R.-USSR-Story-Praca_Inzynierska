@@ -6,7 +6,7 @@
 #include "../scripts/global.h"
 #include "../scripts/map/map.h"
 #include "../scripts/translation.h"
-#include "../scripts/items.h"
+#include "../scripts/items/items.h"
 #include "../scripts/textures.h"
 #include "../scripts/player/inventory.h"
 

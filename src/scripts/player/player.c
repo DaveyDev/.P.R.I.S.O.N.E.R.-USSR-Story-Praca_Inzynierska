@@ -1,7 +1,7 @@
 #include "player.h"
 #include "../map/objects.h"
 #include "../map/objects.h"
-#include "../idList.h"
+#include "../items/idList.h"
 #include <math.h>
 
 Player player;
