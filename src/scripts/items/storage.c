@@ -1,32 +1,89 @@
 #include "storage.h"
 #include "../../../lib/raylib.h"
 #include <stdio.h>
+#include "idList.h"
+#include "../global.h"
 
-Chest chests[MAX_CHESTS];
 
-void InitChests() {
-    for (int i = 0; i < MAX_CHESTS; i++) {
-        chests[i].position = (Vector2){50 + i * 100, 50}; // Example placement
-        chests[i].storage.itemCount = 0;
-        chests[i].isOpen = false;
+
+Inventory playerInventory;
+Chest chestData[100][100];  
+
+int openedChestRow = -1, openedChestCol = -1; // Track opened chest position
+bool chestUIOpen = false; // Is the chest window open?
+
+bool IsChest(int objectID) {
+    return objectID == CABINET;
+}
+
+void UpdateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
+    int row = player.position.y / TILE_SIZE;
+    int col = player.position.x / TILE_SIZE;
+
+    if (row < 0 || col < 0 || row >= mapRows || col >= mapCols) return;
+
+    // Check if left mouse button is clicked on a chest
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        Vector2 mousePos = GetMousePosition();
+        Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
+        
+        int clickedCol = (int)(worldMousePos.x / 32);
+        int clickedRow = (int)(worldMousePos.y / 32);
+
+        printf("row: %i, col: %i\n", clickedRow, clickedCol);
+        printf("IsChest: %d\n", IsChest(objects[clickedRow][clickedCol]));
+        printf("Object ID at [%i, %i]: %d\n", clickedRow, clickedCol, objects[clickedRow][clickedCol]);
+
+
+        if (clickedRow >= 0 && clickedCol >= 0 && clickedRow < mapRows && clickedCol < mapCols) {
+            if (IsChest(objects[clickedRow][clickedCol])) {
+                chestUIOpen = !chestUIOpen;  // Toggle chest UI
+                printf("chest opened\n");
+                
+                if (chestUIOpen) {
+                    openedChestRow = clickedRow;
+                    openedChestCol = clickedCol;
+                } else {
+                    openedChestRow = -1;
+                    openedChestCol = -1;
+                }
+            }
+        }
     }
 }
 
-void OpenChest(int chestIndex) {
-    if (chestIndex < 0 || chestIndex >= MAX_CHESTS) return;
-    chests[chestIndex].isOpen = !chests[chestIndex].isOpen;
+
+void DrawChestUI() {
+    if (!chestUIOpen || openedChestRow == -1 || openedChestCol == -1) return;
+
+    Chest *chest = &chestData[openedChestRow][openedChestCol];
+
+    int uiX = GetScreenWidth() / 2 - 100;
+    int uiY = GetScreenHeight() / 2 - 100;
+    DrawRectangle(uiX, uiY, 200, 200, DARKGRAY);
+    DrawText("Chest Inventory", uiX + 20, uiY + 10, 20, WHITE);
+
+    for (int i = 0; i < chest->storage.itemCount; i++) {
+        DrawText(TextFormat("Item %d: %d", i, chest->storage.items[i]), uiX + 20, uiY + 40 + i * 20, 18, WHITE);
+    }
+
+    DrawText("[G] Take Item | [Esc] Close", uiX + 20, uiY + 170, 16, WHITE);
+
+    if (IsKeyPressed(KEY_G)) RetrieveItemFromChest(openedChestRow, openedChestCol, &playerInventory);
+    if (IsKeyPressed(KEY_ESCAPE)) chestUIOpen = false;
 }
 
-bool StoreItemInChest(int chestIndex, int itemID, Inventory *playerInventory) {
-    if (chestIndex < 0 || chestIndex >= MAX_CHESTS) return false;
-    Chest *chest = &chests[chestIndex];
+bool StoreItemInChest(int row, int col, int itemID, Inventory *playerInventory) {
+    int objectID = objects[row][col];  
+    if (!IsChest(objectID)) return false;
 
-    if (chest->storage.itemCount >= MAX_ITEMS) return false; // Chest full
 
-    // Add item to chest
+    Chest *chest = &chestData[row][col];
+
+    if (chest->storage.itemCount >= MAX_ITEMS_IN_CHEST) return false;
+
     chest->storage.items[chest->storage.itemCount++] = itemID;
 
-    // Remove item from player inventory
     for (int i = 0; i < playerInventory->itemCount; i++) {
         if (playerInventory->items[i] == itemID) {
             playerInventory->items[i] = playerInventory->items[--playerInventory->itemCount];
@@ -36,39 +93,17 @@ bool StoreItemInChest(int chestIndex, int itemID, Inventory *playerInventory) {
     return false;
 }
 
-bool RetrieveItemFromChest(int chestIndex, Inventory *playerInventory) {
-    if (chestIndex < 0 || chestIndex >= MAX_CHESTS) return false;
-    Chest *chest = &chests[chestIndex];
+bool RetrieveItemFromChest(int row, int col, Inventory *playerInventory) {
+    int objectID = objects[row][col];  
+    if (!IsChest(objectID)) return false;
 
-    if (chest->storage.itemCount == 0 || playerInventory->itemCount >= MAX_ITEMS) 
-        return false; // No items or player's inventory is full
 
-    // Transfer the last item
+    Chest *chest = &chestData[row][col];
+
+    if (chest->storage.itemCount == 0 || playerInventory->itemCount >= MAX_ITEMS_IN_CHEST) return false;
+
     int itemID = chest->storage.items[--chest->storage.itemCount];
     playerInventory->items[playerInventory->itemCount++] = itemID;
 
     return true;
-}
-
-void DrawChests() {
-    for (int i = 0; i < MAX_CHESTS; i++) {
-        Color color = chests[i].isOpen ? DARKGRAY : BROWN;
-        DrawRectangleV(chests[i].position, (Vector2){32, 32}, color);
-    }
-}
-
-void DrawChestContents(int chestIndex) {
-    if (!chests[chestIndex].isOpen) return;
-
-    for (int i = 0; i < chests[chestIndex].storage.itemCount; i++) {
-        DrawText(TextFormat("Item %d: %d", i, chests[chestIndex].storage.items[i]), 50, 100 + (i * 20), 20, WHITE);
-    }
-}
-
-void CheckChestInteraction(Vector2 playerPos) {
-    for (int i = 0; i < MAX_CHESTS; i++) {
-        if (CheckCollisionPointRec(playerPos, (Rectangle){chests[i].position.x, chests[i].position.y, 32, 32})) {
-            if (IsKeyPressed(KEY_E)) OpenChest(i);
-        }
-    }
 }

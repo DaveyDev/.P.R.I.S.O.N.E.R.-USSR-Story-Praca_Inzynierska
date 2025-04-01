@@ -10,7 +10,7 @@
 #include "../scripts/textures.h"
 #include "../scripts/cheats/debugCMD.h"
 #include "../scripts/player/inventory.h"
-
+#include "../scripts/items/storage.h"
 
 
 
@@ -85,6 +85,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drawInventory();  // Draw the inventory bar
     drawSelectedItem();  // Show held item when dragging
 
+    UpdateChests(map, rows, cols, camera);
+    DrawChestUI();  
 
 
     

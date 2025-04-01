@@ -2,29 +2,28 @@
 #define STORAGE_H
 
 #include "../../../lib/raylib.h"
+#include "../map/map.h"  // Include your map system header
 
-#define MAX_ITEMS 10
-#define MAX_CHESTS 5
+#define MAX_ITEMS_IN_CHEST 10
 
 typedef struct {
-    int items[MAX_ITEMS]; // Item IDs
+    int items[MAX_ITEMS_IN_CHEST];
     int itemCount;
 } Inventory;
 
 typedef struct {
-    Vector2 position;
     Inventory storage;
     bool isOpen;
 } Chest;
 
-extern Chest chests[MAX_CHESTS];
+extern Inventory playerInventory;
+extern int openedChestRow, openedChestCol;
+extern bool chestUIOpen;  
 
-void InitChests();
-void OpenChest(int chestIndex);
-bool StoreItemInChest(int chestIndex, int itemID, Inventory *playerInventory);
-bool RetrieveItemFromChest(int chestIndex, Inventory *playerInventory);
-void DrawChests();
-void DrawChestContents(int chestIndex);
-void CheckChestInteraction(Vector2 playerPos);
+bool IsChest(int objectID);
+void UpdateChests(int **map, int mapRows, int mapCols, Camera2D camera);
+void DrawChestUI();
+bool StoreItemInChest(int row, int col, int itemID, Inventory *playerInventory);
+bool RetrieveItemFromChest(int row, int col, Inventory *playerInventory);
 
 #endif // STORAGE_H
