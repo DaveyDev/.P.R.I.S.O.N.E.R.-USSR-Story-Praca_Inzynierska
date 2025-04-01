@@ -51,6 +51,7 @@ char language[16] = "ENG";       // Default language
 char mapPath[256] = "\0";
 char itemPath[256] = "\0";
 
+
 bool wasMapLoaded = false;
 
 void initGlobals() {

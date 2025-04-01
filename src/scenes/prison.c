@@ -29,17 +29,11 @@ void prisonScene() {
     // Load the map if not already loaded
     if (!wasMapLoaded) {
         
-        //snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
-
-        //loadMap("data/levels/test/test.map");
         loadMap(mapPath);
         loadItems(itemPath);
          
-        
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
-        initInventory();
-        loadInventory();
-
+        
     }
 
     // Initialize the camera only once
@@ -91,7 +85,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drawInventory();  // Draw the inventory bar
     drawSelectedItem();  // Show held item when dragging
 
-
+    
 
     
 

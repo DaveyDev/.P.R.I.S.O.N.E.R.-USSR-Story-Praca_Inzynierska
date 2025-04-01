@@ -7,6 +7,9 @@
 #include "../scripts/translation.h"
 #include "string.h"
 #include "../scripts/newGame.h"
+#include <unistd.h>  // For access()
+#include "../scripts/player/inventory.h"
+
 
 
 
@@ -45,19 +48,32 @@ void startGameScene(){
 
 
 
-    if (GuiButton(playBtn, getTranslation("startgame_newgame"))) {
+    if (GuiButton(playBtn, getTranslation("startgame_newgame"))) { // starts new game
         strcpy(mapName, "test");
-        snprintf(mapPath, sizeof(mapPath), "data/levels/%s/map.map", mapName);
+        snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
         snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
-        makeGameSave(mapName);
+        makeGameSave(mapName); // creates save by copying files from level to save folder
+        initInventory();
         *currentScene = GAME;
     }
-    if (GuiButton(optionsBtn, getTranslation("startgame_loadsave"))) {
-        strcpy(mapName, "save1");
-        snprintf(mapPath, sizeof(mapPath), "data/saves/%s/map.map", mapName);
-        snprintf(itemPath, sizeof(itemPath), "data/saves/%s/items.dat", mapName);
-        *currentScene = GAME;
+    
+
+    
+    bool saveExists = (access("data/saves/save1/test.map", F_OK) == 0); // Check if the file exists
+    GuiSetState(saveExists ? STATE_NORMAL : STATE_DISABLED); // Set button state
+
+    if (GuiButton(optionsBtn, getTranslation("startgame_loadsave"))) { // starts game from a save
+        strcpy(mapName, "test");
+        snprintf(mapPath, sizeof(mapPath), "data/saves/save1/%s.map", mapName);
+        snprintf(itemPath, sizeof(itemPath), "data/saves/save1/items.dat");
+        //if(access(mapPath, F_OK) == 0) *currentScene = GAME;
+        initInventory();
+        loadInventory(); 
+        *currentScene = GAME;  
+        
     }
+    GuiSetState(STATE_NORMAL); // Reset GUI state
+
     if (GuiButton(exitBtn, getTranslation("general_back"))) {
         *currentScene = MENU;
     }
