@@ -3,6 +3,7 @@
 #include "../map/objects.h"
 #include "../items/idList.h"
 #include <math.h>
+#include "../global.h"
 
 Player player;
 
@@ -53,6 +54,9 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
         (Rectangle){96, 256, 32, 64},
         
     }, 4);
+
+    player-> food = 20;
+    player -> health = 30;
     
 }
 
@@ -172,6 +176,11 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
 
     player->colliderCenter.x = worldPos.x + 13;
     player->colliderCenter.y = worldPos.y + 46;
+
+    if(player->health <= 0){
+        *currentScene = END_GAME;
+    }
+    
 }
 
 
@@ -221,5 +230,15 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
     return false;
 }
 
+
+// Function to draw player stats
+void drawPlayerStats(Player *player) {
+    // Set the font color
+    Color textColor = WHITE;
+
+    // Draw health and food at the top-left corner
+    DrawText(TextFormat("Health: %d", player->health), 10, 10, 20, textColor); // Draw health
+    DrawText(TextFormat("Food: %d", player->food), 10, 40, 20, textColor); // Draw food
+}
 
 

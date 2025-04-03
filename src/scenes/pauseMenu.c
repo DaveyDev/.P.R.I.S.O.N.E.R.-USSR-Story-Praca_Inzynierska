@@ -9,6 +9,7 @@
 #include "../scripts/items/items.h"
 #include "../scripts/textures.h"
 #include "../scripts/player/inventory.h"
+#include "../scripts/cheats/debugCMD.h"
 
 
 
@@ -68,7 +69,7 @@ void pauseScene(){
     DrawTextEx(baseFont, getTranslation("pause_menu_name"), pausePos, dynamicTitleFontSize, 2, WHITE);
 
 
-    DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
+    showFPS();
 
 
 

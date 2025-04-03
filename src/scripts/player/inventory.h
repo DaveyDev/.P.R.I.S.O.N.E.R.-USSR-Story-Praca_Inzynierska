@@ -3,7 +3,7 @@
 
 #include "../../../lib/raylib.h"
 
-#define INVENTORY_SIZE 5
+#define INVENTORY_SIZE 6
 
 typedef struct {
     int id;

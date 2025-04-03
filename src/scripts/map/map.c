@@ -8,6 +8,7 @@
 #include "../global.h"
 #include "objects.h"
 #include "../player/player.h"
+#include "../items/items.h"
 
 
 
@@ -208,6 +209,10 @@ void drawMap(Camera2D camera) {
             DrawTextureRec(grassTileset, tileSource, position, WHITE);
         }
     }
+    
+    EndMode2D();
+    drawItems(camera);
+    BeginMode2D(camera);
 
     // **Step 2: Draw details layer (always under the player)**
     for (int row = startRow; row <= endRow; row++) {

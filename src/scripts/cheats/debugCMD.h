@@ -7,5 +7,6 @@ void initDebugCMD();
 void updateDebugCMD();
 void drawDebugCMD();
 bool isShowCollidersEnabled();
+void showFPS();
 
 #endif // DEBUG_CMD_H

@@ -59,6 +59,9 @@ int main(){
             case STARTGAME:
                 startGameScene();
                 break;
+            case END_GAME:
+                endGameScene();
+                break;
             default:
                 WindowShouldClose();
                 break;

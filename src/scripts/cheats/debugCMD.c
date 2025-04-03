@@ -12,6 +12,7 @@ static bool enteringCommand = false;
 static char inputBuffer[MAX_INPUT_LENGTH] = {0};
 static int inputIndex = 0;
 static bool showColliders = false;
+static bool showFPSFlag = false;
 
 void initDebugCMD() {
     enteringCommand = false;
@@ -26,6 +27,12 @@ void processCommand() {
     } else if (strcmp(inputBuffer, "colliders false") == 0) {
         showColliders = false;
         printf("Colliders disabled.\n");
+    } else if (strcmp(inputBuffer, "showFPS true") == 0) {
+        showFPSFlag = true;
+        printf("FPS counter enabled.\n");
+    } else if (strcmp(inputBuffer, "showFPS false") == 0) {
+        showFPSFlag = false;
+        printf("FPS counter disabled.\n");
     } else if (strncmp(inputBuffer, "give ", 5) == 0) {
         int itemID;
 
@@ -92,4 +99,10 @@ void drawDebugCMD() {
 
 bool isShowCollidersEnabled() {
     return showColliders;
+}
+
+void showFPS(){
+    if(showFPSFlag){
+        DrawText(TextFormat("FPS: %d", GetFPS()), GetScreenWidth() - 130 , 10, 20, RED);
+        }
 }

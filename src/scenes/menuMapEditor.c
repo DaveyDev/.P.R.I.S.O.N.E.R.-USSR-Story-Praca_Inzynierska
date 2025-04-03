@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "../scripts/global.h"
 #include <string.h>
+#include "../scripts/cheats/debugCMD.h"
 
 
 

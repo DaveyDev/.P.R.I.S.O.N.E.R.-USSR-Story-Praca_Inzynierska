@@ -9,7 +9,7 @@
 #include "../scripts/newGame.h"
 #include <unistd.h>  // For access()
 #include "../scripts/player/inventory.h"
-
+#include "../scripts/cheats/debugCMD.h"
 
 
 
@@ -43,7 +43,7 @@ void startGameScene(){
     DrawTextEx(baseFont, getTranslation("general_saves"), subtitle1Pos, dynamicSubitleFontSize, 2, WHITE);
 
 
-    DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
+    showFPS();
 
 
 

@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include "idList.h"
 #include "../global.h"
-
+#include "../player/inventory.h"
 
 
 Inventory playerInventory;
-Chest chestData[100][100];  
+Chest chestData[100][100];
 
 int openedChestRow = -1, openedChestCol = -1; // Track opened chest position
 bool chestUIOpen = false; // Is the chest window open?
@@ -22,24 +22,16 @@ void UpdateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
 
     if (row < 0 || col < 0 || row >= mapRows || col >= mapCols) return;
 
-    // Check if left mouse button is clicked on a chest
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         Vector2 mousePos = GetMousePosition();
         Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
-        
-        int clickedCol = (int)(worldMousePos.x / 32);
-        int clickedRow = (int)(worldMousePos.y / 32);
 
-        printf("row: %i, col: %i\n", clickedRow, clickedCol);
-        printf("IsChest: %d\n", IsChest(objects[clickedRow][clickedCol]));
-        printf("Object ID at [%i, %i]: %d\n", clickedRow, clickedCol, objects[clickedRow][clickedCol]);
-
+        int clickedCol = (int)(worldMousePos.x / TILE_SIZE);
+        int clickedRow = (int)(worldMousePos.y / TILE_SIZE);
 
         if (clickedRow >= 0 && clickedCol >= 0 && clickedRow < mapRows && clickedCol < mapCols) {
             if (IsChest(objects[clickedRow][clickedCol])) {
-                chestUIOpen = !chestUIOpen;  // Toggle chest UI
-                printf("chest opened\n");
-                
+                chestUIOpen = !chestUIOpen;
                 if (chestUIOpen) {
                     openedChestRow = clickedRow;
                     openedChestCol = clickedCol;
@@ -53,30 +45,50 @@ void UpdateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
 }
 
 
+
+
+
 void DrawChestUI() {
     if (!chestUIOpen || openedChestRow == -1 || openedChestCol == -1) return;
 
     Chest *chest = &chestData[openedChestRow][openedChestCol];
 
-    int uiX = GetScreenWidth() / 2 - 100;
-    int uiY = GetScreenHeight() / 2 - 100;
-    DrawRectangle(uiX, uiY, 200, 200, DARKGRAY);
-    DrawText("Chest Inventory", uiX + 20, uiY + 10, 20, WHITE);
+    int uiX = GetScreenWidth() / 2 - 150;
+    int uiY = GetScreenHeight() / 2 - 120;
 
+    DrawRectangle(uiX, uiY, 300, 240, DARKGRAY);
+    DrawRectangleLines(uiX, uiY, 300, 240, WHITE);
+    DrawText("Chest Inventory", uiX + 50, uiY + 10, 24, YELLOW);
+
+    Vector2 mousePos = GetMousePosition();
+    
+    // Draw and detect clicks on chest items
     for (int i = 0; i < chest->storage.itemCount; i++) {
-        DrawText(TextFormat("Item %d: %d", i, chest->storage.items[i]), uiX + 20, uiY + 40 + i * 20, 18, WHITE);
+        int itemX = uiX + 20;
+        int itemY = uiY + 50 + i * 20;
+        DrawText(TextFormat("Item %d: %d", i, chest->storage.items[i]), itemX, itemY, 18, WHITE);
+
+        // Check if mouse clicked an item
+        if (CheckCollisionPointRec(mousePos, (Rectangle){itemX, itemY, 100, 20}) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            RetrieveItemFromChest(openedChestRow, openedChestCol, &playerInventory);
+        }
     }
 
-    DrawText("[G] Take Item | [Esc] Close", uiX + 20, uiY + 170, 16, WHITE);
+    // Draw and detect clicks on inventory items
+    for (int i = 0; i < playerInventory.itemCount; i++) {
+        int itemX = uiX + 160;
+        int itemY = uiY + 50 + i * 20;
+        DrawText(TextFormat("Inv %d: %d", i, playerInventory.items[i]), itemX, itemY, 18, WHITE);
 
-    if (IsKeyPressed(KEY_G)) RetrieveItemFromChest(openedChestRow, openedChestCol, &playerInventory);
-    if (IsKeyPressed(KEY_ESCAPE)) chestUIOpen = false;
+        if (CheckCollisionPointRec(mousePos, (Rectangle){itemX, itemY, 100, 20}) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            StoreItemInChest(openedChestRow, openedChestCol, playerInventory.items[i], &playerInventory);
+        }
+    }
 }
 
-bool StoreItemInChest(int row, int col, int itemID, Inventory *playerInventory) {
-    int objectID = objects[row][col];  
-    if (!IsChest(objectID)) return false;
 
+bool StoreItemInChest(int row, int col, int itemID, Inventory *playerInventory) {
+    if (!IsChest(objects[row][col])) return false;
 
     Chest *chest = &chestData[row][col];
 
@@ -94,9 +106,7 @@ bool StoreItemInChest(int row, int col, int itemID, Inventory *playerInventory) 
 }
 
 bool RetrieveItemFromChest(int row, int col, Inventory *playerInventory) {
-    int objectID = objects[row][col];  
-    if (!IsChest(objectID)) return false;
-
+    if (!IsChest(objects[row][col])) return false;
 
     Chest *chest = &chestData[row][col];
 

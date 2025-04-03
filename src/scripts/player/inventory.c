@@ -7,7 +7,7 @@
 #include "../items/items.h"
 #include "../textures.h"
 
-#define INVENTORY_SIZE 5
+//#define INVENTORY_SIZE 5
 
 InventoryItem inventory[INVENTORY_SIZE]; 
 InventoryItem selectedItem = { .id = -1, .quantity = 0 };
@@ -99,6 +99,74 @@ void drawInventory() {
     }
 }
 
+/*
+// Variables to track dragging state
+bool isDragging = false;
+int draggedItem = -1;
+int draggedFromInventory = -1; // Stores index in inventory or -2 if from chest
+
+void DrawInventory() {
+    int uiX = 20; // Inventory UI position
+    int uiY = GetScreenHeight() - 120;
+
+    Vector2 mousePos = GetMousePosition();
+
+    DrawRectangle(uiX, uiY, 400, 100, DARKGRAY);
+    DrawRectangleLines(uiX, uiY, 400, 100, WHITE);
+    DrawText("Inventory", uiX + 10, uiY + 10, 20, YELLOW);
+
+    // Draw inventory slots
+    for (int i = 0; i < playerInventory.itemCount; i++) {
+        int slotX = uiX + 10 + (i * 40);
+        int slotY = uiY + 40;
+        Rectangle slot = { slotX, slotY, 30, 30 };
+
+        DrawRectangleLines(slot.x, slot.y, slot.width, slot.height, WHITE);
+        DrawText(TextFormat("%d", playerInventory.items[i]), slotX + 5, slotY + 5, 20, WHITE);
+
+        // Highlight slot if hovered
+        if (CheckCollisionPointRec(mousePos, slot)) {
+            DrawRectangleLines(slot.x, slot.y, slot.width, slot.height, RED);
+
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                isDragging = true;
+                draggedItem = playerInventory.items[i];
+                draggedFromInventory = i;
+            }
+        }
+    }
+
+    // If dragging an item, draw it under the cursor
+    if (isDragging) {
+        DrawText(TextFormat("%d", draggedItem), mousePos.x, mousePos.y, 20, GREEN);
+        
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+            bool dropped = false;
+
+            // Check if dropped on a chest slot (only if chest UI is open)
+            if (chestUIOpen) {
+                for (int i = 0; i < chestData[openedChestRow][openedChestCol].storage.itemCount; i++) {
+                    int chestSlotX = GetScreenWidth() / 2 - 130;
+                    int chestSlotY = GetScreenHeight() / 2 - 100 + (i * 30);
+                    Rectangle chestSlot = { chestSlotX, chestSlotY, 100, 30 };
+
+                    if (CheckCollisionPointRec(mousePos, chestSlot)) {
+                        if (draggedFromInventory >= 0) { // From inventory
+                            StoreItemInChest(openedChestRow, openedChestCol, draggedItem, &playerInventory);
+                            dropped = true;
+                        }
+                    }
+                }
+            }
+
+            // Reset dragging state
+            isDragging = false;
+            draggedItem = -1;
+            draggedFromInventory = -1;
+        }
+    }
+}
+*/
 void handleInventoryClick() {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();

@@ -16,6 +16,10 @@ typedef struct {
     Vector2 colliderCenter;  // Center of the oval
     float colliderRadiusX;   // Horizontal radius
     float colliderRadiusY;   // Vertical radius
+
+    int food;
+    int health;
+
     
 
 } Player;
@@ -29,4 +33,7 @@ void unloadPlayer(Player *player);
 //bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols);
 bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radiusY, int **objects, int **details, int rows, int cols);
 bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radiusY, Rectangle rect);
+void drawPlayerStats(Player *player);
+
+
 #endif  // PLAYER_H
