@@ -54,6 +54,7 @@ void startGameScene(){
         snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
         makeGameSave(mapName); // creates save by copying files from level to save folder
         initInventory();
+        isNewGame = true;
         *currentScene = GAME;
     }
     
@@ -69,6 +70,7 @@ void startGameScene(){
         //if(access(mapPath, F_OK) == 0) *currentScene = GAME;
         initInventory();
         loadInventory(); 
+        isNewGame = false;
         *currentScene = GAME;  
         
     }

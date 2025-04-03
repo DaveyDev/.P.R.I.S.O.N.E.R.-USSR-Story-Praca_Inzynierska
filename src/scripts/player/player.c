@@ -4,6 +4,8 @@
 #include "../items/idList.h"
 #include <math.h>
 #include "../global.h"
+#include <stdio.h>
+#include <string.h>
 
 Player player;
 
@@ -180,7 +182,7 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     if(player->health <= 0){
         *currentScene = END_GAME;
     }
-    
+
 }
 
 
@@ -241,4 +243,27 @@ void drawPlayerStats(Player *player) {
     DrawText(TextFormat("Food: %d", player->food), 10, 40, 20, textColor); // Draw food
 }
 
+void savePlayerStats(Player *player) {
+    FILE *file = fopen("data/saves/save1/player.dat", "w");
+    if (!file) {
+        fprintf(stderr, "Error saving player stats\n");
+        return;
+    }
+    fprintf(file, "%d:%d", player->health, player->food);
+    fclose(file);
+}
 
+int loadPlayerStats(Player *player) {
+    FILE *file = fopen("data/saves/save1/player.dat", "r");
+    if (!file) {
+        fprintf(stderr, "Error loading player stats\n");
+        return 0; // Return 0 to indicate failure
+    }
+    if (fscanf(file, "%d:%d", &player->health, &player->food) != 2) {
+        fprintf(stderr, "Error reading player stats\n");
+        fclose(file);
+        return 0;
+    }
+    fclose(file);
+    return 1; // Return 1 to indicate success
+}

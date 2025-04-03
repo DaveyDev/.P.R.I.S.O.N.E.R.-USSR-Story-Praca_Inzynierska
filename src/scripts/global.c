@@ -53,6 +53,7 @@ char itemPath[256] = "\0";
 
 
 bool wasMapLoaded = false;
+bool isNewGame = false;
 
 void initGlobals() {
     currentScene = (AppScene *)malloc(sizeof(AppScene));

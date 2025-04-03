@@ -42,6 +42,7 @@ extern char mapPath[256];
 extern char itemPath[256];
 
 extern bool wasMapLoaded;
+extern bool isNewGame;
 
 
 void initGlobals();

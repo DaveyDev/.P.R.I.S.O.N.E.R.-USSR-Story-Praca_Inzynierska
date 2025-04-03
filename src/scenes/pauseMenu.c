@@ -81,6 +81,7 @@ void pauseScene(){
     if (GuiButton(exitBtn, getTranslation("pause_exit"))) {
         saveItems();
         saveInventory();
+        savePlayerStats(&player);
         *currentScene = MENU;
     }
 

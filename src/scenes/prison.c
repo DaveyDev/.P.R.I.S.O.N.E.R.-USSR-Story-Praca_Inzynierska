@@ -33,6 +33,7 @@ void prisonScene() {
         loadItems(itemPath);
          
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
+        if(!isNewGame) loadPlayerStats(&player);
         
     }
 

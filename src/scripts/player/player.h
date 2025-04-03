@@ -34,6 +34,8 @@ void unloadPlayer(Player *player);
 bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radiusY, int **objects, int **details, int rows, int cols);
 bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radiusY, Rectangle rect);
 void drawPlayerStats(Player *player);
+void savePlayerStats(Player *player);
+int loadPlayerStats(Player *player);
 
 
 #endif  // PLAYER_H
