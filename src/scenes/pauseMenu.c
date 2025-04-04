@@ -82,6 +82,7 @@ void pauseScene(){
         saveItems();
         saveInventory();
         savePlayerStats(&player);
+        saveChests();
         *currentScene = MENU;
     }
 

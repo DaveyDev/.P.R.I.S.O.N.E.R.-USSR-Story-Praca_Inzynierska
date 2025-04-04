@@ -5,6 +5,7 @@
 #include "../global.h"
 #include "../player/inventory.h"
 #include "../textures.h"
+#include "items.h"
 
 
 Inventory playerInventory;
@@ -45,48 +46,6 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
     }
 }
 
-
-
-
-/*
-void DrawChestUI() {
-    if (!chestUIOpen || openedChestRow == -1 || openedChestCol == -1) return;
-
-    Chest *chest = &chestData[openedChestRow][openedChestCol];
-
-    int uiX = GetScreenWidth() / 2 - 150;
-    int uiY = GetScreenHeight() / 2 - 120;
-
-    DrawRectangle(uiX, uiY, 300, 240, DARKGRAY);
-    DrawRectangleLines(uiX, uiY, 300, 240, WHITE);
-    DrawText("Chest Inventory", uiX + 50, uiY + 10, 24, YELLOW);
-
-    Vector2 mousePos = GetMousePosition();
-    
-    // Draw and detect clicks on chest items
-    for (int i = 0; i < chest->storage.itemCount; i++) {
-        int itemX = uiX + 20;
-        int itemY = uiY + 50 + i * 20;
-        DrawText(TextFormat("Item %d: %d", i, chest->storage.items[i]), itemX, itemY, 18, WHITE);
-
-        // Check if mouse clicked an item
-        if (CheckCollisionPointRec(mousePos, (Rectangle){itemX, itemY, 100, 20}) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            RetrieveItemFromChest(openedChestRow, openedChestCol, &playerInventory);
-        }
-    }
-
-    // Draw and detect clicks on inventory items
-    for (int i = 0; i < playerInventory.itemCount; i++) {
-        int itemX = uiX + 160;
-        int itemY = uiY + 50 + i * 20;
-        DrawText(TextFormat("Inv %d: %d", i, playerInventory.items[i]), itemX, itemY, 18, WHITE);
-
-        if (CheckCollisionPointRec(mousePos, (Rectangle){itemX, itemY, 100, 20}) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            StoreItemInChest(openedChestRow, openedChestCol, playerInventory.items[i], &playerInventory);
-        }
-    }
-}
-*/ 
 
 void drawChestUI() {
     if (!chestUIOpen || openedChestRow == -1 || openedChestCol == -1) return;
@@ -139,26 +98,7 @@ void drawChestUI() {
         }
     }
 }
-
 /*
-bool StoreItemInChest(int row, int col, int itemID, Inventory *playerInventory) {
-    if (!IsChest(objects[row][col])) return false;
-
-    Chest *chest = &chestData[row][col];
-
-    if (chest->storage.itemCount >= MAX_ITEMS_IN_CHEST) return false;
-
-    chest->storage.items[chest->storage.itemCount++] = itemID;
-
-    for (int i = 0; i < playerInventory->itemCount; i++) {
-        if (playerInventory->items[i] == itemID) {
-            playerInventory->items[i] = playerInventory->items[--playerInventory->itemCount];
-            return true;
-        }
-    }
-    return false;
-}
-
 bool RetrieveItemFromChest(int row, int col, Inventory *playerInventory) {
     if (!IsChest(objects[row][col])) return false;
 
@@ -203,17 +143,66 @@ bool retrieveItemFromChest(int row, int col, Inventory *playerInventory) {
 
     Chest *chest = &chestData[row][col];
 
-    for (int i = 0; i < 4; i++) {
-        if (chest->storage.items[i] != -1) { // Has an item
+    for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+        if (chest->storage.items[i] != -1) {  // Found an item in the chest
             int itemID = chest->storage.items[i];
-            chest->storage.items[i] = -1; // Remove from chest
 
-            // Add to player inventory if space available
-            if (playerInventory->itemCount < MAX_ITEMS_IN_CHEST) {
-                playerInventory->items[playerInventory->itemCount++] = itemID;
+            // Try adding the item to the player's inventory
+            if (addItemToInventory(itemID, items[itemID].itemName)) {
+                chest->storage.items[i] = -1;  // Remove item from chest
                 return true;
+            } else {
+                printf("Inventory full!\n");
+                return false;
             }
         }
     }
-    return false;
+    return false;  // No items found in chest
 }
+
+void loadChests() {
+    FILE *file = fopen("data/saves/save1/chests.dat", "r");
+    if (!file) {
+        fprintf(stderr, "Error loading chests\n");
+        return;
+    }
+
+    int row, col, itemCount;
+    while (fscanf(file, "%d:%d:%d:", &row, &col, &itemCount) == 3) {
+        if (isChest(objects[row][col])) {
+            Chest *chest = &chestData[row][col];
+            chest->storage.itemCount = itemCount;
+
+            for (int i = 0; i < itemCount; i++) {
+                fscanf(file, "%d,", &chest->storage.items[i]);
+            }
+        }
+    }
+
+    fclose(file);
+}
+
+void saveChests() {
+    FILE *file = fopen("data/saves/save1/chests.dat", "w");
+    if (!file) {
+        fprintf(stderr, "Error saving chests\n");
+        return;
+    }
+
+    for (int row = 0; row < rows; row++) {  // Use 'rows' instead of 'MAP_ROWS'
+        for (int col = 0; col < cols; col++) {  // Use 'cols' instead of 'MAP_COLS'
+            if (isChest(objects[row][col])) {
+                Chest *chest = &chestData[row][col];
+
+                fprintf(file, "%d:%d:%d:", row, col, chest->storage.itemCount);
+                for (int i = 0; i < chest->storage.itemCount; i++) {
+                    fprintf(file, "%d,", chest->storage.items[i]);
+                }
+                fprintf(file, "\n");  // New line for the next chest
+            }
+        }
+    }
+
+    fclose(file);
+}
+
