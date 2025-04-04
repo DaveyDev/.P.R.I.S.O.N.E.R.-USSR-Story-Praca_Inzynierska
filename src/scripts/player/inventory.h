@@ -2,8 +2,9 @@
 #define INVENTORY_H
 
 #include "../../../lib/raylib.h"
+#include "../items/storage.h"
 
-#define INVENTORY_SIZE 6
+#define INVENTORY_SIZE 5
 
 typedef struct {
     int id;
@@ -22,6 +23,7 @@ void drawInventory();
 void handleInventoryClick(); // Handles clicking on inventory slots
 void placeSelectedItem(Camera2D camera); // Places the selected item on the ground
 void drawSelectedItem();
+void storeSelectedItem(int selectedItemIndex, Inventory *playerInventory);
 
 
 #endif

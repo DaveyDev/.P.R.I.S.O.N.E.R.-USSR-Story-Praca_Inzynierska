@@ -86,6 +86,22 @@ void saveItems() {
     fclose(file);
 }
 
+void saveItemsE(const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        fprintf(stderr, "Error saving items\n");
+        return;
+    }
+    for (int i = 0; i < itemCount; i++) {
+        fprintf(file, "%d:%d:%f:%f:%s\n",
+                items[i].id, items[i].quantity,
+                items[i].itemPos.x, items[i].itemPos.y,
+                items[i].itemName);
+    }
+    fclose(file);
+}
+
+
 void loadItems(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {

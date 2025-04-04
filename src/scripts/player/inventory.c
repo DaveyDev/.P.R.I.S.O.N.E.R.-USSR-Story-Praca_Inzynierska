@@ -6,6 +6,8 @@
 #include "inventory.h"
 #include "../items/items.h"
 #include "../textures.h"
+#include "../items/storage.h"
+
 
 //#define INVENTORY_SIZE 5
 
@@ -167,6 +169,7 @@ void DrawInventory() {
     }
 }
 */
+/*
 void handleInventoryClick() {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();
@@ -194,6 +197,50 @@ void handleInventoryClick() {
         }
     }
 }
+*/
+void handleInventoryClick() {
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+        Vector2 mousePos = GetMousePosition();
+        int slotSize = 60;
+        int spacing = 10;
+        int startX = (GetScreenWidth() - (INVENTORY_SIZE * (slotSize + spacing))) / 2;
+        int startY = GetScreenHeight() - 80;
+
+        for (int i = 0; i < INVENTORY_SIZE; i++) {
+            Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
+
+            if (CheckCollisionPointRec(mousePos, slot)) {
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                    // Left click: Pick up or return item
+                    if (selectedItem.id == -1 && inventory[i].id != -1) {
+                        // Pick up the item
+                        selectedItem = inventory[i];
+                        inventory[i].quantity--;
+                        if (inventory[i].quantity <= 0) inventory[i].id = -1;
+                    } else if (selectedItem.id != -1) {
+                        // Return item to inventory
+                        addItemToInventory(selectedItem.id, selectedItem.name);
+                        selectedItem.id = -1;
+                    }
+                } 
+                else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && chestUIOpen) {
+                    // Right click: Store item in the chest
+                    if (inventory[i].id != -1) {
+                        if (storeItemInChest(openedChestRow, openedChestCol, inventory[i].id, &playerInventory)) {
+                            printf("Item stored in chest!\n");
+                            inventory[i].quantity--;
+                            if (inventory[i].quantity <= 0) inventory[i].id = -1;
+                        } else {
+                            printf("Chest is full!\n");
+                        }
+                    }
+                }
+                return;
+            }
+        }
+    }
+}
+
 
 
 void placeSelectedItem(Camera2D camera) {
@@ -244,5 +291,18 @@ void drawSelectedItem() {
         Rectangle itemDest = { mousePos.x - 16, mousePos.y - 16, itemsWidth, itemsHeight };
 
         DrawTexturePro(itemsSet, itemSource, itemDest, (Vector2){0, 0}, 0.0f, WHITE);
+    }
+}
+
+void storeSelectedItem(int selectedItemIndex, Inventory *playerInventory) {
+    if (!chestUIOpen) return;  // No chest is open, can't store
+
+    int itemID = playerInventory->items[selectedItemIndex];  // Get item from inventory
+
+    // Try to store the item in the chest at the opened location
+    if (storeItemInChest(openedChestRow, openedChestCol, itemID, playerInventory)) {
+        printf("Item stored successfully!\n");
+    } else {
+        printf("Chest is full!\n");
     }
 }

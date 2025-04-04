@@ -87,8 +87,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drawSelectedItem();  // Show held item when dragging
     drawPlayerStats(&player);
 
-    UpdateChests(map, rows, cols, camera);
-    DrawChestUI();  
+    updateChests(map, rows, cols, camera);
+    drawChestUI();  
 
 
     

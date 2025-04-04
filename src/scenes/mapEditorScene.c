@@ -119,9 +119,11 @@ void mapsEditorScene() {
     if (CheckCollisionPointRec(GetMousePosition(), saveButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         char mapPath[256];
         snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
+        char itemPath[256];
+        snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
         saveMap(mapPath);
         printf("saved map");
-        saveItems();
+        saveItemsE(itemPath);
         printf("saved items");
     }
 

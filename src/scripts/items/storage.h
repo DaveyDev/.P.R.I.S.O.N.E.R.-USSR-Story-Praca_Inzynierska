@@ -20,10 +20,10 @@ extern Inventory playerInventory;
 extern int openedChestRow, openedChestCol;
 extern bool chestUIOpen;  
 
-bool IsChest(int objectID);
-void UpdateChests(int **map, int mapRows, int mapCols, Camera2D camera);
-void DrawChestUI();
-bool StoreItemInChest(int row, int col, int itemID, Inventory *playerInventory);
-bool RetrieveItemFromChest(int row, int col, Inventory *playerInventory);
+bool isChest(int objectID);
+void updateChests(int **map, int mapRows, int mapCols, Camera2D camera);
+void drawChestUI();
+bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory);
+bool retrieveItemFromChest(int row, int col, Inventory *playerInventory);
 
 #endif // STORAGE_H
