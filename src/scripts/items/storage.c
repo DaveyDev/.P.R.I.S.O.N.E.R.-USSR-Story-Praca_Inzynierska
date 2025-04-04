@@ -116,25 +116,23 @@ bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory) 
     if (!isChest(objects[row][col])) return false;
 
     Chest *chest = &chestData[row][col];
-
-    // Find the first empty slot and store the item
+    
+    // Check for existing stack or free slot
     for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
-        if (chest->storage.items[i] == -1) {  // Empty slot found
+        if (chest->storage.items[i] == itemID) {
+            // Already exists - stack it
+            chest->storage.itemCount++;  // optional if you're tracking quantity per item
+            return true;
+        }
+        if (chest->storage.items[i] == -1) {
+            // Empty slot - store it
             chest->storage.items[i] = itemID;
-
-            // Remove *one* instance of the item from player inventory
-            for (int j = 0; j < playerInventory->itemCount; j++) {
-                if (playerInventory->items[j] == itemID) {
-                    // Move last item to this slot and reduce count
-                    playerInventory->items[j] = playerInventory->items[playerInventory->itemCount - 1];
-                    playerInventory->itemCount--;
-                    return true;  // Exit after successfully storing 1 item
-                }
-            }
-            return false;  // If item wasn't found in player inventory
+            chest->storage.itemCount++;
+            return true;
         }
     }
-    return false;  // No empty slots available
+
+    return false;  // No free space
 }
 
 
@@ -173,6 +171,11 @@ void loadChests() {
             Chest *chest = &chestData[row][col];
             chest->storage.itemCount = itemCount;
 
+            // Clear all slots first
+            for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+                chest->storage.items[i] = -1;
+            }
+
             for (int i = 0; i < itemCount; i++) {
                 fscanf(file, "%d,", &chest->storage.items[i]);
             }
@@ -181,6 +184,7 @@ void loadChests() {
 
     fclose(file);
 }
+
 
 void saveChests() {
     FILE *file = fopen("data/saves/save1/chests.dat", "w");

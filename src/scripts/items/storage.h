@@ -4,7 +4,7 @@
 #include "../../../lib/raylib.h"
 #include "../map/map.h"  // Include your map system header
 
-#define MAX_ITEMS_IN_CHEST 10
+#define MAX_ITEMS_IN_CHEST 4
 
 typedef struct {
     int items[MAX_ITEMS_IN_CHEST];

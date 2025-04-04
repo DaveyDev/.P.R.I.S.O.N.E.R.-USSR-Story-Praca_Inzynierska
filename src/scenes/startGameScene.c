@@ -52,6 +52,7 @@ void startGameScene(){
         strcpy(mapName, "test");
         snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
         snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
+        //snprintf(chestPath, sizeof(chestPath), "data/levels/%s/chests.dat", mapName);
         makeGameSave(mapName); // creates save by copying files from level to save folder
         initInventory();
         //loadChests();
@@ -71,7 +72,6 @@ void startGameScene(){
         //if(access(mapPath, F_OK) == 0) *currentScene = GAME;
         initInventory();
         loadInventory();
-        //loadChests(); 
         isNewGame = false;
         *currentScene = GAME;  
         
