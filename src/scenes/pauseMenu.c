@@ -82,7 +82,10 @@ void pauseScene(){
         saveItems();
         saveInventory();
         savePlayerStats(&player);
-        saveChests();
+        char chestPath[256];
+        
+        snprintf(chestPath, sizeof(chestPath), "data/saves/save1/chests.dat");
+        saveChests(chestPath);
         *currentScene = MENU;
     }
 

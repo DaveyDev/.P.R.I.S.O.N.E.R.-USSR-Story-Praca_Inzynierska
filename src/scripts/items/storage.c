@@ -93,9 +93,13 @@ void drawChestUI() {
         }
 
         // Clicking to retrieve item
+        //if (CheckCollisionPointRec(mousePos, slot) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        //    retrieveItemFromChest(openedChestRow, openedChestCol, &playerInventory);
+        //}
         if (CheckCollisionPointRec(mousePos, slot) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            retrieveItemFromChest(openedChestRow, openedChestCol, &playerInventory);
+            retrieveItemFromChest(openedChestRow, openedChestCol, i, &playerInventory);
         }
+
     }
 }
 /*
@@ -111,7 +115,7 @@ bool RetrieveItemFromChest(int row, int col, Inventory *playerInventory) {
 
     return true;
 }
-*/
+
 bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory) {
     if (!isChest(objects[row][col])) return false;
 
@@ -134,8 +138,45 @@ bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory) 
 
     return false;  // No free space
 }
+*/
+bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory) {
+    if (!isChest(objects[row][col])) return false;
 
+    Chest *chest = &chestData[row][col];
 
+    for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+        if (chest->storage.items[i] == -1) {
+            chest->storage.items[i] = itemID;
+            chest->storage.itemCount++;
+            return true;
+        }
+    }
+
+    // No free slot
+    printf("Chest is full!\n");
+    return false;
+}
+bool retrieveItemFromChest(int row, int col, int slotIndex, Inventory *playerInventory) {
+    if (!isChest(objects[row][col])) return false;
+
+    Chest *chest = &chestData[row][col];
+
+    if (slotIndex < 0 || slotIndex >= MAX_ITEMS_IN_CHEST) return false;
+
+    int itemID = chest->storage.items[slotIndex];
+    if (itemID == -1) return false;
+
+    if (addItemToInventory(itemID, items[itemID].itemName)) {
+        chest->storage.items[slotIndex] = -1;
+        chest->storage.itemCount--;
+        return true;
+    } else {
+        printf("Inventory full!\n");
+        return false;
+    }
+}
+
+/*
 bool retrieveItemFromChest(int row, int col, Inventory *playerInventory) {
     if (!isChest(objects[row][col])) return false;
 
@@ -186,8 +227,8 @@ void loadChests() {
 }
 
 
-void saveChests() {
-    FILE *file = fopen("data/saves/save1/chests.dat", "w");
+void saveChests(const char *filename) {
+    FILE *file = fopen(filename, "w");
     if (!file) {
         fprintf(stderr, "Error saving chests\n");
         return;
@@ -202,7 +243,74 @@ void saveChests() {
                 for (int i = 0; i < chest->storage.itemCount; i++) {
                     fprintf(file, "%d,", chest->storage.items[i]);
                 }
+                
+
                 fprintf(file, "\n");  // New line for the next chest
+            }
+        }
+    }
+
+    fclose(file);
+}
+*/
+void loadChests() {
+    FILE *file = fopen("data/saves/save1/chests.dat", "r");
+    if (!file) {
+        fprintf(stderr, "Error loading chests\n");
+        return;
+    }
+
+    int row, col, slotCount;
+    while (fscanf(file, "%d:%d:%d:", &row, &col, &slotCount) == 3) {
+        if (isChest(objects[row][col])) {
+            Chest *chest = &chestData[row][col];
+            chest->storage.itemCount = 0;
+
+            // Clear all slots
+            for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+                chest->storage.items[i] = -1;
+            }
+
+            // Read all slots
+            for (int i = 0; i < slotCount; i++) {
+                int itemID;
+                fscanf(file, "%d,", &itemID);
+                if (i < MAX_ITEMS_IN_CHEST) {
+                    chest->storage.items[i] = itemID;
+                    if (itemID != -1) chest->storage.itemCount++;
+                }
+            }
+        }
+    }
+
+    fclose(file);
+}
+
+void saveChests(const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        fprintf(stderr, "Error saving chests\n");
+        return;
+    }
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (isChest(objects[row][col])) {
+                Chest *chest = &chestData[row][col];
+
+                // Recalculate itemCount based on valid items
+                chest->storage.itemCount = 0;
+                for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+                    if (chest->storage.items[i] != -1) {
+                        chest->storage.itemCount++;
+                    }
+                }
+
+                fprintf(file, "%d:%d:%d:", row, col, MAX_ITEMS_IN_CHEST);
+                for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+                    fprintf(file, "%d,", chest->storage.items[i]);
+                }
+                fprintf(file, "\n");
             }
         }
     }

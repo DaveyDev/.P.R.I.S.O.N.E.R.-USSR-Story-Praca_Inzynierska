@@ -24,9 +24,9 @@ bool isChest(int objectID);
 void updateChests(int **map, int mapRows, int mapCols, Camera2D camera);
 void drawChestUI();
 bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory);
-bool retrieveItemFromChest(int row, int col, Inventory *playerInventory);
+bool retrieveItemFromChest(int row, int col, int slotIndex, Inventory *playerInventory);
 void loadChests();
-void saveChests();
+void saveChests(const char *filename);
 
 
 #endif // STORAGE_H
