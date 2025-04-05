@@ -27,22 +27,7 @@ void pickUpItem(int index) {
         printf("Inventory is full. Cannot pick up item.\n");
     }
 }
-/*
-void updateItems(Camera2D camera) {
-    Vector2 mousePos = GetMousePosition();
-    Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
 
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        for (int i = 0; i < itemCount; i++) {
-            Rectangle itemBounds = { items[i].itemPos.x, items[i].itemPos.y, 16, 16 };
-            if (CheckCollisionPointRec(worldMousePos, itemBounds)) {
-                pickUpItem(i);
-                //drawInventory();  // Force UI update after pickup
-                break;
-            }
-        }
-    }
-}*/
 void updateItems(Camera2D camera) {
     Vector2 mousePos = GetMousePosition();
     Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
@@ -150,30 +135,6 @@ void loadItems(const char *filename) {
 
 // Function to draw items on the screen
 // Function to draw items on the screen relative to the camera
-/*void drawItems(Camera2D camera) {
-    for (int i = 0; i < itemCount; i++) {
-        // Convert world coordinates to screen coordinates
-        Vector2 screenPos = GetWorldToScreen2D(items[i].itemPos, camera);
-
-
-        int itemsWidth = 32;  // Width of the tree in the texture atlas
-        int itemsHeight = 32; // Height of the tree in the texture atlas
-        int itemsPerRow = itemsSet.width / itemsWidth;
-
-        int itemIndex = items[i].id - 3000;
-        // Calculate the x and y coordinates in the atlas
-        int row = itemIndex / itemsPerRow;
-        int col = itemIndex % itemsPerRow;
-
-
-        int scale = 1; // Scale factor
-        Rectangle itemSource = { col * itemsWidth, row * itemsHeight, itemsWidth, itemsHeight }; // Define the source rectangle
-        Vector2 destPos = { screenPos.x, screenPos.y }; // Calculate scaled destination position
-        Rectangle itemDest = { destPos.x, destPos.y, itemsWidth * scale, itemsHeight * scale }; // Define the destination rectangle with scaled width and height
-        DrawTexturePro(itemsSet, itemSource, itemDest, (Vector2){0, 0}, 0.0f, WHITE); // Draw the scaled item
-    }
-}*/
-
 void drawItems(Camera2D camera) {
     for (int i = 0; i < itemCount; i++) {
         Vector2 screenPos = GetWorldToScreen2D(items[i].itemPos, camera);

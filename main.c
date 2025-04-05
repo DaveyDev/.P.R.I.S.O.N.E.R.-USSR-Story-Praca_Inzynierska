@@ -28,16 +28,12 @@ int main(){
     initGlobals();
     initGuiStyle();
     initDebugCMD();
-    
     loadTextures();
-
-    //Player player;
-    //initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
-    
     loadLanguage();
+    SetExitKey(0);
 
 
-    while (!windowShouldClose) {
+    while (!WindowShouldClose() && !windowShouldClose) {
 
         BeginDrawing();
 

@@ -12,7 +12,7 @@ typedef enum {
     IRON_ORE = 2003,
     URANIUM_ORE = 2004,
     STONE = 2005,
-    SULFUR_ORE = 2006,
+    GOLD_ORE = 2006,
     SMALL_TABLE = 2007,
     LEFT_TABLE = 2008,
     MIDDLE_TABLE = 2009,
@@ -35,6 +35,7 @@ typedef enum {
     DARKGREY_EMPTY = 2026,
     BARBED_WIRE = 2027,
     OAK_WOODEN_FLOOR = 2028,
+    BARBED_WIRE_VERTICAL = 2029,
 
     
     //ITEMS
@@ -58,6 +59,8 @@ typedef enum {
     REVOLVER = 3017,
     HANDY_STALIN_PIC = 3018,
     GREY_KEY = 3019,
+    STONE_ITEM = 3020,
+    OLD_FILE = 3021,
 
     // Add more as needed
 } idList;

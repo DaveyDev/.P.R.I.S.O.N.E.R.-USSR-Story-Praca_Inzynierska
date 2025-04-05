@@ -30,6 +30,8 @@ int main(){
 
     initGlobals();
     
+    SetExitKey(0);
+    
 
     while (!WindowShouldClose()) {
 

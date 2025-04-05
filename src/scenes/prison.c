@@ -93,6 +93,12 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drawChestUI();  
 
 
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
+        tryUseActiveItem(worldMouse);
+    }
+
+
     
 
 

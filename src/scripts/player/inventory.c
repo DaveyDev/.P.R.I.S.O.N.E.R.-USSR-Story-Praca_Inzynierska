@@ -7,12 +7,16 @@
 #include "../items/items.h"
 #include "../textures.h"
 #include "../items/storage.h"
+#include "../items/idList.h"
 
 
 //#define INVENTORY_SIZE 5
 
 InventoryItem inventory[INVENTORY_SIZE]; 
 InventoryItem selectedItem = { .id = -1, .quantity = 0 };
+
+int activeItemIndex = -1;
+
 
 
 void initInventory() {
@@ -74,7 +78,10 @@ void drawInventory() {
 
     for (int i = 0; i < INVENTORY_SIZE; i++) {
         Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
-        DrawRectangleRec(slot, GRAY);
+        //DrawRectangleRec(slot, GRAY);
+        Color slotColor = (i == activeItemIndex) ? GREEN : GRAY;
+        DrawRectangleRec(slot, slotColor);
+
         DrawRectangleLines(slot.x, slot.y, slot.width, slot.height, DARKGRAY);
 
         if (inventory[i].id != -1) {
@@ -101,103 +108,7 @@ void drawInventory() {
     }
 }
 
-/*
-// Variables to track dragging state
-bool isDragging = false;
-int draggedItem = -1;
-int draggedFromInventory = -1; // Stores index in inventory or -2 if from chest
 
-void DrawInventory() {
-    int uiX = 20; // Inventory UI position
-    int uiY = GetScreenHeight() - 120;
-
-    Vector2 mousePos = GetMousePosition();
-
-    DrawRectangle(uiX, uiY, 400, 100, DARKGRAY);
-    DrawRectangleLines(uiX, uiY, 400, 100, WHITE);
-    DrawText("Inventory", uiX + 10, uiY + 10, 20, YELLOW);
-
-    // Draw inventory slots
-    for (int i = 0; i < playerInventory.itemCount; i++) {
-        int slotX = uiX + 10 + (i * 40);
-        int slotY = uiY + 40;
-        Rectangle slot = { slotX, slotY, 30, 30 };
-
-        DrawRectangleLines(slot.x, slot.y, slot.width, slot.height, WHITE);
-        DrawText(TextFormat("%d", playerInventory.items[i]), slotX + 5, slotY + 5, 20, WHITE);
-
-        // Highlight slot if hovered
-        if (CheckCollisionPointRec(mousePos, slot)) {
-            DrawRectangleLines(slot.x, slot.y, slot.width, slot.height, RED);
-
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                isDragging = true;
-                draggedItem = playerInventory.items[i];
-                draggedFromInventory = i;
-            }
-        }
-    }
-
-    // If dragging an item, draw it under the cursor
-    if (isDragging) {
-        DrawText(TextFormat("%d", draggedItem), mousePos.x, mousePos.y, 20, GREEN);
-        
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-            bool dropped = false;
-
-            // Check if dropped on a chest slot (only if chest UI is open)
-            if (chestUIOpen) {
-                for (int i = 0; i < chestData[openedChestRow][openedChestCol].storage.itemCount; i++) {
-                    int chestSlotX = GetScreenWidth() / 2 - 130;
-                    int chestSlotY = GetScreenHeight() / 2 - 100 + (i * 30);
-                    Rectangle chestSlot = { chestSlotX, chestSlotY, 100, 30 };
-
-                    if (CheckCollisionPointRec(mousePos, chestSlot)) {
-                        if (draggedFromInventory >= 0) { // From inventory
-                            StoreItemInChest(openedChestRow, openedChestCol, draggedItem, &playerInventory);
-                            dropped = true;
-                        }
-                    }
-                }
-            }
-
-            // Reset dragging state
-            isDragging = false;
-            draggedItem = -1;
-            draggedFromInventory = -1;
-        }
-    }
-}
-*/
-/*
-void handleInventoryClick() {
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        Vector2 mousePos = GetMousePosition();
-        int slotSize = 60;
-        int spacing = 10;
-        int startX = (GetScreenWidth() - (INVENTORY_SIZE * (slotSize + spacing))) / 2;
-        int startY = GetScreenHeight() - 80;
-
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
-
-            if (CheckCollisionPointRec(mousePos, slot)) {
-                if (selectedItem.id == -1 && inventory[i].id != -1) {
-                    // Pick up the item
-                    selectedItem = inventory[i];
-                    inventory[i].quantity--;
-                    if (inventory[i].quantity <= 0) inventory[i].id = -1;
-                } else if (selectedItem.id != -1) {
-                    // Return item to inventory if clicked again
-                    addItemToInventory(selectedItem.id, selectedItem.name);
-                    selectedItem.id = -1;
-                }
-                return;
-            }
-        }
-    }
-}
-*/
 void handleInventoryClick() {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();
@@ -234,7 +145,16 @@ void handleInventoryClick() {
                             printf("Chest is full!\n");
                         }
                     }
+                } else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && !chestUIOpen) {
+                    if (inventory[i].id != -1) {
+                    if (activeItemIndex == i) {
+                    activeItemIndex = -1; // Deactivate if already selected
+                    } else {
+                    activeItemIndex = i; // Set active tool
+                        }
+                    }
                 }
+
                 return;
             }
         }
@@ -306,3 +226,81 @@ void storeSelectedItem(int selectedItemIndex, Inventory *playerInventory) {
         printf("Chest is full!\n");
     }
 }
+void tryUseActiveItem(Vector2 worldPos) {
+    if (activeItemIndex == -1) return;
+
+    int itemId = inventory[activeItemIndex].id;
+
+    int col = (int)(worldPos.x / 32);
+    int row = (int)(worldPos.y / 32);
+
+    if (row < 0 || row >= rows || col < 0 || col >= cols) return;
+
+    int obj = objects[row][col];
+
+    // 🪓 Axe logic (chop trees)
+    if (itemId == AXE) {
+        if (obj >= 1000 && obj <= 1999) { // Tree range
+            printf("Tree chopped at tile (%d, %d)!\n", col, row);
+
+            if (itemCount < MAX_ITEMS) {
+                items[itemCount].id = WOOD_LOG;
+                items[itemCount].quantity = 1;
+                items[itemCount].itemPos = (Vector2){ col * 32, row * 32 };
+                itemCount++;
+            }
+
+            objects[row][col] = 0;
+            return;
+        }
+    }
+
+    // ⛏️ Pickaxe logic (mine rocks/ores)
+    if (itemId == PICKAXE) {
+        int dropItem = -1;
+
+        switch (obj) {
+            case SIMPLE_STONE: dropItem = STONE_ITEM; break;
+            case STONE:        dropItem = STONE_ITEM; break;
+            case COPPER_ORE:   dropItem = COPPER_NUGGET; break;
+            case COAL_ORE:     dropItem = COAL; break;
+            case IRON_ORE:     dropItem = IRON_NUGGET; break;
+            case URANIUM_ORE:  dropItem = URANIUM_NUGGET; break;
+            case GOLD_ORE:     dropItem = GOLD_NUGGET; break;
+            default: break;
+        }
+
+        if (dropItem != -1) {
+            printf("Mined %d at tile (%d, %d)\n", dropItem, col, row);
+
+            if (itemCount < MAX_ITEMS) {
+                items[itemCount].id = dropItem;
+                items[itemCount].quantity = 1;
+                items[itemCount].itemPos = (Vector2){ col * 32, row * 32 };
+                itemCount++;
+            }
+
+            objects[row][col] = 0;
+            return;
+        }
+    }
+    // ⛏️ Pickaxe logic (mine rocks/ores)
+    if (itemId == OLD_FILE) {
+        int dropItem = -1;
+
+        switch (obj) {
+            case BARBED_WIRE: dropItem = 0; break;
+            case BARBED_WIRE_VERTICAL: dropItem = 0; break;
+            default: break;
+        }
+
+        if (dropItem != -1) {
+            printf("wire fence at tile (%d, %d) was cut\n", col, row);
+
+            objects[row][col] = 0;
+            return;
+        }
+    }
+}
+
+

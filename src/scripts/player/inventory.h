@@ -24,6 +24,7 @@ void handleInventoryClick(); // Handles clicking on inventory slots
 void placeSelectedItem(Camera2D camera); // Places the selected item on the ground
 void drawSelectedItem();
 void storeSelectedItem(int selectedItemIndex, Inventory *playerInventory);
+void tryUseActiveItem(Vector2 worldPos);
 
 
 #endif
