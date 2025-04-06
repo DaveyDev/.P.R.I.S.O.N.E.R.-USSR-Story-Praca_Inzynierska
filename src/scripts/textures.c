@@ -10,7 +10,7 @@ Texture2D playerSet;
 Texture2D itemsSet;
 Texture2D mainMenuBackground;
 Texture2D pauseMenuBackground;
-
+Image mainIco;
 
 void loadTextures() {
     // Load the tileset texture
@@ -22,7 +22,7 @@ void loadTextures() {
     itemsSet = LoadTexture("data/textures/itemsSet.png");
     mainMenuBackground = LoadTexture("data/textures/mainMenuBackground.png");
     pauseMenuBackground = LoadTexture("data/textures/pauseMenuBackground.png");
-
+    mainIco = LoadImage("data/textures/ico.png");
 }
 
 void unloadTextures() {

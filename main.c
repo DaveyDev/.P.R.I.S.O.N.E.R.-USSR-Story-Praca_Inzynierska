@@ -21,18 +21,20 @@ int main(){
     initSoundManager();
     // Raylib Initialization
     loadProperties("game.properties");
-
+    
+    
     InitWindow(resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, ".P.R.I.S.O.N.E.R.");
     SetTargetFPS(600);
 
-    
+    loadTextures();
     initGlobals();
     initGuiStyle();
     initDebugCMD();
-    loadTextures();
+    SetWindowIcon(mainIco);
     loadLanguage();
     SetExitKey(0);
     
+
     //PlayBackgroundMusic();
 
 

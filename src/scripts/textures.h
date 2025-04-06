@@ -13,7 +13,7 @@ extern Texture2D playerSet;
 extern Texture2D itemsSet;
 extern Texture2D mainMenuBackground;
 extern Texture2D pauseMenuBackground;
-
+extern Image mainIco;
 
 // Function declarations
 void loadTextures();
