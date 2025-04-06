@@ -1,10 +1,11 @@
 #include "soundManager.h"
+#include "../global.h"
 
 static Sound doorSound;
-static Music backgroundMusic;
-static bool musicPlaying = false;
+//static Music backgroundMusic;
+//static bool musicPlaying = false;
 
-void InitSoundManager(void) {
+void initSoundManager() {
     InitAudioDevice();
 
     doorSound = LoadSound("data/sound/door.wav");
@@ -12,31 +13,31 @@ void InitSoundManager(void) {
     SetMusicVolume(backgroundMusic, 0.5f);
 }
 
-void UpdateSoundManager(void) {
+void updateSoundManager() {
     if (musicPlaying) {
         UpdateMusicStream(backgroundMusic);
     }
 }
 
-void PlayDoorSound(void) {
+void playDoorSound() {
     PlaySound(doorSound);
 }
 
-void PlayBackgroundMusic(void) {
+void playBackgroundMusic() {
     if (!musicPlaying) {
         PlayMusicStream(backgroundMusic);
         musicPlaying = true;
     }
 }
 
-void StopBackgroundMusic(void) {
+void stopBackgroundMusic() {
     if (musicPlaying) {
         StopMusicStream(backgroundMusic);
         musicPlaying = false;
     }
 }
 
-void UnloadSoundManager(void) {
+void unloadSoundManager() {
     UnloadSound(doorSound);
     UnloadMusicStream(backgroundMusic);
     CloseAudioDevice();

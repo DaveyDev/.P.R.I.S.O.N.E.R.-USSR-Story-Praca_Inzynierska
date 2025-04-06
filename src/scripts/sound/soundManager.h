@@ -1,13 +1,13 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 
-#include "../../lib/raylib.h"
+#include "../../../lib/raylib.h"
 
-void InitSoundManager(void);
-void UpdateSoundManager(void);
-void PlayDoorSound(void);
-void PlayBackgroundMusic(void);
-void StopBackgroundMusic(void);
-void UnloadSoundManager(void);
+void initSoundManager();
+void updateSoundManager();
+void playDoorSound();
+void playBackgroundMusic();
+void stopBackgroundMusic();
+void unloadSoundManager();
 
 #endif

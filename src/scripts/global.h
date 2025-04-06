@@ -44,6 +44,11 @@ extern char itemPath[256];
 extern bool wasMapLoaded;
 extern bool isNewGame;
 
+extern Music backgroundMusic;
+extern float musicVolume;
+extern bool musicPlaying;
+extern bool musicEnabled;
+
 
 void initGlobals();
 void loadProperties(const char *filename);

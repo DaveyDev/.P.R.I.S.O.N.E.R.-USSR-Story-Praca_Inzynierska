@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "translation.h"
+#include "sound/soundManager.h"
 
 #define MAX_RESOLUTIONS 3 // Adjust based on the number of resolutions available
 
@@ -55,6 +56,12 @@ char itemPath[256] = "\0";
 bool wasMapLoaded = false;
 bool isNewGame = false;
 
+
+Music backgroundMusic;
+float musicVolume = 1.0f;
+bool musicPlaying = false;
+bool musicEnabled = false;
+
 void initGlobals() {
     currentScene = (AppScene *)malloc(sizeof(AppScene));
     if (currentScene != NULL) {
@@ -99,6 +106,14 @@ void loadProperties(const char *filename) {
             strncpy(language, value, sizeof(language) - 1);
             language[sizeof(language) - 1] = '\0'; // Ensure null termination
             currentLanguage = getLanguageEnum(language); // Map to enum
+        }  else if (strcmp(key, "music") == 0) {
+            musicEnabled = (strcmp(value, "true") == 0);
+            if (musicEnabled) {
+                playBackgroundMusic();
+            }
+
+        } else if (strcmp(key, "music_volume") == 0) {
+            musicVolume = strtof(value, NULL); // Convert string to float
         }
 
         

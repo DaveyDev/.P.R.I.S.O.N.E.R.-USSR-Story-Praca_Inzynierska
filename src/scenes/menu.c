@@ -7,6 +7,7 @@
 #include "../scripts/translation.h"
 #include "../scripts/textures.h"
 #include "../scripts/cheats/debugCMD.h"
+#include "../scripts/sound/soundManager.h"
 
 
 
@@ -20,6 +21,8 @@ const int subtitleFontSize = 40;
 
 void menuScene(){
     
+    
+
     mousePoint = GetMousePosition();
     
      // Dynamically adjust font size based on resolution

@@ -11,13 +11,14 @@
 #include "src/scripts/textures.h"
 #include "src/scripts/translation.h"
 #include "src/scripts/cheats/debugCMD.h"
+#include "src/scripts/sound/soundManager.h"
 
 bool exitMenu = false;
 
 int main(){
 
 
-
+    initSoundManager();
     // Raylib Initialization
     loadProperties("game.properties");
 
@@ -31,6 +32,8 @@ int main(){
     loadTextures();
     loadLanguage();
     SetExitKey(0);
+    
+    //PlayBackgroundMusic();
 
 
     while (!WindowShouldClose() && !windowShouldClose) {
@@ -38,6 +41,8 @@ int main(){
         BeginDrawing();
 
         
+        
+        updateSoundManager();
 
         switch (*currentScene){
             case MENU:
