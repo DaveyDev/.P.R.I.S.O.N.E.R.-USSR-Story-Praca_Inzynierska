@@ -4,6 +4,7 @@
 #include "../../../lib/raylib.h"
 #include "../items/storage.h"
 
+
 #define INVENTORY_SIZE 5
 
 typedef struct {

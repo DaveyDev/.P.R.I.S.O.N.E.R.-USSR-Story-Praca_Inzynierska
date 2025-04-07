@@ -11,6 +11,8 @@ Texture2D itemsSet;
 Texture2D mainMenuBackground;
 Texture2D pauseMenuBackground;
 Image mainIco;
+Texture2D inmateTexture;
+Texture2D guardTexture;
 
 void loadTextures() {
     // Load the tileset texture
@@ -23,6 +25,8 @@ void loadTextures() {
     mainMenuBackground = LoadTexture("data/textures/mainMenuBackground.png");
     pauseMenuBackground = LoadTexture("data/textures/pauseMenuBackground.png");
     mainIco = LoadImage("data/textures/ico.png");
+    inmateTexture = LoadTexture("data/textures/inmateSet.png");
+    guardTexture = LoadTexture("data/textures/guardSet.png");
 }
 
 void unloadTextures() {

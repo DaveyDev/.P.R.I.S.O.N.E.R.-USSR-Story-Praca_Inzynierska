@@ -14,6 +14,9 @@ extern Texture2D itemsSet;
 extern Texture2D mainMenuBackground;
 extern Texture2D pauseMenuBackground;
 extern Image mainIco;
+extern Texture2D inmateTexture;
+extern Texture2D guardTexture;
+
 
 // Function declarations
 void loadTextures();

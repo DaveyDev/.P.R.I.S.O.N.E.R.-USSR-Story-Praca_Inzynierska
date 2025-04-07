@@ -9,6 +9,7 @@
 #include "objects.h"
 #include "../player/player.h"
 #include "../items/items.h"
+#include "../NPC/npc.h"
 
 
 
@@ -31,6 +32,7 @@ TileMapping neighbours_to_atlas_coord[] = {
     {{Grass, Dirt, Dirt, Grass}, {0, 1}},
     {{Dirt, Dirt, Dirt, Dirt}, {0, 3}}
 };
+
 
 
 
@@ -218,6 +220,9 @@ void drawMap(Camera2D camera) {
         }
     }
 
+    
+
+
     // **Step 3: Draw objects and the player at the right moment**
     for (int row = startRow; row <= endRow; row++) {
         for (int col = startCol; col <= endCol; col++) {
@@ -239,6 +244,18 @@ void drawMap(Camera2D camera) {
             }
         }
     }
+
+    //for testing
+    // **Step 2,5: Draw NPCs**
+    for (int i = 0; i < numInmates; i++) { // Make sure to define 'numInmates'
+        int npcRow = (int)(inmates[i].position.y / 32); // Convert NPC world Y to tile row
+        if (npcRow >= startRow && npcRow <= endRow) { // Ensure NPC is within the visible rows
+            EndMode2D();
+            DrawNPC(&inmates[i]);
+            BeginMode2D(camera);
+        }
+    }
+
 
     EndMode2D();
 }
