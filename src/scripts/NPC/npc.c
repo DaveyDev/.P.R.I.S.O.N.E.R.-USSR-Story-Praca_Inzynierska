@@ -58,7 +58,7 @@ void UpdateNPC(NPC *npc, float deltaTime) {
             break;
     }
 }
-
+/*
 void DrawNPC(NPC *npc) {
     Rectangle frameRec = { npc->frame * 32, 0, 32, 32 };
     //DrawTextureRec(npc->texture, frameRec, npc->position, WHITE);
@@ -66,3 +66,15 @@ void DrawNPC(NPC *npc) {
     Vector2 origin = {0};
     drawSpriteAnimationPro(npc-> npcAnimation[0], dest, origin, 0, WHITE);
 }
+*/
+
+void DrawNPC(NPC *npc, Camera2D camera) {
+    Vector2 screenPos = GetWorldToScreen2D(npc->position, camera);
+
+    Rectangle dest = { screenPos.x, screenPos.y, 64, 128 }; // scaled 2x from 32x64
+    Vector2 origin = { 0, 128 }; // origin at feet
+
+    drawSpriteAnimationPro(npc->npcAnimation[0], dest, origin, 0, WHITE);
+}
+
+

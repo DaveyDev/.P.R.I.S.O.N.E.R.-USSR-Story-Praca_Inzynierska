@@ -45,6 +45,6 @@ extern int numGuards;
 
 NPC InitNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior);
 void UpdateNPC(NPC *npc, float deltaTime);
-void DrawNPC(NPC *npc);
+void DrawNPC(NPC *npc, Camera2D camera);
 
 #endif

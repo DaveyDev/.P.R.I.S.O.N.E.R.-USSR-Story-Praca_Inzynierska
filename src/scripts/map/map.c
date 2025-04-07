@@ -251,11 +251,26 @@ void drawMap(Camera2D camera) {
         int npcRow = (int)(inmates[i].position.y / 32); // Convert NPC world Y to tile row
         if (npcRow >= startRow && npcRow <= endRow) { // Ensure NPC is within the visible rows
             EndMode2D();
-            DrawNPC(&inmates[i]);
+            for (int i = 0; i < numInmates; i++) {
+            DrawNPC(&inmates[i], camera);
+            //DrawNPC(&guards[i], camera);
+            }
+
             BeginMode2D(camera);
         }
     }
+    for (int i = 0; i < numGuards; i++) { // Make sure to define 'numInmates'
+        int npcRow = (int)(guards[i].position.y / 32); // Convert NPC world Y to tile row
+        if (npcRow >= startRow && npcRow <= endRow) { // Ensure NPC is within the visible rows
+            EndMode2D();
+            for (int i = 0; i < numGuards; i++) {
+            //DrawNPC(&inmates[i], camera);
+            DrawNPC(&guards[i], camera);
+            }
 
+            BeginMode2D(camera);
+        }
+    }
 
     EndMode2D();
 }
