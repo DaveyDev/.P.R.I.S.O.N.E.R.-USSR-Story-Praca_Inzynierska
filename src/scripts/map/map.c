@@ -252,7 +252,7 @@ void drawMap(Camera2D camera) {
         if (npcRow >= startRow && npcRow <= endRow) { // Ensure NPC is within the visible rows
             EndMode2D();
             for (int i = 0; i < numInmates; i++) {
-            DrawNPC(&inmates[i], camera);
+            drawNPC(&inmates[i], camera);
             //DrawNPC(&guards[i], camera);
             }
 
@@ -265,7 +265,7 @@ void drawMap(Camera2D camera) {
             EndMode2D();
             for (int i = 0; i < numGuards; i++) {
             //DrawNPC(&inmates[i], camera);
-            DrawNPC(&guards[i], camera);
+            drawNPC(&guards[i], camera);
             }
 
             BeginMode2D(camera);

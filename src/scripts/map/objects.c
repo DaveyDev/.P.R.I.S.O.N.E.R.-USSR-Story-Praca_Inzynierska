@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "../items/idList.h"
 #include "../map/map.h"
+#include "../sound/soundManager.h"
 
 WallMapping wall_neighbours_to_atlas_coord[] = { // top, bottom, left, right
     {{StoneWall, StoneWall, StoneWall, StoneWall}, {1, 1}, {1, 1}},
@@ -143,10 +144,11 @@ void freeObjects(int **objects, int rows) {
 void openDoor(int row, int col){
     if(details[row][col] == GREY_DOOR) details[row][col] = OPEN_GREY_DOOR;
     if(details[row][col] == LIGHTGREY_DOOR) details[row][col] = OPEN_LIGHTGREY_DOOR;
+    playOpenDoorSound();
 
 }
 void closeDoor(int row, int col){
     if(details[row][col] == OPEN_GREY_DOOR) details[row][col] = GREY_DOOR;
     if(details[row][col] == OPEN_LIGHTGREY_DOOR) details[row][col] = LIGHTGREY_DOOR;
-
+    playCloseDoorSound();
 }

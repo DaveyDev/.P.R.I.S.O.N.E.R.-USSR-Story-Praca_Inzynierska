@@ -1,5 +1,6 @@
 #include "npc.h"
 #include "../textures.h"
+#include <stdio.h>
 
 NPC inmates[10];
 int numInmates = 0;
@@ -7,7 +8,7 @@ int numInmates = 0;
 NPC guards[5];
 int numGuards = 0;
 
-NPC InitNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior) {
+NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior) {
     NPC npc;
     npc.texture = texture;
     npc.position = position;
@@ -31,7 +32,7 @@ NPC InitNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     return npc;
 }
 
-void UpdateNPC(NPC *npc, float deltaTime) {
+void updateNPC(NPC *npc, float deltaTime) {
     npc->frameCounter++;
     if (npc->frameCounter >= 10) {
         npc->frame = (npc->frame + 1) % 4;
@@ -68,7 +69,7 @@ void DrawNPC(NPC *npc) {
 }
 */
 
-void DrawNPC(NPC *npc, Camera2D camera) {
+void drawNPC(NPC *npc, Camera2D camera) {
     Vector2 screenPos = GetWorldToScreen2D(npc->position, camera);
 
     Rectangle dest = { screenPos.x, screenPos.y, 64, 128 }; // scaled 2x from 32x64
@@ -78,3 +79,55 @@ void DrawNPC(NPC *npc, Camera2D camera) {
 }
 
 
+
+void saveNPCsToFile(const char *filename, NPC *npcArray, int count) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        fprintf(stderr, "Error saving NPCs to %s\n", filename);
+        return;
+    }
+
+    for (int i = 0; i < count; i++) {
+        NPC *npc = &npcArray[i];
+        fprintf(file, "%.2f,%.2f:%.2f,%.2f:%d:%d:%d:%d\n",
+            npc->position.x, npc->position.y,
+            npc->origin.x, npc->origin.y,
+            npc->type,
+            npc->behavior,
+            npc->direction,
+            npc->dir
+        );
+    }
+
+    fclose(file);
+}
+
+int loadNPCsFromFile(const char *filename, NPC *npcArray, int maxCount, Texture2D texture) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        fprintf(stderr, "Error loading NPCs from %s\n", filename);
+        return 0;
+    }
+
+    int count = 0;
+    while (!feof(file) && count < maxCount) {
+        float posX, posY, originX, originY;
+        int type, behavior, direction, dir;
+
+        int matched = fscanf(file, "%f,%f:%f,%f:%d:%d:%d:%d\n",
+                             &posX, &posY,
+                             &originX, &originY,
+                             &type, &behavior, &direction, &dir);
+
+        if (matched == 8) {
+            NPC npc = initNPC(texture, (Vector2){posX, posY}, (NPCType)type, (NPCBehavior)behavior);
+            npc.origin = (Vector2){originX, originY};
+            npc.direction = direction;
+            npc.dir = (Direction)dir;
+            npcArray[count++] = npc;
+        }
+    }
+
+    fclose(file);
+    return count;
+}

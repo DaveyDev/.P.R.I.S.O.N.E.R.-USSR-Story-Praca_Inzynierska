@@ -43,8 +43,10 @@ extern int numInmates;
 extern NPC guards[5];
 extern int numGuards;
 
-NPC InitNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior);
-void UpdateNPC(NPC *npc, float deltaTime);
-void DrawNPC(NPC *npc, Camera2D camera);
+NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior);
+void updateNPC(NPC *npc, float deltaTime);
+void drawNPC(NPC *npc, Camera2D camera);
+void saveNPCsToFile(const char *filename, NPC *npcArray, int count);
+int loadNPCsFromFile(const char *filename, NPC *npcArray, int maxCount, Texture2D texture);
 
 #endif

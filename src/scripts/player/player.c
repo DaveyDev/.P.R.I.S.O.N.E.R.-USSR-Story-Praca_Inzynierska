@@ -6,6 +6,7 @@
 #include "../global.h"
 #include <stdio.h>
 #include <string.h>
+#include "../sound/soundManager.h"
 
 Player player;
 
@@ -14,6 +15,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> position.y = screenHeight/2;
     player-> speed = speed;
     player-> collider  = (Rectangle){player-> position.x + 2, player->position.y + 50, 16, 25};
+    player->footstepTimer = 0.5f;
 
     // Define the oval collider parameters
     player->colliderCenter = (Vector2){player->position.x + 16, player->position.y + 50};
@@ -21,35 +23,35 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player->colliderRadiusY = 3;   // Half the height
     
     player-> playerTexture = LoadTexture("data/textures/playerSet.png");
-    player-> playerAnimation[0] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
+    player-> playerAnimation[0] = createSpriteAnimation(player-> playerTexture, 4, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
         (Rectangle){32, 0, 32, 64},
         (Rectangle){64, 0, 32, 64},
         (Rectangle){96, 0, 32, 64},
         
     }, 4);
-    player-> playerAnimation[1] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
+    player-> playerAnimation[1] = createSpriteAnimation(player-> playerTexture, 4, (Rectangle[]){
         (Rectangle){0, 64, 32, 64}, 
         (Rectangle){32, 64, 32, 64},
         (Rectangle){64, 64, 32, 64},
         (Rectangle){96, 64, 32, 64},
         
     }, 4);
-    player-> playerAnimation[2] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
+    player-> playerAnimation[2] = createSpriteAnimation(player-> playerTexture, 4, (Rectangle[]){
         (Rectangle){0, 128, 32, 64}, 
         (Rectangle){32, 128, 32, 64},
         (Rectangle){64, 128, 32, 64},
         (Rectangle){96, 128, 32, 64},
         
     }, 4);
-    player-> playerAnimation[3] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
+    player-> playerAnimation[3] = createSpriteAnimation(player-> playerTexture, 4, (Rectangle[]){
         (Rectangle){0, 192, 32, 64}, 
         (Rectangle){32, 192, 32, 64},
         (Rectangle){64, 192, 32, 64},
         (Rectangle){96, 192, 32, 64},
         
     }, 4);
-    player-> playerAnimation[4] = createSpriteAnimation(player-> playerTexture, 3, (Rectangle[]){
+    player-> playerAnimation[4] = createSpriteAnimation(player-> playerTexture, 4, (Rectangle[]){
         (Rectangle){0, 256, 32, 64}, 
         (Rectangle){32, 256, 32, 64},
         (Rectangle){64, 256, 32, 64},
@@ -145,31 +147,40 @@ bool CheckCollisionEllipseCircle(Vector2 ellipseCenter, float radiusX, float rad
 void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     Vector2 newColliderCenter = player->colliderCenter;
+    bool isMoving = false;
 
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D')) {
         newColliderCenter.x += speedPerSecond;
         if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
             player->position.x += speedPerSecond;
+            isMoving = true;
         }
     }
     if (IsKeyDown(KEY_LEFT) || IsKeyDown('A')) {
         newColliderCenter.x -= speedPerSecond;
         if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
             player->position.x -= speedPerSecond;
+            isMoving = true;
         }
     }
     if (IsKeyDown(KEY_DOWN) || IsKeyDown('S')) {
         newColliderCenter.y += speedPerSecond;
         if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
             player->position.y += speedPerSecond;
+            isMoving = true;
         }
     }
     if (IsKeyDown(KEY_UP) || IsKeyDown('W')) {
         newColliderCenter.y -= speedPerSecond;
         if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
             player->position.y -= speedPerSecond;
+            isMoving = true;
         }
     }
+
+    calculatePlayerSteps(isMoving, deltaTime);  
+
+    
 
     // Update collider position
     Vector2 worldPos = GetScreenToWorld2D((Vector2){player->position.x, player->position.y}, camera);

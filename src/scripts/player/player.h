@@ -12,7 +12,8 @@ typedef struct {
     float speed;
     Rectangle collider;
     SpriteAnimation playerAnimation[5];
-    
+    float footstepTimer;
+
     Vector2 colliderCenter;  // Center of the oval
     float colliderRadiusX;   // Horizontal radius
     float colliderRadiusY;   // Vertical radius

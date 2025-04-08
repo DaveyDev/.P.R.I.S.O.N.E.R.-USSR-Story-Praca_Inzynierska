@@ -1,16 +1,27 @@
 #include "soundManager.h"
 #include "../global.h"
+#include "../player/player.h"
+#include <math.h>
 
-static Sound doorSound;
+static Sound doorOpenSound;
+static Sound doorCloseSound;
+static Sound pickupItemSound;
+static Sound footstepSound;
+
 //static Music backgroundMusic;
 //static bool musicPlaying = false;
 
 void initSoundManager() {
     InitAudioDevice();
 
-    doorSound = LoadSound("data/sound/door.wav");
+    doorOpenSound = LoadSound("data/sound/doorOpen.wav");
+    pickupItemSound = LoadSound("data/sound/pickup.wav");
+    doorCloseSound = LoadSound("data/sound/doorClose.wav");
     backgroundMusic = LoadMusicStream("data/sound/background.mp3");
+    footstepSound = LoadSound("data/sound/footstep.wav"); 
+
     SetMusicVolume(backgroundMusic, 0.5f);
+    
 }
 
 void updateSoundManager() {
@@ -19,8 +30,17 @@ void updateSoundManager() {
     }
 }
 
-void playDoorSound() {
-    PlaySound(doorSound);
+void playOpenDoorSound() {
+    PlaySound(doorOpenSound);
+}
+void playCloseDoorSound(){
+    PlaySound(doorCloseSound);
+}
+void playPickupItemSound(){
+    PlaySound(pickupItemSound);
+}
+void playFootstepSound() {
+    PlaySound(footstepSound);
 }
 
 void playBackgroundMusic() {
@@ -37,8 +57,24 @@ void stopBackgroundMusic() {
     }
 }
 
+void calculatePlayerSteps(bool isMoving, float deltaTime){  //calculates if player footstep sound should play 
+    if (isMoving) {
+        player.footstepTimer += deltaTime;
+        if (player.footstepTimer >= 0.5f) { // 0.4 seconds between steps
+            playFootstepSound();
+            player.footstepTimer = 0.0f;
+        }
+        } else {
+        player.footstepTimer = 0.5f; // Reset so it plays immediately when walking again
+        }
+}
+
 void unloadSoundManager() {
-    UnloadSound(doorSound);
+    UnloadSound(doorOpenSound);
+    UnloadSound(doorCloseSound);
+    UnloadSound(pickupItemSound);
     UnloadMusicStream(backgroundMusic);
+    UnloadSound(footstepSound);
+
     CloseAudioDevice();
 }

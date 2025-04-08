@@ -5,9 +5,15 @@
 
 void initSoundManager();
 void updateSoundManager();
-void playDoorSound();
+void playOpenDoorSound();
+void playCloseDoorSound();
 void playBackgroundMusic();
 void stopBackgroundMusic();
 void unloadSoundManager();
+void playPickupItemSound();
+void playFootstepSound();
+void calculatePlayerSteps(bool isMoving, float deltaTime);
+
+
 
 #endif

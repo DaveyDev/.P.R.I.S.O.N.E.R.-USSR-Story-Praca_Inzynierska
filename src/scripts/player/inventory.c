@@ -8,6 +8,7 @@
 #include "../textures.h"
 #include "../items/storage.h"
 #include "../items/idList.h"
+#include "../sound/soundManager.h"
 
 
 //#define INVENTORY_SIZE 5
@@ -34,6 +35,7 @@ int addItemToInventory(int id, const char *name) {
             strncpy(inventory[i].name, name, sizeof(inventory[i].name) - 1);
             inventory[i].quantity = 1;
             printf("Inventory slot %d filled with item %d (%s)\n", i, id, name);
+            playPickupItemSound();
             return 1; // Successfully added
         }
     }

@@ -10,6 +10,8 @@
 #include <unistd.h>  // For access()
 #include "../scripts/player/inventory.h"
 #include "../scripts/cheats/debugCMD.h"
+#include "../scripts/NPC/npc.h"
+#include "../scripts/textures.h"
 
 
 
@@ -55,6 +57,13 @@ void startGameScene(){
         //snprintf(chestPath, sizeof(chestPath), "data/levels/%s/chests.dat", mapName);
         makeGameSave(mapName); // creates save by copying files from level to save folder
         initInventory();
+        //inmates[numInmates++] = initNPC(inmateTexture, (Vector2){ 300, 160 }, NPC_INMATE, BEHAVIOR_PATROL);
+        //guards[numGuards++] = initNPC(guardTexture, (Vector2){ 500, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
+        //guards[numGuards++] = initNPC(guardTexture, (Vector2){ 500, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
+        //guards[numGuards++] = initNPC(guardTexture, (Vector2){ 540, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
+        //guards[numGuards++] = initNPC(guardTexture, (Vector2){ 580, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
+        numInmates = loadNPCsFromFile("data/saves/save1/inmates.dat", inmates, 10, inmateTexture);
+        numGuards = loadNPCsFromFile("data/saves/save1/guards.dat", guards, 5, guardTexture);
         //loadChests();
         isNewGame = true;
         *currentScene = GAME;
@@ -72,6 +81,8 @@ void startGameScene(){
         //if(access(mapPath, F_OK) == 0) *currentScene = GAME;
         initInventory();
         loadInventory();
+        numInmates = loadNPCsFromFile("data/saves/save1/inmates.dat", inmates, 10, inmateTexture);
+        numGuards = loadNPCsFromFile("data/saves/save1/guards.dat", guards, 5, guardTexture);
         isNewGame = false;
         *currentScene = GAME;  
         

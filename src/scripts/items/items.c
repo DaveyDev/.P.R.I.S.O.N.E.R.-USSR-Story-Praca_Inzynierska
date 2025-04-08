@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../textures.h"
+#include "../sound/soundManager.h"
 
 Item items[MAX_ITEMS];  // Define the actual storage
 int itemCount = 0;  
@@ -16,6 +17,7 @@ void pickUpItem(int index) {
     if (addItemToInventory(items[index].id, items[index].itemName)) {
         printf("Item added to inventory successfully!\n");
 
+        
         // Shift the remaining items in the array to "remove" it
         for (int i = index; i < itemCount - 1; i++) {
             items[i] = items[i + 1];
@@ -172,6 +174,7 @@ void addItem(Vector2 position, int itemID, int quantity, const char *name) {
     items[itemCount].itemPos = position;
     strncpy(items[itemCount].itemName, name, NAME_LEN - 1);
     items[itemCount].itemName[NAME_LEN - 1] = '\0'; // Ensure null termination
+    
 
     printf("Added item %d (%s) at (%.2f, %.2f)\n", itemID, name, position.x, position.y);
 

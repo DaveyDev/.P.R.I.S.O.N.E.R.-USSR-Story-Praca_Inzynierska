@@ -10,6 +10,7 @@
 #include "../scripts/textures.h"
 #include "../scripts/player/inventory.h"
 #include "../scripts/cheats/debugCMD.h"
+#include "../scripts/NPC/npc.h"
 
 
 
@@ -86,6 +87,11 @@ void pauseScene(){
         
         snprintf(chestPath, sizeof(chestPath), "data/saves/save1/chests.dat");
         saveChests(chestPath);
+
+        // Saving
+        saveNPCsToFile("data/saves/save1/inmates.dat", inmates, numInmates);
+        saveNPCsToFile("data/saves/save1/guards.dat", guards, numGuards);
+
         *currentScene = MENU;
     }
 

@@ -40,11 +40,7 @@ void prisonScene() {
         
 
         
-        inmates[numInmates++] = InitNPC(inmateTexture, (Vector2){ 300, 160 }, NPC_INMATE, BEHAVIOR_PATROL);
-        guards[numGuards++] = InitNPC(guardTexture, (Vector2){ 500, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
-        guards[numGuards++] = InitNPC(guardTexture, (Vector2){ 500, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
-        guards[numGuards++] = InitNPC(guardTexture, (Vector2){ 540, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
-        guards[numGuards++] = InitNPC(guardTexture, (Vector2){ 580, 160 }, NPC_GUARD, BEHAVIOR_IDLE);
+        
 
 
 
@@ -115,11 +111,11 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
     //f or testing 
     for (int i = 0; i < numInmates; i++) {
-    UpdateNPC(&inmates[i], deltaTime);
+    updateNPC(&inmates[i], deltaTime);
     }
 
     for (int i = 0; i < numGuards; i++) {
-    UpdateNPC(&guards[i], deltaTime);
+    updateNPC(&guards[i], deltaTime);
     }
 
 
