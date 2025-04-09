@@ -17,6 +17,7 @@ bool isWallLikeDetail(int detail);
 void openDoor(int row, int col);
 void closeDoor(int row, int col);
 
+
 // Define your tile types
 enum WallType {
     StoneWall = 11,

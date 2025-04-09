@@ -238,6 +238,15 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
             if (!CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider) && (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR)) {
                 closeDoor(row, col);
             }
+
+            // 🏁 Winning block
+            if (objectID == WINNING_BLOCK) {
+                if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+                    playerWon = true;  // You should declare this flag somewhere globally
+                    *currentScene = WIN_GAME;
+                    return false; // don't block movement
+                }
+            }
         }
     }
     return false;

@@ -10,7 +10,7 @@
 #include "../player/player.h"
 #include "../items/items.h"
 #include "../NPC/npc.h"
-
+#include "../items/idList.h"
 
 
 
@@ -241,6 +241,10 @@ void drawMap(Camera2D camera) {
                 drawTree(objects[row][col] - 1000, block);
             } else if (objects[row][col] == 11) {
                 drawWall(row, col, wallSet);
+            } else if (isEditor && objects[row][col] == WINNING_BLOCK) {
+                // Draw a yellow rectangle with a "W" inside
+                DrawRectangleLinesEx(block, 2, YELLOW);
+                DrawText("W", block.x + 10, block.y + 6, 16, YELLOW);
             }
         }
     }

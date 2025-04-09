@@ -55,6 +55,8 @@ char itemPath[256] = "\0";
 
 bool wasMapLoaded = false;
 bool isNewGame = false;
+bool playerWon = false;
+bool isEditor = false;
 
 
 Music backgroundMusic;

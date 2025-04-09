@@ -48,6 +48,8 @@ extern Music backgroundMusic;
 extern float musicVolume;
 extern bool musicPlaying;
 extern bool musicEnabled;
+extern bool playerWon;
+extern bool isEditor;
 
 
 void initGlobals();

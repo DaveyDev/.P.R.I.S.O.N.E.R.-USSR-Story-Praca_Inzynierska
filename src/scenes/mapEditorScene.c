@@ -74,6 +74,10 @@ void mapsEditorScene() {
     editMap(cameraE);
     updateItems(cameraE);
     drawItems(cameraE);
+
+
+    
+
     
 
     

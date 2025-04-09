@@ -5,6 +5,8 @@
 // Define your tile types with unique IDs
 typedef enum {
 
+    WINNING_BLOCK = 12,
+    
     //PLACEABLE
     SIMPLE_STONE = 2000,
     COPPER_ORE = 2001,

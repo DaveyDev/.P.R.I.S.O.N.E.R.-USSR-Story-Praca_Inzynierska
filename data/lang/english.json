@@ -17,6 +17,10 @@
 	"pause_exit": "EXIT TO MENU",
 	"startgame_newgame": "NEW GAME",
 	"startgame_loadsave": "LOAD GAME",
-	"dialogue_main_character_test1": "could you please leave my land"
+	"dialogue_main_character_test1": "could you please leave my land",
+	"ending_good_escape": "You have escaped the gulag - well done, comrade!",
+	"ending_good_escape_line1": "You have escaped the gulag",
+	"ending_good_escape_line2": "well done, comrade!",
+	"ending_bad_death": "you died in a gulag you moron"
 }
   

@@ -25,12 +25,11 @@ int main(){
     InitWindow(resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, ".P.R.I.S.O.N.E.R. - Map Editor");
     SetTargetFPS(60);
     initGuiStyle();
-    
     loadTextures();
-
     initGlobals();
-    
+
     SetExitKey(0);
+    isEditor = true;
     
 
     while (!WindowShouldClose()) {
