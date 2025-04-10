@@ -36,7 +36,9 @@ int addItemToInventory(int id, const char *name) {
             inventory[i].quantity = 1;
             printf("Inventory slot %d filled with item %d (%s)\n", i, id, name);
             playPickupItemSound();
+            useFood(0.01f); // uses food each time player picks up item.
             return 1; // Successfully added
+            
         }
     }
     printf("Failed to add item to inventory: No space\n");

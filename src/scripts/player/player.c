@@ -59,7 +59,7 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
         
     }, 4);
 
-    player-> food = 20;
+    player-> food = 20.0f;
     player -> health = 30;
     
 }
@@ -260,7 +260,7 @@ void drawPlayerStats(Player *player) {
 
     // Draw health and food at the top-left corner
     DrawText(TextFormat("Health: %d", player->health), 10, 10, 20, textColor); // Draw health
-    DrawText(TextFormat("Food: %d", player->food), 10, 40, 20, textColor); // Draw food
+    DrawText(TextFormat("Food: %d", (int)player->food), 10, 40, 20, textColor); // Draw food
 }
 
 void savePlayerStats(Player *player) {
@@ -269,7 +269,7 @@ void savePlayerStats(Player *player) {
         fprintf(stderr, "Error saving player stats\n");
         return;
     }
-    fprintf(file, "%d:%d", player->health, player->food);
+    fprintf(file, "%d:%f", player->health, player->food);
     fclose(file);
 }
 
@@ -279,11 +279,16 @@ int loadPlayerStats(Player *player) {
         fprintf(stderr, "Error loading player stats\n");
         return 0; // Return 0 to indicate failure
     }
-    if (fscanf(file, "%d:%d", &player->health, &player->food) != 2) {
+    if (fscanf(file, "%d:%f", &player->health, &player->food) != 2) {
         fprintf(stderr, "Error reading player stats\n");
         fclose(file);
         return 0;
     }
     fclose(file);
     return 1; // Return 1 to indicate success
+}
+
+
+void useFood(float foodAmound){
+    player.food = player.food - foodAmound;
 }

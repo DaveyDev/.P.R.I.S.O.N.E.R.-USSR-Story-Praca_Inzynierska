@@ -49,20 +49,20 @@ const int numResolutions = sizeof(resolutions) / sizeof(resolutions[0]);  // Now
 
 char language[16] = "ENG";       // Default language
 
+//map and items
 char mapPath[256] = "\0";
 char itemPath[256] = "\0";
-
-
 bool wasMapLoaded = false;
 bool isNewGame = false;
 bool playerWon = false;
 bool isEditor = false;
 
-
+//music
 Music backgroundMusic;
 float musicVolume = 1.0f;
 bool musicPlaying = false;
 bool musicEnabled = false;
+
 
 void initGlobals() {
     currentScene = (AppScene *)malloc(sizeof(AppScene));

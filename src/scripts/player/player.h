@@ -18,7 +18,7 @@ typedef struct {
     float colliderRadiusX;   // Horizontal radius
     float colliderRadiusY;   // Vertical radius
 
-    int food;
+    float food;
     int health;
 
     
@@ -37,6 +37,7 @@ bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radius
 void drawPlayerStats(Player *player);
 void savePlayerStats(Player *player);
 int loadPlayerStats(Player *player);
+void useFood(float foodAmound);
 
 
 #endif  // PLAYER_H

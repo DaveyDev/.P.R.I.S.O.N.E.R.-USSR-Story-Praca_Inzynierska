@@ -38,18 +38,20 @@ extern Resolution resolutions[];
 extern int currentResolutionIndex;
 extern const int numResolutions;  // Declare the number of resolutions
 
+//map and items
 extern char mapPath[256];
 extern char itemPath[256];
-
 extern bool wasMapLoaded;
 extern bool isNewGame;
 
+//music
 extern Music backgroundMusic;
 extern float musicVolume;
 extern bool musicPlaying;
 extern bool musicEnabled;
 extern bool playerWon;
 extern bool isEditor;
+
 
 
 void initGlobals();

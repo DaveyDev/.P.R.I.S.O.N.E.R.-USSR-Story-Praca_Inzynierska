@@ -6,6 +6,8 @@
 typedef enum {
 
     WINNING_BLOCK = 12,
+    LUMBER_WORK_CHEST = 13,
+
     
     //PLACEABLE
     SIMPLE_STONE = 2000,

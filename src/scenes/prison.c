@@ -12,6 +12,7 @@
 #include "../scripts/player/inventory.h"
 #include "../scripts/items/storage.h"
 #include "../scripts/NPC/npc.h"
+#include "../scripts/dayCycle.h"
 
 
 
@@ -78,27 +79,31 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 }
 
 
-    
+    //map
     drawMap(camera);
     updateMap(camera);
-
-    //drawItems(camera);
-    //updateItems(camera);
-
-    //drawPlayer(&player);
+    //day cycle
+    updateDayCycle();
+    //player and items
     updatePlayer(&player, GetFrameTime(), objects, details, rows, cols, camera);
-
     handleInventoryClick();  // Click inventory to pick up items
     placeSelectedItem(camera);  // Right-click to place items
+    // Draw day/night overlay on top
+    drawDayCycleOverlay(GetScreenWidth(), GetScreenHeight());
+
     updateItems(camera);  // Left-click to pick up items
-    //drawItems(camera);  // Draw items in the world
     drawInventory();  // Draw the inventory bar
     drawSelectedItem();  // Show held item when dragging
     drawPlayerStats(&player);
-
+    //chests
     updateChests(map, rows, cols, camera);
-    drawChestUI();  
+    drawChestUI();
 
+    // Convert the time to a string with floating point precision
+    char timeStr[20];
+    sprintf(timeStr, "TIME: %.2f", getTime());
+
+    DrawText(timeStr, GetScreenWidth() - 150, 20, 20, WHITE);
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
@@ -156,6 +161,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     }
     }
 
+    
     if(IsKeyPressed(KEY_G)) player.health = player.health - 1;
 
     showFPS();

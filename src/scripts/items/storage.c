@@ -15,7 +15,7 @@ int openedChestRow = -1, openedChestCol = -1; // Track opened chest position
 bool chestUIOpen = false; // Is the chest window open?
 
 bool isChest(int objectID) {
-    return objectID == CABINET;
+    return objectID == CABINET || objectID == LUMBER_WORK_CHEST;;
 }
 
 void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
@@ -44,6 +44,32 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
             }
         }
     }
+    // Check for work chest completion
+    for (int row = 0; row < mapRows; row++) {
+        for (int col = 0; col < mapCols; col++) {
+            if (objects[row][col] == LUMBER_WORK_CHEST) {
+                Chest *chest = &chestData[row][col];
+
+                int logCount = 0;
+                for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+                    if (chest->storage.items[i] == WOOD_LOG) { 
+                        logCount++;
+                    }
+                }
+
+                if (logCount >= 4) {
+                    // Clear chest and change ID to completed chest
+                    for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+                        chest->storage.items[i] = -1;
+                    }
+                    chest->storage.itemCount = 0;
+                    printf("work chest completed\n");
+                    //objects[row][col] = 13; // work done chest
+                }
+            }
+        }
+    }
+
 }
 
 
@@ -63,7 +89,18 @@ void drawChestUI() {
 
     DrawRectangle(startX - 10, startY - 10, chestWidth + 20, chestHeight + 20, DARKGRAY);
     DrawRectangleLines(startX - 10, startY - 10, chestWidth + 20, chestHeight + 20, WHITE);
-    DrawText("Chest", startX + chestWidth / 2 - 30, startY - 30, 20, YELLOW);
+
+
+    //DrawText("Chest", startX + chestWidth / 2 - 30, startY - 30, 20, YELLOW);
+    int chestID = objects[openedChestRow][openedChestCol];
+    const char* chestTitle = "Chest";
+
+    if (chestID == LUMBER_WORK_CHEST) chestTitle = "Work Chest";
+    else if (chestID == CABINET) chestTitle = "Chest";
+
+    int titleWidth = MeasureText(chestTitle, 20);
+    DrawText(chestTitle, startX + (chestWidth - titleWidth) / 2, startY - 30, 20, YELLOW);
+
 
     Vector2 mousePos = GetMousePosition();
 

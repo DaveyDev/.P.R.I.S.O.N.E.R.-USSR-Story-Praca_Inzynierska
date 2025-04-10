@@ -215,6 +215,8 @@ void drawMap(Camera2D camera) {
             }
             if (details[row][col] >= 2000 && details[row][col] <= 2999) {
                 drawPlaceable(details[row][col] - 2000, block);
+            } else if (objects[row][col] == LUMBER_WORK_CHEST){
+                drawPlaceable(CABINET - 2000, block);
             }
             
         }
@@ -245,7 +247,7 @@ void drawMap(Camera2D camera) {
                 // Draw a yellow rectangle with a "W" inside
                 DrawRectangleLinesEx(block, 2, YELLOW);
                 DrawText("W", block.x + 10, block.y + 6, 16, YELLOW);
-            }
+            } 
         }
     }
 
