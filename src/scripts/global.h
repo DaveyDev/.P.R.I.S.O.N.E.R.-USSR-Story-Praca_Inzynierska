@@ -52,6 +52,9 @@ extern bool musicEnabled;
 extern bool playerWon;
 extern bool isEditor;
 
+//work
+extern bool isWorkDone;
+
 
 
 void initGlobals();

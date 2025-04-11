@@ -5,6 +5,7 @@
 #include "../../../lib/raylib.h"
 #include "../items/items.h"
 #include "../player/inventory.h"
+#include "../dayCycle.h"
 
 #define MAX_INPUT_LENGTH 128
 
@@ -35,8 +36,6 @@ void processCommand() {
         printf("FPS counter disabled.\n");
     } else if (strncmp(inputBuffer, "give ", 5) == 0) {
         int itemID;
-
-        // Try to parse the command format: "give <id>"
         if (sscanf(inputBuffer + 5, "%d", &itemID) == 1) {
             if (addItemToInventory(itemID, "Unknown Item")) {
                 printf("Given item with ID: %d\n", itemID);
@@ -46,10 +45,19 @@ void processCommand() {
         } else {
             printf("Invalid format! Use: give <id>\n");
         }
+    } else if (strncmp(inputBuffer, "time set ", 9) == 0) {
+        int hour;
+        if (sscanf(inputBuffer + 9, "%d", &hour) == 1 && hour >= 0 && hour <= 23) {
+            setTimeOfDay((float)hour);
+            printf("Time set to %02d:00\n", hour);
+        } else {
+            printf("Invalid format! Use: time set <0-23>\n");
+        }
     } else {
         printf("Unknown command: %s\n", inputBuffer);
     }
 }
+
 
 void updateDebugCMD() {
     if (IsKeyPressed(KEY_GRAVE)) {  // ` key

@@ -63,6 +63,9 @@ float musicVolume = 1.0f;
 bool musicPlaying = false;
 bool musicEnabled = false;
 
+//work
+bool isWorkDone = false;
+
 
 void initGlobals() {
     currentScene = (AppScene *)malloc(sizeof(AppScene));

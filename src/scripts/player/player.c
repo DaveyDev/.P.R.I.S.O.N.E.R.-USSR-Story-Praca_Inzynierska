@@ -7,8 +7,15 @@
 #include <stdio.h>
 #include <string.h>
 #include "../sound/soundManager.h"
+#include "../dayCycle.h"
+#include "../items/idList.h"
 
 Player player;
+
+const float damageCooldown = 0.1f; // 0.5 seconds between damage
+const int barbedWireDamage = 1;
+
+
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
     player-> position.x = screenWidth/2;
@@ -60,7 +67,9 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     }, 4);
 
     player-> food = 20.0f;
-    player -> health = 30;
+    player -> health = 30.0f;
+
+    player-> lastDamageTime = 0.0f;
     
 }
 
@@ -223,7 +232,31 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
                 }
             }
 
-            if (objectID >= 2000 && objectID <= 2999 && objectID != WOODEN_FLOOR && objectID != STONE_FLOOR) {
+            if (objectID == LUMBER_WORK_CHEST) {
+                Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
+                float circleRadius = 8.0f;
+                if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
+                    return true;
+                }
+            }
+
+            if (objectID == BARBED_WIRE || objectID == BARBED_WIRE_VERTICAL) {
+                if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+                    float currentTime = GetTime();
+                    if (currentTime - player.lastDamageTime >= damageCooldown) {
+                        player.health -= barbedWireDamage;
+                        player.lastDamageTime = currentTime;
+                    }
+                return true;
+                }
+            }
+
+
+            if (objectID >= 2000 && objectID <= 2999 
+                && objectID != WOODEN_FLOOR 
+                && objectID != STONE_FLOOR
+                && objectID != BARBED_WIRE
+                && objectID != BARBED_WIRE_VERTICAL) {
                 Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
                 float circleRadius = 12.0f;
                 if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
@@ -269,26 +302,59 @@ void savePlayerStats(Player *player) {
         fprintf(stderr, "Error saving player stats\n");
         return;
     }
-    fprintf(file, "%d:%f", player->health, player->food);
+
+    // Save format: health:food:timeOfDay:dayCount
+    fprintf(file, "%f:%f:%f:%d", player->health, player->food, getTimeOfDay(), getDayCount());
+
     fclose(file);
 }
+
 
 int loadPlayerStats(Player *player) {
     FILE *file = fopen("data/saves/save1/player.dat", "r");
     if (!file) {
         fprintf(stderr, "Error loading player stats\n");
-        return 0; // Return 0 to indicate failure
+        return 0;
     }
-    if (fscanf(file, "%d:%f", &player->health, &player->food) != 2) {
+
+    float loadedTimeOfDay;
+    int loadedDayCount;
+
+    // Read format must match saved format
+    if (fscanf(file, "%f:%f:%f:%d", &player->health, &player->food, &loadedTimeOfDay, &loadedDayCount) != 4) {
         fprintf(stderr, "Error reading player stats\n");
         fclose(file);
         return 0;
     }
+
     fclose(file);
-    return 1; // Return 1 to indicate success
+
+    // Apply loaded values to the day cycle
+    //setDaySpeed(0.05f);  // Ensure a default speed or use your current one
+    extern void setTimeOfDay(float);  // You’ll need to define this setter
+    extern void setDayCount(int);     // And this one too
+
+    setTimeOfDay(loadedTimeOfDay);
+    setDayCount(loadedDayCount);
+
+    return 1;
 }
 
 
-void useFood(float foodAmound){
-    player.food = player.food - foodAmound;
+
+void useFood(float foodAmount) {
+    player.food -= foodAmount;
+
+    if (player.food < 0) {
+        // Convert the "overdrawn" food into health loss
+        float leftover = -player.food;
+        player.food = 0;
+
+        player.health -= leftover;
+        if (player.health < 0) {
+            player.health = 0;
+        }
+    }
 }
+
+

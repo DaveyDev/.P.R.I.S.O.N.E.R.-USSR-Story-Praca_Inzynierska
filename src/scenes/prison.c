@@ -100,10 +100,12 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drawChestUI();
 
     // Convert the time to a string with floating point precision
-    char timeStr[20];
-    sprintf(timeStr, "TIME: %.2f", getTime());
+    //char timeStr[20];
+    //sprintf(timeStr, "TIME: %.2f", getTime());
 
-    DrawText(timeStr, GetScreenWidth() - 150, 20, 20, WHITE);
+    //DrawText(timeStr, GetScreenWidth() - 150, 20, 20, WHITE);
+    DrawClock(GetScreenWidth(), GetScreenHeight(), 24, WHITE, Fade(BLACK, 0.6f));
+
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);

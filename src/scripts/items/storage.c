@@ -64,6 +64,7 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
                     }
                     chest->storage.itemCount = 0;
                     printf("work chest completed\n");
+                    isWorkDone = true;
                     //objects[row][col] = 13; // work done chest
                 }
             }

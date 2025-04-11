@@ -28,6 +28,32 @@ void initInventory() {
     }
 }
 
+bool eatItem(int index) {
+    if (inventory[index].id == -1) return false;
+
+    switch (inventory[index].id) {
+        case BREAD:
+            useFood(-6.0f);
+            break;
+        //case COOKED_MEAT:
+            //useFood(-0.5f);
+            //break;
+        //case RAW_MEAT:
+            //useFood(-0.1f);
+            //break;
+        default:
+            return false; // Not edible
+    }
+
+    inventory[index].quantity--;
+    if (inventory[index].quantity <= 0) {
+        inventory[index].id = -1;
+    }
+
+    printf("Ate item %d, remaining: %d\n", inventory[index].id, inventory[index].quantity);
+    return true;
+}
+
 int addItemToInventory(int id, const char *name) {
     for (int i = 0; i < INVENTORY_SIZE; i++) {
         if (inventory[i].id == -1) { // Find first empty slot
@@ -151,13 +177,18 @@ void handleInventoryClick() {
                     }
                 } else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && !chestUIOpen) {
                     if (inventory[i].id != -1) {
-                    if (activeItemIndex == i) {
-                    activeItemIndex = -1; // Deactivate if already selected
-                    } else {
-                    activeItemIndex = i; // Set active tool
+                        if (!eatItem(i)) {
+                            // Not edible, so treat it like a tool toggle
+                            if (activeItemIndex == i) {
+                                activeItemIndex = -1;
+                            } else {
+                                activeItemIndex = i;
+                            }
                         }
                     }
                 }
+
+
 
                 return;
             }
@@ -306,5 +337,9 @@ void tryUseActiveItem(Vector2 worldPos) {
         }
     }
 }
+
+
+
+
 
 

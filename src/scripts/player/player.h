@@ -19,7 +19,9 @@ typedef struct {
     float colliderRadiusY;   // Vertical radius
 
     float food;
-    int health;
+    float health;
+    float lastDamageTime; // Global or part of the player struct
+
 
     
 
