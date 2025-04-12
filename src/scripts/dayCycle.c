@@ -111,6 +111,10 @@ void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor,
 
 }
 
+void newDay(){ //temporary
+    
+}
+
 
 
 

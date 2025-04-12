@@ -33,14 +33,23 @@ bool eatItem(int index) {
 
     switch (inventory[index].id) {
         case BREAD:
+            useFood(-4.0f);
+            break;
+        case CIGARETTES:
+            useFood(-15.0f);
+            player.health = player.health - 10;
+            break;
+        case BASIC_SOUP:
             useFood(-6.0f);
             break;
-        //case COOKED_MEAT:
-            //useFood(-0.5f);
-            //break;
-        //case RAW_MEAT:
-            //useFood(-0.1f);
-            //break;
+        case BOTTLE_OF_VODKA:
+            useFood(-50.0f);
+            player.health = 1.0f;
+            break;
+        case AID_KIT:
+            //useFood(-50.0f);
+            player.health = player.health + 30.0f;
+            break;
         default:
             return false; // Not edible
     }

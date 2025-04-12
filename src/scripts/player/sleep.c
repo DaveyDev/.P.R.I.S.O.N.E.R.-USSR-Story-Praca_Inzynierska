@@ -110,8 +110,8 @@ void tryToSleep(Camera2D camera) {
             if (dist <= 32.0f) {
                 if (canSleep()) {
                     startSleep(); // << real sleep logic
-                    player.health = (float)player.maxHealth; // restore health if you want
-                    player.food = (float)player.maxFood;
+                    player.health = player.health + 5.0f; // restore health if you want
+                    player.food = player.food + 5.0f;
                     // optionally: reset hunger, thirst, etc.
                     printf("Player has started sleeping...\n");
                 } else {
