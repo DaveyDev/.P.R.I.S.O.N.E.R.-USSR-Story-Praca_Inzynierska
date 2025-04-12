@@ -20,6 +20,8 @@ typedef struct {
 
     float food;
     float health;
+    int maxFood;
+    int maxHealth;
     float lastDamageTime; // Global or part of the player struct
 
 
@@ -36,7 +38,7 @@ void unloadPlayer(Player *player);
 //bool checkCollisionWithObjects(Rectangle playerCollider, int **objects, int **details, int rows, int cols);
 bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radiusY, int **objects, int **details, int rows, int cols);
 bool CheckCollisionEllipseRec(Vector2 ellipseCenter, float radiusX, float radiusY, Rectangle rect);
-void drawPlayerStats(Player *player);
+void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor);
 void savePlayerStats(Player *player);
 int loadPlayerStats(Player *player);
 void useFood(float foodAmound);

@@ -55,7 +55,7 @@ void drawDayCycleOverlay(int screenWidth, int screenHeight) {
         darkness = 0.6f * (1.0f - ((timeOfDay - 5.0f) / 3.0f)); // Morning
     }
 
-    printf("darkness: %f\n", darkness);
+    //printf("darkness: %f\n", darkness);
 
     Color overlay = (Color){ 0, 0, 0, (unsigned char)(darkness * 255) };
     DrawRectangle(0, 0, screenWidth, screenHeight, overlay);

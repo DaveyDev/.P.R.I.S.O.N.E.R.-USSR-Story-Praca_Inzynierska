@@ -8,6 +8,12 @@ typedef enum {
     WINNING_BLOCK = 12,
     LUMBER_WORK_CHEST = 13,
 
+    //TREES
+    SPRUCE = 1000,
+    BETONIARZ_SPRUCE = 1001,
+    ASH = 1002,
+    TREE_STUMP = 1003,
+
     
     //PLACEABLE
     SIMPLE_STONE = 2000,

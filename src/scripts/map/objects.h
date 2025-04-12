@@ -10,7 +10,7 @@ void drawTree(int treeIndex, Rectangle block);
 void drawWall(int row, int col, Texture2D wallSet);
 void drawPlaceable(int placeableIndex, Rectangle block);
 void drawObjects(int **objects, int rows, int cols, Texture2D treesTileset, Texture2D wallSet, Camera2D camera);
-void updateObjects(int **objects, int rows, int cols, Vector2 worldMousePos);
+//void updateObjects(int **objects, int rows, int cols, Vector2 worldMousePos);
 void freeObjects(int **objects, int rows);
 bool isWallLike(int object);
 bool isWallLikeDetail(int detail);

@@ -13,6 +13,7 @@
 #include "../scripts/items/storage.h"
 #include "../scripts/NPC/npc.h"
 #include "../scripts/dayCycle.h"
+#include "../scripts/player/sleep.h"
 
 
 
@@ -94,7 +95,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     updateItems(camera);  // Left-click to pick up items
     drawInventory();  // Draw the inventory bar
     drawSelectedItem();  // Show held item when dragging
-    drawPlayerStats(&player);
+    drawPlayerStats(&player, 20, WHITE, Fade(BLACK, 0.6f));
+
     //chests
     updateChests(map, rows, cols, camera);
     drawChestUI();
@@ -105,6 +107,24 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
     //DrawText(timeStr, GetScreenWidth() - 150, 20, 20, WHITE);
     DrawClock(GetScreenWidth(), GetScreenHeight(), 24, WHITE, Fade(BLACK, 0.6f));
+
+    if (!isPlayerSleeping()) {
+    // regular input, movement, etc.
+
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            tryToSleep(camera);
+        }
+
+    } else {
+        updateSleep();
+    }
+
+    if (isPlayerSleeping()) {
+        drawSleep(GetScreenWidth(), GetScreenHeight());
+    }
+
+
+
 
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {

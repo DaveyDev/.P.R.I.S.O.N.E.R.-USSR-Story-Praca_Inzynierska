@@ -67,7 +67,10 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     }, 4);
 
     player-> food = 20.0f;
-    player -> health = 30.0f;
+    player-> health = 30.0f;
+
+    player-> maxFood = 20;
+    player-> maxHealth = 30;
 
     player-> lastDamageTime = 0.0f;
     
@@ -287,14 +290,40 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
 
 
 // Function to draw player stats
-void drawPlayerStats(Player *player) {
-    // Set the font color
-    Color textColor = WHITE;
+// Function to draw player stats with styled background
+void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
+    int padding = 10;
+    int spacing = 8;
 
-    // Draw health and food at the top-left corner
-    DrawText(TextFormat("Health: %d", player->health), 10, 10, 20, textColor); // Draw health
-    DrawText(TextFormat("Food: %d", (int)player->food), 10, 40, 20, textColor); // Draw food
+    // Prepare text strings
+    char healthText[32];
+    snprintf(healthText, sizeof(healthText), "Health: %d", (int)player->health);
+
+    char foodText[32];
+    snprintf(foodText, sizeof(foodText), "Food: %d", (int)player->food);
+
+    // Measure text width to find the widest one
+    int healthWidth = MeasureText(healthText, fontSize);
+    int foodWidth = MeasureText(foodText, fontSize);
+    int maxWidth = (healthWidth > foodWidth) ? healthWidth : foodWidth;
+
+    int boxWidth = maxWidth + padding * 2;
+    int boxHeight = fontSize * 2 + spacing + padding * 2;
+
+    int boxX = 10;
+    int boxY = 10;
+
+    // Draw background box
+    DrawRectangleRounded((Rectangle){ boxX, boxY, boxWidth, boxHeight }, 0.2f, 8, bgColor);
+
+    // Draw text lines
+    int textX = boxX + padding;
+    int textY = boxY + padding;
+
+    DrawText(healthText, textX, textY, fontSize, textColor);
+    DrawText(foodText, textX, textY + fontSize + spacing, fontSize, textColor);
 }
+
 
 void savePlayerStats(Player *player) {
     FILE *file = fopen("data/saves/save1/player.dat", "w");

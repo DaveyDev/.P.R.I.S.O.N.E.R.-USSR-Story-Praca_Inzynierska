@@ -275,7 +275,20 @@ void tryUseActiveItem(Vector2 worldPos) {
 
     // 🪓 Axe logic (chop trees)
     if (itemId == AXE) {
-        if (obj >= 1000 && obj <= 1999) { // Tree range
+        if (obj >= 1000 && obj <= 1999 && obj != TREE_STUMP) { // Tree range
+            printf("Tree chopped at tile (%d, %d)!\n", col, row);
+
+            if (itemCount < MAX_ITEMS) {
+                items[itemCount].id = WOOD_LOG;
+                items[itemCount].quantity = 1;
+                items[itemCount].itemPos = (Vector2){ col * 32, row * 32 };
+                itemCount++;
+            }
+
+            objects[row][col] = TREE_STUMP;
+            return;
+        }
+        if (obj == TREE_STUMP) { // Tree range
             printf("Tree chopped at tile (%d, %d)!\n", col, row);
 
             if (itemCount < MAX_ITEMS) {
