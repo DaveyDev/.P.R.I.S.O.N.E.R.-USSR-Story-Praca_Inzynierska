@@ -52,7 +52,7 @@ void updateSleep() {
                 setDayCount(getDayCount() + 1);
             }
         }
-
+        newDayTrees();
         isSleeping = false;
     }
 }

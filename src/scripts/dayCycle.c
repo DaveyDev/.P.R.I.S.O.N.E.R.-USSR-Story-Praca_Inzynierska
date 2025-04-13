@@ -1,6 +1,9 @@
 #include "../../lib/raylib.h"
 #include "dayCycle.h"
 #include "stdio.h"
+#include "map/map.h"
+#include <stdlib.h> // for rand()
+#include "items/idList.h"
 
 static float timeOfDay = 0.0f;
 static float daySpeed = 0.02f; // Default: 1 full day in 4 minutes
@@ -38,6 +41,7 @@ void updateDayCycle() {
     if (timeOfDay >= 24.0f) {
         timeOfDay -= 24.0f;
         dayCount++;
+        newDayTrees();
     }
 }
 
@@ -111,10 +115,18 @@ void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor,
 
 }
 
-void newDay(){ //temporary
-    
+void newDayTrees() {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (objects[row][col] == TREE_STUMP) {
+                // Optional: random chance to regrow
+                if (rand() % 3 == 0) { // ~33% chance
+                    objects[row][col] = SPRUCE; //temporary 
+                }
+            }
+        }
+    }
 }
-
 
 
 
