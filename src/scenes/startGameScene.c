@@ -52,6 +52,7 @@ void startGameScene(){
 
 
     if (GuiButton(playBtn, getTranslation("startgame_newgame"))) { // starts new game
+        
         strcpy(mapName, "test");
         snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
         snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
@@ -95,3 +96,4 @@ void startGameScene(){
     
     
 }
+

@@ -71,6 +71,7 @@ typedef enum {
     GREY_KEY = 3019,
     STONE_ITEM = 3020,
     OLD_FILE = 3021,
+    LETTER = 3022,
 
     // Add more as needed
 } idList;
