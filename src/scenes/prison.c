@@ -138,11 +138,12 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
     //f or testing 
     for (int i = 0; i < numInmates; i++) {
-    updateNPC(&inmates[i], deltaTime);
+    
+    updateNPC(&inmates[i], deltaTime, player.colliderCenter);
     }
 
     for (int i = 0; i < numGuards; i++) {
-    updateNPC(&guards[i], deltaTime);
+    updateNPC(&guards[i], deltaTime, player.colliderCenter);
     }
 
 

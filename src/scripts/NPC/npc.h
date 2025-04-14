@@ -4,6 +4,8 @@
 #include "../../../lib/raylib.h"
 #include "../animation.h"
 
+#define MAX_NPC_PATH 64
+
 typedef enum {
     NPC_INMATE,
     NPC_GUARD
@@ -11,7 +13,8 @@ typedef enum {
 
 typedef enum {
     BEHAVIOR_IDLE,
-    BEHAVIOR_PATROL
+    BEHAVIOR_PATROL,
+    BEHAVIOR_FOLLOW
     // You can add more like BEHAVIOR_FOLLOW, BEHAVIOR_TALK
 } NPCBehavior;
 
@@ -33,6 +36,12 @@ typedef struct {
     Direction dir;
     NPCType type;
     NPCBehavior behavior;
+    Vector2 path[MAX_NPC_PATH];
+    int pathLength;
+    int pathIndex;
+    float moveTimer;
+    float pathUpdateTimer;
+
 } NPC;
 
 
@@ -44,7 +53,7 @@ extern NPC guards[5];
 extern int numGuards;
 
 NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior);
-void updateNPC(NPC *npc, float deltaTime);
+void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos);
 void drawNPC(NPC *npc, Camera2D camera);
 void saveNPCsToFile(const char *filename, NPC *npcArray, int count);
 int loadNPCsFromFile(const char *filename, NPC *npcArray, int maxCount, Texture2D texture);

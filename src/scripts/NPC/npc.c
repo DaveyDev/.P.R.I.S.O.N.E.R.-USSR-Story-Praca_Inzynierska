@@ -1,12 +1,20 @@
 #include "npc.h"
 #include "../textures.h"
 #include <stdio.h>
+#include "math.h"
+#include "../map/map.h"
+#include "pathfinding.h"
+
+
+
 
 NPC inmates[10];
 int numInmates = 0;
 
 NPC guards[5];
 int numGuards = 0;
+
+
 
 NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior) {
     NPC npc;
@@ -20,6 +28,17 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.type = type;
     npc.behavior = behavior;
 
+    for (int i = 0; i < MAX_NPC_PATH; i++) {
+        npc.path[i] = (Vector2){0};
+    }
+
+    npc.pathLength = 0;
+    npc.pathIndex = 0;
+
+    float moveTimer = 0.0f;
+    float pathUpdateTimer = 0.0f;
+
+
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
         (Rectangle){32, 0, 32, 64},
@@ -32,14 +51,13 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     return npc;
 }
 
-void updateNPC(NPC *npc, float deltaTime) {
+void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos) {
     npc->frameCounter++;
     if (npc->frameCounter >= 10) {
         npc->frame = (npc->frame + 1) % 4;
         npc->frameCounter = 0;
     }
 
-    // Behavior logic
     switch (npc->behavior) {
         case BEHAVIOR_PATROL: {
             npc->position.x += npc->direction * 30 * deltaTime;
@@ -52,13 +70,66 @@ void updateNPC(NPC *npc, float deltaTime) {
 
             npc->dir = (npc->direction < 0) ? LEFT : RIGHT;
         } break;
+/*
+        case BEHAVIOR_FOLLOW: {
+            Vector2 dir = {
+                playerPos.x - npc->position.x,
+                playerPos.y - npc->position.y
+            };
+
+            float distance = sqrtf(dir.x * dir.x + dir.y * dir.y);
+            if (distance > 1.0f) {
+                dir.x /= distance;
+                dir.y /= distance;
+
+                float speed = 40.0f; // pixels per second
+                npc->position.x += dir.x * speed * deltaTime;
+                npc->position.y += dir.y * speed * deltaTime;
+
+                // Set direction for animation
+                if (fabs(dir.x) > fabs(dir.y)) {
+                    npc->dir = (dir.x < 0) ? LEFT : RIGHT;
+                } else {
+                    npc->dir = (dir.y < 0) ? UP : DOWN;
+                }
+            }
+        } break;
+        */
+        case BEHAVIOR_FOLLOW: {
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    // Recalculate path every 1 second
+    if (npc->pathUpdateTimer >= 1.0f) {
+        npc->pathUpdateTimer = 0.0f;
+        npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH);
+        npc->pathIndex = 0;
+    }
+
+    if (npc->pathIndex < npc->pathLength) {
+        Vector2 nextStep = npc->path[npc->pathIndex];
+        Vector2 toStep = { nextStep.x - npc->position.x, nextStep.y - npc->position.y };
+        float dist = sqrtf(toStep.x * toStep.x + toStep.y * toStep.y);
+
+        if (dist < 2.0f) {
+            npc->pathIndex++;
+        } else {
+            toStep.x /= dist;
+            toStep.y /= dist;
+            npc->position.x += toStep.x * 40 * deltaTime;
+            npc->position.y += toStep.y * 40 * deltaTime;
+        }
+    }
+} break;
+
+
 
         case BEHAVIOR_IDLE:
         default:
-            // Do nothing
             break;
     }
 }
+
 /*
 void DrawNPC(NPC *npc) {
     Rectangle frameRec = { npc->frame * 32, 0, 32, 32 };
@@ -76,6 +147,11 @@ void drawNPC(NPC *npc, Camera2D camera) {
     Vector2 origin = { 0, 128 }; // origin at feet
 
     drawSpriteAnimationPro(npc->npcAnimation[0], dest, origin, 0, WHITE);
+
+    for (int i = 0; i < npc->pathLength; i++) {
+    DrawCircleV(npc->path[i], 3, RED);
+    }
+
 }
 
 

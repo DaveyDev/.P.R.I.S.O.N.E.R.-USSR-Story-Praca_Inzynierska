@@ -17,7 +17,7 @@ InventoryItem inventory[INVENTORY_SIZE];
 InventoryItem selectedItem = { .id = -1, .quantity = 0 };
 
 int activeItemIndex = -1;
-static int draggedSlotIndex = -1; // to track LMB press start
+//static int draggedSlotIndex = -1; // to track LMB press start
 
 
 
@@ -149,7 +149,7 @@ void drawInventory() {
     }
 }
 
-/*
+
 void handleInventoryClick() {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();
@@ -174,7 +174,7 @@ void handleInventoryClick() {
                         addItemToInventory(selectedItem.id, selectedItem.name);
                         selectedItem.id = -1;
                     }
-                } 
+                }
                 else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && chestUIOpen) {
                     // Right click: Store item in the chest
                     if (inventory[i].id != -1) {
@@ -206,89 +206,6 @@ void handleInventoryClick() {
         }
     }
 }
-*/
-
-//static int draggedSlotIndex = -1;
-
-void handleInventoryClick() {
-    Vector2 mousePos = GetMousePosition();
-    int slotSize = 60;
-    int spacing = 10;
-    int startX = (GetScreenWidth() - (INVENTORY_SIZE * (slotSize + spacing))) / 2;
-    int startY = GetScreenHeight() - 80;
-
-    // Press detection
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
-            if (CheckCollisionPointRec(mousePos, slot)) {
-                draggedSlotIndex = i;
-                return;
-            }
-        }
-    }
-
-    // Release detection
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
-            if (CheckCollisionPointRec(mousePos, slot)) {
-                if (draggedSlotIndex == i) {
-                    // 👆 Click: eat or toggle
-                    if (inventory[i].id != -1) {
-                        if (!eatItem(i)) {
-                            if (activeItemIndex == i) activeItemIndex = -1;
-                            else activeItemIndex = i;
-                        }
-                    }
-                } else {
-                    // ✋ Drag → drop into this slot
-                    if (selectedItem.id != -1) {
-                        addItemToInventory(selectedItem.id, selectedItem.name);
-                        selectedItem.id = -1;
-                    }
-                }
-                draggedSlotIndex = -1;
-                return;
-            }
-        }
-
-        // 🗺️ Released outside inventory → pick up or drop into world
-        if (draggedSlotIndex != -1 && selectedItem.id == -1) {
-            int i = draggedSlotIndex;
-            if (inventory[i].id != -1) {
-                // Pick up item
-                selectedItem = inventory[i];
-                inventory[i].quantity--;
-                if (inventory[i].quantity <= 0) inventory[i].id = -1;
-            }
-        }
-
-        draggedSlotIndex = -1;
-    }
-
-    // RMB = store to chest if open
-    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && chestUIOpen) {
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
-            if (CheckCollisionPointRec(mousePos, slot)) {
-                if (inventory[i].id != -1) {
-                    if (storeItemInChest(openedChestRow, openedChestCol, inventory[i].id, &playerInventory)) {
-                        printf("Item stored in chest!\n");
-                        inventory[i].quantity--;
-                        if (inventory[i].quantity <= 0) inventory[i].id = -1;
-                    } else {
-                        printf("Chest is full!\n");
-                    }
-                }
-                return;
-            }
-        }
-    }
-}
-
-
-
 
 
 
