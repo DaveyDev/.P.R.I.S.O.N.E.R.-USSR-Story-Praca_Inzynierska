@@ -53,6 +53,27 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     return npc;
 }
 
+Vector2 avoidOtherNPCs(NPC *self, NPC *all, int count) {
+    Vector2 push = {0};
+
+    for (int i = 0; i < count; i++) {
+        NPC *other = &all[i];
+        if (other == self) continue;
+
+        float dist = Vector2Distance(self->position, other->position);
+        float minDist = 20.0f;
+
+        if (dist < minDist && dist > 0.01f) {
+            Vector2 away = Vector2Subtract(self->position, other->position);
+            away = Vector2Normalize(away);
+            away = Vector2Scale(away, (minDist - dist) * 1.5f);
+            push = Vector2Add(push, away);
+        }
+    }
+
+    return push;
+}
+
 void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos) {
     npc->frameCounter++;
     if (npc->frameCounter >= 10) {
@@ -155,6 +176,10 @@ if (npc->pathIndex < npc->pathLength) {
     } else {
         npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
     }
+    
+    // 🟨 Apply avoidance
+    Vector2 avoid = avoidOtherNPCs(npc, inmates, numInmates);
+    npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
 
     // Direction for animation
     if (fabs(direction.x) > fabs(direction.y)) {

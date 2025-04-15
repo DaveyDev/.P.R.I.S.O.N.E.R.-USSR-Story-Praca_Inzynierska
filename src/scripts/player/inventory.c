@@ -52,6 +52,9 @@ bool eatItem(int index) {
             //useFood(-50.0f);
             player.health = player.health + 30.0f;
             break;
+        case SOAP:
+            player.health = player.health - 5.0f;
+            break;
         default:
             return false; // Not edible
     }

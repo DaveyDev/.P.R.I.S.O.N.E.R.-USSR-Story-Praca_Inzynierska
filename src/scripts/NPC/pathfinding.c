@@ -161,3 +161,4 @@ bool isTileWalkable(int row, int col) {
     if(objects[row][col] != 0) return false;
     return true;
 }
+
