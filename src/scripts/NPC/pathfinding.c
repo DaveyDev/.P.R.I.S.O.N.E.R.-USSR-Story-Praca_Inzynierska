@@ -107,17 +107,36 @@ if (startRow < 0 || startCol < 0 || goalRow < 0 || goalCol < 0 ||
         }
 
         // Check neighbors (4-way)
-        int offsets[4][2] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
-        for (int i = 0; i < 4; i++) {
+        //int offsets[4][2] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
+        int offsets[8][2] = {
+            {1, 0}, {-1, 0}, {0, 1}, {0, -1}, // cardinal
+            {1, 1}, {1, -1}, {-1, 1}, {-1, -1} // diagonals
+        };
+
+        for (int i = 0; i < 8; i++) {
+
             int nr = current->row + offsets[i][0];
             int nc = current->col + offsets[i][1];
+
+            // Prevent cutting corners diagonally through walls
+            if (abs(offsets[i][0]) + abs(offsets[i][1]) == 2) { // diagonal
+                int r1 = current->row + offsets[i][0];
+                int c1 = current->col;
+                int r2 = current->row;
+                int c2 = current->col + offsets[i][1];
+                if (!isTileWalkable(r1, c1) || !isTileWalkable(r2, c2)) continue;
+            }
+
 
             if (!isTileWalkable(nr, nc)) continue;
 
             Node *neighbor = grid[nr][nc];
             if (neighbor->closed) continue;
 
-            int tentativeG = current->gCost + 1;
+            //int tentativeG = current->gCost + 1;
+            int moveCost = (abs(offsets[i][0]) + abs(offsets[i][1]) == 2) ? 14 : 10; // diagonal = ~1.4x
+            int tentativeG = current->gCost + moveCost;
+
             if (!neighbor->open || tentativeG < neighbor->gCost) {
                 neighbor->gCost = tentativeG;
                 neighbor->fCost = neighbor->gCost + neighbor->hCost;
@@ -138,6 +157,7 @@ if (startRow < 0 || startCol < 0 || goalRow < 0 || goalCol < 0 ||
 bool isTileWalkable(int row, int col) {
     if (row < 0 || row >= rows || col < 0 || col >= cols) return false;
     if (isWallLike(objects[row][col])) return false;
-    if (isWallLikeDetail(details[row][col])) return false;
+    //if (isWallLikeDetail(details[row][col])) return false;
+    if(objects[row][col] != 0) return false;
     return true;
 }

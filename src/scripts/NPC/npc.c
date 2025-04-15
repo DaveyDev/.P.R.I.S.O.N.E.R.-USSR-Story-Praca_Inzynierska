@@ -4,6 +4,7 @@
 #include "math.h"
 #include "../map/map.h"
 #include "pathfinding.h"
+#include "../../../lib/raymath.h"
 
 
 
@@ -35,8 +36,9 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.pathLength = 0;
     npc.pathIndex = 0;
 
-    float moveTimer = 0.0f;
-    float pathUpdateTimer = 0.0f;
+    npc.moveTimer = 0.0f;
+    npc.pathUpdateTimer = 0.0f;
+
 
 
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
@@ -72,30 +74,6 @@ void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos) {
         } break;
 /*
         case BEHAVIOR_FOLLOW: {
-            Vector2 dir = {
-                playerPos.x - npc->position.x,
-                playerPos.y - npc->position.y
-            };
-
-            float distance = sqrtf(dir.x * dir.x + dir.y * dir.y);
-            if (distance > 1.0f) {
-                dir.x /= distance;
-                dir.y /= distance;
-
-                float speed = 40.0f; // pixels per second
-                npc->position.x += dir.x * speed * deltaTime;
-                npc->position.y += dir.y * speed * deltaTime;
-
-                // Set direction for animation
-                if (fabs(dir.x) > fabs(dir.y)) {
-                    npc->dir = (dir.x < 0) ? LEFT : RIGHT;
-                } else {
-                    npc->dir = (dir.y < 0) ? UP : DOWN;
-                }
-            }
-        } break;
-        */
-        case BEHAVIOR_FOLLOW: {
     npc->moveTimer += deltaTime;
     npc->pathUpdateTimer += deltaTime;
 
@@ -120,6 +98,73 @@ void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos) {
             npc->position.y += toStep.y * 40 * deltaTime;
         }
     }
+} break;
+*/
+case BEHAVIOR_FOLLOW: {
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
+        npc->pathUpdateTimer = 0.0f;
+        npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH);
+        npc->pathIndex = 0;
+    }
+/*
+    if (npc->pathIndex < npc->pathLength) {
+    Vector2 target = npc->path[npc->pathIndex];
+    Vector2 delta = Vector2Subtract(target, npc->position);
+    float distance = Vector2Length(delta);
+
+    Vector2 direction = Vector2Normalize(delta);
+    float speed = 60.0f;
+    float step = speed * deltaTime;
+
+    if (distance <= step) {
+        // Close enough: snap and advance
+        npc->position = target;
+        npc->pathIndex++;
+    } else {
+        // Move smoothly toward target
+        npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+    }
+
+    // Update animation direction
+    if (fabs(direction.x) > fabs(direction.y)) {
+        npc->dir = (direction.x < 0) ? LEFT : RIGHT;
+    } else {
+        npc->dir = (direction.y < 0) ? UP : DOWN;
+    }
+}
+*/
+// Lookahead target: peek 2–3 steps ahead, not just the next one
+int lookahead = npc->pathIndex + 2;
+if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+if (npc->pathIndex < npc->pathLength) {
+    Vector2 target = npc->path[lookahead];
+    Vector2 delta = Vector2Subtract(target, npc->position);
+    float distance = Vector2Length(delta);
+
+    Vector2 direction = Vector2Normalize(delta);
+    float speed = 60.0f;
+    float step = speed * deltaTime;
+
+    if (distance <= step) {
+        npc->position = target;
+        npc->pathIndex = lookahead + 1; // jump ahead!
+    } else {
+        npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+    }
+
+    // Direction for animation
+    if (fabs(direction.x) > fabs(direction.y)) {
+        npc->dir = (direction.x < 0) ? LEFT : RIGHT;
+    } else {
+        npc->dir = (direction.y < 0) ? UP : DOWN;
+    }
+}
+
+
 } break;
 
 
@@ -148,9 +193,26 @@ void drawNPC(NPC *npc, Camera2D camera) {
 
     drawSpriteAnimationPro(npc->npcAnimation[0], dest, origin, 0, WHITE);
 
+    BeginMode2D(camera);
+
+    // Draw red dots for all path steps
     for (int i = 0; i < npc->pathLength; i++) {
-    DrawCircleV(npc->path[i], 3, RED);
+        //DrawCircleV(npc->path[i], 2, RED);
     }
+
+    // Draw red lines between path steps
+    for (int i = 1; i < npc->pathLength; i++) {
+        DrawLineV(npc->path[i - 1], npc->path[i], (Color){255, 0, 0, 128}); // semi-transparent red
+    }
+
+    // Draw current position and current target
+    DrawCircleV(npc->position, 1, YELLOW);
+    if (npc->pathIndex < npc->pathLength) {
+        DrawCircleV(npc->path[npc->pathIndex], 2, RED);
+    }
+
+    EndMode2D();
+
 
 }
 
