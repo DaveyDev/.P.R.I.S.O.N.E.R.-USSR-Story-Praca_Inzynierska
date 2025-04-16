@@ -53,9 +53,12 @@ extern NPC guards[5];
 extern int numGuards;
 
 NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior);
-void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos);
+//void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos);
+void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos, int groupIndex, int groupSize);
+
 void drawNPC(NPC *npc, Camera2D camera);
 void saveNPCsToFile(const char *filename, NPC *npcArray, int count);
 int loadNPCsFromFile(const char *filename, NPC *npcArray, int maxCount, Texture2D texture);
+bool isTileTemporarilyBlocked(int row, int col, NPC *self, NPC *all, int count);
 
 #endif

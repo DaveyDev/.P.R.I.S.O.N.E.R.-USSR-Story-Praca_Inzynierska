@@ -5,6 +5,7 @@
 #include "../../../lib/raymath.h"
 #include "../map/map.h"
 #include "../map/objects.h"
+#include "npc.h"
 
 
 struct Node {
@@ -27,7 +28,8 @@ static int heuristic(int row1, int col1, int row2, int col2) {
     return abs(row1 - row2) + abs(col1 - col2);
 }
 
-int findPath(Vector2 startPos, Vector2 goalPos, Vector2 *pathOut, int maxPathLength) {
+int findPath(Vector2 startPos, Vector2 goalPos, Vector2 *pathOut, int maxPathLength,
+             NPC *self, NPC *others, int npcCount) {
     if (rows <= 0 || cols <= 0) return 0;
 
 int startRow = (int)(startPos.y / TILE_SIZE);
@@ -128,7 +130,25 @@ if (startRow < 0 || startCol < 0 || goalRow < 0 || goalCol < 0 ||
             }
 
 
+            //if (!isTileWalkable(nr, nc)) continue;
             if (!isTileWalkable(nr, nc)) continue;
+
+            // NEW: avoid other NPCs
+            if (self && others && npcCount > 0) {
+    Vector2 tileCenter = { nc * TILE_SIZE + TILE_SIZE / 2, nr * TILE_SIZE + TILE_SIZE / 2 };
+
+    for (int i = 0; i < npcCount; i++) {
+        if (&others[i] == self) continue;
+
+        Vector2 otherPos = others[i].position;
+        float dist = Vector2Distance(tileCenter, otherPos);
+        if (dist < 20.0f) {
+            continue; // this tile is too close to another NPC
+        }
+    }
+}
+
+
 
             Node *neighbor = grid[nr][nc];
             if (neighbor->closed) continue;

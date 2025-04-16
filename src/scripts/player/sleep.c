@@ -43,7 +43,7 @@ void updateSleep() {
     if (sleepTimer >= sleepDuration) {
         float time = getTimeOfDay();
         if (time >= 20.0f || time < 6.0f) {
-            setTimeOfDay(8.0f);
+            setTimeOfDay(6.5f);
             setDayCount(getDayCount() + 1);
         } else {
             setTimeOfDay(time + 6.0f);

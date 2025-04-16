@@ -5,6 +5,7 @@
 #include "../map/map.h"
 #include "pathfinding.h"
 #include "../../../lib/raymath.h"
+#include "../global.h"
 
 
 
@@ -37,7 +38,8 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.pathIndex = 0;
 
     npc.moveTimer = 0.0f;
-    npc.pathUpdateTimer = 0.0f;
+    //npc.pathUpdateTimer = 0.0f;
+    npc.pathUpdateTimer = GetRandomValue(0, 1000) / 1000.0f;  // random delay 0–1s
 
 
 
@@ -66,15 +68,29 @@ Vector2 avoidOtherNPCs(NPC *self, NPC *all, int count) {
         if (dist < minDist && dist > 0.01f) {
             Vector2 away = Vector2Subtract(self->position, other->position);
             away = Vector2Normalize(away);
-            away = Vector2Scale(away, (minDist - dist) * 1.5f);
+
+            float strength = (minDist - dist) / minDist;  // falloff 0.0 to 1.0
+            away = Vector2Scale(away, strength * 8.0f);   // max 8px push at closest
+
             push = Vector2Add(push, away);
+
         }
     }
 
     return push;
 }
 
-void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos) {
+Vector2 getCircleTarget(Vector2 center, int index, int total, float radius) {
+    float angle = ((float)index / total) * 2 * PI;
+    return (Vector2){
+        center.x + cosf(angle) * radius,
+        center.y + sinf(angle) * radius
+    };
+}
+
+
+
+void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos, int groupIndex, int groupSize) {
     npc->frameCounter++;
     if (npc->frameCounter >= 10) {
         npc->frame = (npc->frame + 1) % 4;
@@ -122,14 +138,48 @@ void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos) {
 } break;
 */
 case BEHAVIOR_FOLLOW: {
+
+    //float stopRadius = 16.0f;
+    //if (Vector2Distance(npc->position, playerPos) < stopRadius) {
+        // Already close enough to the player — no need to repath
+    //    return;
+    //}
+
     npc->moveTimer += deltaTime;
     npc->pathUpdateTimer += deltaTime;
-
+/*
     if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
         npc->pathUpdateTimer = 0.0f;
-        npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH);
+        //npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, inmates, numInmates);
+        // Assign a personal circle target based on NPC index
+        //Vector2 circleTarget = getCircleTarget(playerPos, npc - inmates, numInmates, 16.0f);
+        Vector2 circleTarget = getCircleTarget(playerPos, groupIndex, groupSize, 16.0f);
+
+        //npc->pathLength = findPath(npc->position, circleTarget, npc->path, MAX_NPC_PATH, npc, inmates, numInmates);
+        NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+        int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
+        // You can use circleTarget OR playerPos here
+        npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+
+
+
+
         npc->pathIndex = 0;
     }
+    */
+   if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
+    npc->pathUpdateTimer = 0.0f;
+    
+    // Pick the right group (guards or inmates)
+    NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+    int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
+    // Restore original logic: go straight to player
+    npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+    npc->pathIndex = 0;
+}
+
 /*
     if (npc->pathIndex < npc->pathLength) {
     Vector2 target = npc->path[npc->pathIndex];
@@ -178,8 +228,14 @@ if (npc->pathIndex < npc->pathLength) {
     }
     
     // 🟨 Apply avoidance
-    Vector2 avoid = avoidOtherNPCs(npc, inmates, numInmates);
-    npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
+    //Vector2 avoid = avoidOtherNPCs(npc, inmates, numInmates);
+    //npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
+    NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+    int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
+    Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
+    npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f)); // or 0.3f if idle
+
 
     // Direction for animation
     if (fabs(direction.x) > fabs(direction.y)) {
@@ -187,7 +243,18 @@ if (npc->pathIndex < npc->pathLength) {
     } else {
         npc->dir = (direction.y < 0) ? UP : DOWN;
     }
+} else {
+    // Path is finished — still push away from others to avoid standing on top
+    //Vector2 avoid = avoidOtherNPCs(npc, inmates, numInmates);
+    //npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.3f)); // use softer force
+    NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+    int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
+    Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
+    npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.3f));
+
 }
+
 
 
 } break;
@@ -214,7 +281,7 @@ void drawNPC(NPC *npc, Camera2D camera) {
     Vector2 screenPos = GetWorldToScreen2D(npc->position, camera);
 
     Rectangle dest = { screenPos.x, screenPos.y, 64, 128 }; // scaled 2x from 32x64
-    Vector2 origin = { 0, 128 }; // origin at feet
+    Vector2 origin = { 32 , 128 }; // origin at feet
 
     drawSpriteAnimationPro(npc->npcAnimation[0], dest, origin, 0, WHITE);
 
@@ -235,6 +302,9 @@ void drawNPC(NPC *npc, Camera2D camera) {
     if (npc->pathIndex < npc->pathLength) {
         DrawCircleV(npc->path[npc->pathIndex], 2, RED);
     }
+
+    DrawCircleLines(npc->position.x, npc->position.y, 20, (Color){255, 100, 100, 60});
+
 
     EndMode2D();
 
@@ -294,3 +364,19 @@ int loadNPCsFromFile(const char *filename, NPC *npcArray, int maxCount, Texture2
     fclose(file);
     return count;
 }
+
+bool isTileTemporarilyBlocked(int row, int col, NPC *self, NPC *all, int count) {
+    Vector2 tileCenter = { col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2 };
+
+    for (int i = 0; i < count; i++) {
+        if (&all[i] == self) continue;
+
+        Vector2 otherPos = all[i].position;
+        float dist = Vector2Distance(tileCenter, otherPos);
+
+        if (dist < 20) return true; // too close to other NPC
+    }
+
+    return false;
+}
+
