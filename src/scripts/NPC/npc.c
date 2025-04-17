@@ -6,6 +6,9 @@
 #include "pathfinding.h"
 #include "../../../lib/raymath.h"
 #include "../global.h"
+#include "../items/idList.h"
+#include "../sound/soundManager.h"
+
 
 
 
@@ -40,6 +43,8 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.moveTimer = 0.0f;
     //npc.pathUpdateTimer = 0.0f;
     npc.pathUpdateTimer = GetRandomValue(0, 1000) / 1000.0f;  // random delay 0–1s
+    npc.attackCooldown = 0.0f;
+
 
 
 
@@ -88,6 +93,29 @@ Vector2 getCircleTarget(Vector2 center, int index, int total, float radius) {
     };
 }
 
+Vector2 findNearestPatrolPoint(Vector2 from) {
+    Vector2 closest = from;
+    float bestDist = 999999.0f;
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (objects[row][col] == PATROL_BLOCK) {
+                printf("Found patrol at row: %d col: %d\n", row, col);
+
+                Vector2 pos = { col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2 };
+                float dist = Vector2Distance(from, pos);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    closest = pos;
+                }
+            }
+        }
+    }
+
+    return closest;
+}
+
+
 
 
 void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos, int groupIndex, int groupSize) {
@@ -97,77 +125,41 @@ void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos, int groupIndex, int
         npc->frameCounter = 0;
     }
 
+    NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+    int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
     switch (npc->behavior) {
-        case BEHAVIOR_PATROL: {
-            npc->position.x += npc->direction * 30 * deltaTime;
+        
 
-            float left = npc->origin.x - 32;
-            float right = npc->origin.x + 32;
-
-            if (npc->position.x < left) npc->direction = 1;
-            else if (npc->position.x > right) npc->direction = -1;
-
-            npc->dir = (npc->direction < 0) ? LEFT : RIGHT;
-        } break;
-/*
-        case BEHAVIOR_FOLLOW: {
-    npc->moveTimer += deltaTime;
-    npc->pathUpdateTimer += deltaTime;
-
-    // Recalculate path every 1 second
-    if (npc->pathUpdateTimer >= 1.0f) {
-        npc->pathUpdateTimer = 0.0f;
-        npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH);
-        npc->pathIndex = 0;
-    }
-
-    if (npc->pathIndex < npc->pathLength) {
-        Vector2 nextStep = npc->path[npc->pathIndex];
-        Vector2 toStep = { nextStep.x - npc->position.x, nextStep.y - npc->position.y };
-        float dist = sqrtf(toStep.x * toStep.x + toStep.y * toStep.y);
-
-        if (dist < 2.0f) {
-            npc->pathIndex++;
-        } else {
-            toStep.x /= dist;
-            toStep.y /= dist;
-            npc->position.x += toStep.x * 40 * deltaTime;
-            npc->position.y += toStep.y * 40 * deltaTime;
-        }
-    }
-} break;
-*/
 case BEHAVIOR_FOLLOW: {
 
-    //float stopRadius = 16.0f;
-    //if (Vector2Distance(npc->position, playerPos) < stopRadius) {
-        // Already close enough to the player — no need to repath
-    //    return;
-    //}
-
     npc->moveTimer += deltaTime;
     npc->pathUpdateTimer += deltaTime;
-/*
-    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
-        npc->pathUpdateTimer = 0.0f;
-        //npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, inmates, numInmates);
-        // Assign a personal circle target based on NPC index
-        //Vector2 circleTarget = getCircleTarget(playerPos, npc - inmates, numInmates, 16.0f);
-        Vector2 circleTarget = getCircleTarget(playerPos, groupIndex, groupSize, 16.0f);
 
-        //npc->pathLength = findPath(npc->position, circleTarget, npc->path, MAX_NPC_PATH, npc, inmates, numInmates);
-        NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
-        int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+    float attackRange = 20.0f;
+    float attackRate = 1.5f;  // seconds between attacks
 
-        // You can use circleTarget OR playerPos here
-        npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+    // Check distance to player
+    float toPlayer = Vector2Distance(npc->position, playerPos);
 
+    if (toPlayer < attackRange) {
+        npc->attackCooldown -= deltaTime;
+        if (npc->attackCooldown <= 0.0f) {
+            npc->attackCooldown = attackRate;
+            playAttackSound();
 
-
-
-        npc->pathIndex = 0;
+            if(player.health <= 5){
+                player.health = 1;
+                
+                return;
+            }
+            player.health -= 5;  // 👊 Take damage
+            printf("Guard attacked! Player HP: %f\n", player.health);
+        }
+        return;  // skip movement when attacking
     }
-    */
+
+
    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
     npc->pathUpdateTimer = 0.0f;
     
@@ -180,36 +172,13 @@ case BEHAVIOR_FOLLOW: {
     npc->pathIndex = 0;
 }
 
-/*
-    if (npc->pathIndex < npc->pathLength) {
-    Vector2 target = npc->path[npc->pathIndex];
-    Vector2 delta = Vector2Subtract(target, npc->position);
-    float distance = Vector2Length(delta);
 
-    Vector2 direction = Vector2Normalize(delta);
-    float speed = 60.0f;
-    float step = speed * deltaTime;
-
-    if (distance <= step) {
-        // Close enough: snap and advance
-        npc->position = target;
-        npc->pathIndex++;
-    } else {
-        // Move smoothly toward target
-        npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
-    }
-
-    // Update animation direction
-    if (fabs(direction.x) > fabs(direction.y)) {
-        npc->dir = (direction.x < 0) ? LEFT : RIGHT;
-    } else {
-        npc->dir = (direction.y < 0) ? UP : DOWN;
-    }
-}
-*/
 // Lookahead target: peek 2–3 steps ahead, not just the next one
 int lookahead = npc->pathIndex + 2;
 if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+
+
 
 if (npc->pathIndex < npc->pathLength) {
     Vector2 target = npc->path[lookahead];
@@ -227,11 +196,9 @@ if (npc->pathIndex < npc->pathLength) {
         npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
     }
     
-    // 🟨 Apply avoidance
-    //Vector2 avoid = avoidOtherNPCs(npc, inmates, numInmates);
-    //npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
-    NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
-    int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+    //avoidance code
+    //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+    //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
 
     Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
     npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f)); // or 0.3f if idle
@@ -245,10 +212,9 @@ if (npc->pathIndex < npc->pathLength) {
     }
 } else {
     // Path is finished — still push away from others to avoid standing on top
-    //Vector2 avoid = avoidOtherNPCs(npc, inmates, numInmates);
-    //npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.3f)); // use softer force
-    NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
-    int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+    
+    //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+    //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
 
     Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
     npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.3f));
@@ -258,6 +224,57 @@ if (npc->pathIndex < npc->pathLength) {
 
 
 } break;
+
+case BEHAVIOR_PATROL: {
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
+        npc->pathUpdateTimer = 0.0f;
+
+        Vector2 patrolTarget = findNearestPatrolPoint(npc->position);
+        printf("Patrol target for NPC: (%.1f, %.1f)\n", patrolTarget.x, patrolTarget.y);
+        printf("NPC pos: (%.1f, %.1f)\n", npc->position.x, npc->position.y);
+
+        //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+        //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+        //npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+        npc->pathLength = findPath(npc->position, patrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+        npc->pathIndex = 0;
+        printf("Path to patrol target: %d steps\n", npc->pathLength);
+
+    }
+
+    int lookahead = npc->pathIndex + 2;
+    if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+    if (npc->pathIndex < npc->pathLength) {
+        Vector2 target = npc->path[lookahead];
+        Vector2 delta = Vector2Subtract(target, npc->position);
+        float distance = Vector2Length(delta);
+
+        Vector2 direction = Vector2Normalize(delta);
+        float speed = 40.0f;
+        float step = speed * deltaTime;
+
+        if (distance <= step) {
+            npc->position = target;
+            npc->pathIndex = lookahead + 1;
+        } else {
+            npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+        }
+
+        //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+        //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
+        Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
+        npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
+
+        npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
+                                                            (direction.y < 0 ? UP : DOWN);
+    }
+} break;
+
 
 
 

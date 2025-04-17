@@ -6,6 +6,9 @@
 #include "../player/inventory.h"
 #include "../textures.h"
 #include "items.h"
+#include "math.h"
+
+#define MAX_CHEST_DISTANCE 2.0f // distance in tiles
 
 
 Inventory playerInventory;
@@ -24,6 +27,21 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
 
     if (row < 0 || col < 0 || row >= mapRows || col >= mapCols) return;
 
+    // Auto-close chest if player moves too far from opened chest
+    if (chestUIOpen && openedChestRow != -1 && openedChestCol != -1) {
+        float dx = openedChestCol - player.collider.x / TILE_SIZE;
+        float dy = openedChestRow - player.collider.y / TILE_SIZE;
+        float distance = sqrtf(dx * dx + dy * dy);
+
+        if (distance > MAX_CHEST_DISTANCE) {
+            chestUIOpen = false;
+            openedChestRow = -1;
+            openedChestCol = -1;
+            printf("Chest closed - too far away\n");
+        }
+    }
+
+
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         Vector2 mousePos = GetMousePosition();
         Vector2 worldMousePos = GetScreenToWorld2D(mousePos, camera);
@@ -32,7 +50,7 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
         int clickedRow = (int)(worldMousePos.y / TILE_SIZE);
 
         if (clickedRow >= 0 && clickedCol >= 0 && clickedRow < mapRows && clickedCol < mapCols) {
-            if (isChest(objects[clickedRow][clickedCol])) {
+            /*if (isChest(objects[clickedRow][clickedCol])) {
                 chestUIOpen = !chestUIOpen;
                 if (chestUIOpen) {
                     openedChestRow = clickedRow;
@@ -41,7 +59,28 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
                     openedChestRow = -1;
                     openedChestCol = -1;
                 }
+               
+            }*/
+            if (isChest(objects[clickedRow][clickedCol])) {
+                float dx = clickedCol - player.collider.x / TILE_SIZE;
+                float dy = clickedRow - player.collider.y / TILE_SIZE;
+                float distance = sqrtf(dx * dx + dy * dy);
+
+                if (distance <= MAX_CHEST_DISTANCE) {
+                    chestUIOpen = !chestUIOpen;
+                    if (chestUIOpen) {
+                        openedChestRow = clickedRow;
+                        openedChestCol = clickedCol;
+                    } else {
+                        openedChestRow = -1;
+                        openedChestCol = -1;
+                    }
+                } else {
+                    printf("Too far to open the chest\n");
+                }
             }
+
+
         }
     }
     // Check for work chest completion

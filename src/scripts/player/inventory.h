@@ -26,6 +26,7 @@ void placeSelectedItem(Camera2D camera); // Places the selected item on the grou
 void drawSelectedItem();
 void storeSelectedItem(int selectedItemIndex, Inventory *playerInventory);
 void tryUseActiveItem(Vector2 worldPos);
+void handlePickupWithE();
 
 
 #endif

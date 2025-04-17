@@ -165,7 +165,7 @@ void handleInventoryClick() {
             Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
 
             if (CheckCollisionPointRec(mousePos, slot)) {
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                /*if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
                     // Left click: Pick up or return item
                     if (selectedItem.id == -1 && inventory[i].id != -1) {
                         // Pick up the item
@@ -177,8 +177,30 @@ void handleInventoryClick() {
                         addItemToInventory(selectedItem.id, selectedItem.name);
                         selectedItem.id = -1;
                     }
+                }*/
+                if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+                    if (inventory[i].id != -1) {
+                        // Drop one item of that type at player's position or near cursor
+                        Vector2 dropPos = (Vector2){player.collider.x, player.collider.y};
+                        dropPos.x = dropPos.x + 2;
+                        dropPos.y = dropPos.y + 24;
+
+                        if (itemCount < MAX_ITEMS) {
+                            items[itemCount].id = inventory[i].id;
+                            items[itemCount].quantity = 1;
+                            items[itemCount].itemPos = dropPos;
+                            itemCount++;
+
+                            inventory[i].quantity--;
+                            if (inventory[i].quantity <= 0) {
+                                inventory[i].id = -1;
+                                strcpy(inventory[i].name, "");
+                            }
+                        }
+                    }
                 }
-                else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && chestUIOpen) {
+
+                else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && chestUIOpen) {
                     // Right click: Store item in the chest
                     if (inventory[i].id != -1) {
                         if (storeItemInChest(openedChestRow, openedChestCol, inventory[i].id, &playerInventory)) {
@@ -189,7 +211,7 @@ void handleInventoryClick() {
                             printf("Chest is full!\n");
                         }
                     }
-                } else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON) && !chestUIOpen) {
+                } else if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !chestUIOpen) {
                     if (inventory[i].id != -1) {
                         if (!eatItem(i)) {
                             // Not edible, so treat it like a tool toggle
@@ -214,7 +236,7 @@ void handleInventoryClick() {
 
 
 void placeSelectedItem(Camera2D camera) {
-    if (selectedItem.id != -1 && IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+    if (selectedItem.id != -1 && IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();
         Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
         worldPos.x = worldPos.x - 8; //offset so placing items feels more natural
@@ -366,6 +388,20 @@ void tryUseActiveItem(Vector2 worldPos) {
     }
 }
 
+void handlePickupWithE() {
+    if (IsKeyPressed(KEY_E)) {
+        Vector2 playerPos = (Vector2){player.collider.x, player.collider.y};
+        for (int i = 0; i < itemCount; i++) {
+            if (Vector2Distance(playerPos, items[i].itemPos) < 30.0f) { // pickup range
+                if (addItemToInventory(items[i].id, getNameFromId(items[i].id))) {
+                    items[i] = items[itemCount - 1]; // remove from list
+                    itemCount--;
+                    break;
+                }
+            }
+        }
+    }
+}
 
 
 

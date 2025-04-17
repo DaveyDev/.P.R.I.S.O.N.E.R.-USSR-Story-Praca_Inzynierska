@@ -6,7 +6,7 @@
 #include "../map/map.h"
 #include "../map/objects.h"
 #include "npc.h"
-
+#include "../items/idList.h"
 
 struct Node {
     int row, col;
@@ -177,8 +177,12 @@ if (startRow < 0 || startCol < 0 || goalRow < 0 || goalCol < 0 ||
 bool isTileWalkable(int row, int col) {
     if (row < 0 || row >= rows || col < 0 || col >= cols) return false;
     if (isWallLike(objects[row][col])) return false;
-    //if (isWallLikeDetail(details[row][col])) return false;
-    if(objects[row][col] != 0) return false;
+    if (objects[row][col] != 0 
+    && objects[row][col] != PATROL_BLOCK
+    && objects[row][col] != WINNING_BLOCK
+    && objects[row][col] != LIGHTGREY_DOOR
+    && objects[row][col] != WOODEN_FLOOR) return false;
+
     return true;
 }
 

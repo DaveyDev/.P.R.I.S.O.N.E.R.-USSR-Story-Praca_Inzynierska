@@ -9,6 +9,7 @@
 #include "../sound/soundManager.h"
 #include "../dayCycle.h"
 #include "../items/idList.h"
+#include "inventory.h"
 
 Player player;
 
@@ -190,7 +191,8 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         }
     }
 
-    calculatePlayerSteps(isMoving, deltaTime);  
+    calculatePlayerSteps(isMoving, deltaTime);
+    handlePickupWithE(); 
 
     
 

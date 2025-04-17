@@ -7,6 +7,8 @@ typedef enum {
 
     WINNING_BLOCK = 12,
     LUMBER_WORK_CHEST = 13,
+    PATROL_BLOCK = 14,
+    SPAWN_BLOCK = 15,
 
     //TREES
     SPRUCE = 1000,
@@ -75,5 +77,16 @@ typedef enum {
 
     // Add more as needed
 } idList;
+
+typedef struct {
+    int id;
+    const char* name;
+} IdNamePair;
+
+// Declare, don't define
+extern IdNamePair itemNamesByID[];
+extern int itemNamesByIDCount;
+
+const char* getNameFromId(int id);
 
 #endif /* IDLIST_H */

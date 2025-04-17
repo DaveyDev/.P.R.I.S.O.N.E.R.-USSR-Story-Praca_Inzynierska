@@ -247,7 +247,11 @@ void drawMap(Camera2D camera) {
                 // Draw a yellow rectangle with a "W" inside
                 DrawRectangleLinesEx(block, 2, YELLOW);
                 DrawText("W", block.x + 10, block.y + 6, 16, YELLOW);
-            } 
+            } else if (isEditor && objects[row][col] == PATROL_BLOCK) {
+                // Draw a yellow rectangle with a "W" inside
+                DrawRectangleLinesEx(block, 2, BLUE);
+                DrawText("P", block.x + 10, block.y + 6, 16, BLUE);
+            }
         }
     }
 
