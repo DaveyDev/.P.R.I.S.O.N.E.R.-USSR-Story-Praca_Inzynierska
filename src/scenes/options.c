@@ -26,8 +26,7 @@ void updateResolutionString(char *resolutionText) {
 
 // Function to handle resolution change
 void handleResolutionChange() {
-    // Draw the label "Resolution:" on the left side
-    //DrawText("Resolution:", GetScreenWidth() / 2 - 200, GetScreenHeight() / 2, 20, WHITE);
+    
     Vector2 resolutionLabelPos = {
         GetScreenWidth() / 2 - 200,
         GetScreenHeight() / 2

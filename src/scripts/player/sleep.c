@@ -53,6 +53,7 @@ void updateSleep() {
             }
         }
         newDayTrees();
+        player.wasKnockedOutToday = false;
         isSleeping = false;
     }
 }
@@ -126,3 +127,21 @@ void tryToSleep(Camera2D camera) {
     }
 }
 
+void triggerForcedSleep() {
+    isSleeping = true;
+    sleepTimer = 0.0f;
+
+    // Force time skip and start a new day
+    setTimeOfDay(6.5f);
+    setDayCount(getDayCount() + 1);
+    newDayTrees();
+
+    // Wake up nearly dead
+    player.health = 1.0f;
+    player.food = 3.0f;  // optional
+    
+
+    printf("Player was knocked out and forced to sleep...\n");
+
+    // You can even trigger a black screen animation or play a sound here
+}

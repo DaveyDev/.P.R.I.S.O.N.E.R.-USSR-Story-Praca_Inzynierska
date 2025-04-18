@@ -8,6 +8,7 @@
 #include "../global.h"
 #include "../items/idList.h"
 #include "../sound/soundManager.h"
+#include "../player/sleep.h"
 
 
 
@@ -45,6 +46,7 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.pathUpdateTimer = GetRandomValue(0, 1000) / 1000.0f;  // random delay 0–1s
     npc.attackCooldown = 0.0f;
 
+    npc.health = 35;
 
 
 
@@ -56,6 +58,7 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
         
     }, 4);
 
+    
 
     return npc;
 }
@@ -143,21 +146,33 @@ case BEHAVIOR_FOLLOW: {
     float toPlayer = Vector2Distance(npc->position, playerPos);
 
     if (toPlayer < attackRange) {
-        npc->attackCooldown -= deltaTime;
-        if (npc->attackCooldown <= 0.0f) {
-            npc->attackCooldown = attackRate;
-            playAttackSound();
 
-            if(player.health <= 5){
-                player.health = 1;
-                
-                return;
-            }
-            player.health -= 5;  // 👊 Take damage
-            printf("Guard attacked! Player HP: %f\n", player.health);
-        }
-        return;  // skip movement when attacking
+    // If player is already KO'd or sleeping, stop attacking
+    if (player.wasKnockedOutToday || isPlayerSleeping()) {
+        npc->behavior = BEHAVIOR_PATROL;
+        npc->pathLength = 0;
+        npc->pathIndex = 0;
+        return;
     }
+
+    npc->attackCooldown -= deltaTime;
+    if (npc->attackCooldown <= 0.0f) {
+        npc->attackCooldown = attackRate;
+        playAttackSound();
+
+        if (player.health <= 5) {
+            player.health = 1;
+            player.wasKnockedOutToday = true;
+            triggerForcedSleep();
+            return;
+        }
+
+        player.health -= 5;
+        printf("Guard attacked! Player HP: %f\n", player.health);
+    }
+
+    return;
+}
 
 
    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
@@ -196,9 +211,7 @@ if (npc->pathIndex < npc->pathLength) {
         npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
     }
     
-    //avoidance code
-    //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
-    //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+    
 
     Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
     npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f)); // or 0.3f if idle
@@ -213,8 +226,6 @@ if (npc->pathIndex < npc->pathLength) {
 } else {
     // Path is finished — still push away from others to avoid standing on top
     
-    //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
-    //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
 
     Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
     npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.3f));
@@ -236,9 +247,6 @@ case BEHAVIOR_PATROL: {
         printf("Patrol target for NPC: (%.1f, %.1f)\n", patrolTarget.x, patrolTarget.y);
         printf("NPC pos: (%.1f, %.1f)\n", npc->position.x, npc->position.y);
 
-        //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
-        //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
-        //npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, group, groupCount);
         npc->pathLength = findPath(npc->position, patrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
         npc->pathIndex = 0;
         printf("Path to patrol target: %d steps\n", npc->pathLength);
@@ -264,8 +272,6 @@ case BEHAVIOR_PATROL: {
             npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
         }
 
-        //NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
-        //int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
 
         Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
         npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
@@ -284,15 +290,7 @@ case BEHAVIOR_PATROL: {
     }
 }
 
-/*
-void DrawNPC(NPC *npc) {
-    Rectangle frameRec = { npc->frame * 32, 0, 32, 32 };
-    //DrawTextureRec(npc->texture, frameRec, npc->position, WHITE);
-    Rectangle dest = {npc-> position.x, npc->position.y, 64, 128};
-    Vector2 origin = {0};
-    drawSpriteAnimationPro(npc-> npcAnimation[0], dest, origin, 0, WHITE);
-}
-*/
+
 
 void drawNPC(NPC *npc, Camera2D camera) {
     Vector2 screenPos = GetWorldToScreen2D(npc->position, camera);

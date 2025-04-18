@@ -16,8 +16,7 @@
 
 
 const int pauseFontSize = 48;
-//const char *subtitle = "USSR Story";
-//const int subtitleFontSize = 40;
+
 
 
  
@@ -30,7 +29,6 @@ void pauseScene(){
     
      // Dynamically adjust font size based on resolution
     int dynamicTitleFontSize = pauseFontSize * (GetScreenWidth() / 800);  // Scale font size relative to base resolution
-    //int dynamicSubitleFontSize = subtitleFontSize * (GetScreenWidth() / 800);  // Scale font size relative to base resolution
 
     ClearBackground(bgColor);
 
@@ -98,8 +96,7 @@ void pauseScene(){
 
     if(IsKeyPressed(KEY_ESCAPE)) {
         *currentScene = GAME;
-        //isCameraInitialized = false;  // Mark camera as initialized
-        //unloadPlayer(&player);
+        
        
     } 
 

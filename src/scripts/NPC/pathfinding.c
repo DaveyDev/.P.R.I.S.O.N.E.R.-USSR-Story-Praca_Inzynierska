@@ -108,8 +108,7 @@ if (startRow < 0 || startCol < 0 || goalRow < 0 || goalCol < 0 ||
             return count;
         }
 
-        // Check neighbors (4-way)
-        //int offsets[4][2] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
+        // Check neighbors
         int offsets[8][2] = {
             {1, 0}, {-1, 0}, {0, 1}, {0, -1}, // cardinal
             {1, 1}, {1, -1}, {-1, 1}, {-1, -1} // diagonals
@@ -180,7 +179,12 @@ bool isTileWalkable(int row, int col) {
     if (objects[row][col] != 0 
     && objects[row][col] != PATROL_BLOCK
     && objects[row][col] != WINNING_BLOCK
+    && objects[row][col] != GREY_DOOR
+    && objects[row][col] != OPEN_GREY_DOOR
     && objects[row][col] != LIGHTGREY_DOOR
+    && objects[row][col] != OPEN_LIGHTGREY_DOOR
+    && objects[row][col] != STONE_FLOOR
+    && objects[row][col] != OAK_WOODEN_FLOOR
     && objects[row][col] != WOODEN_FLOOR) return false;
 
     return true;

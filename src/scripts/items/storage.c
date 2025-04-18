@@ -50,17 +50,7 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
         int clickedRow = (int)(worldMousePos.y / TILE_SIZE);
 
         if (clickedRow >= 0 && clickedCol >= 0 && clickedRow < mapRows && clickedCol < mapCols) {
-            /*if (isChest(objects[clickedRow][clickedCol])) {
-                chestUIOpen = !chestUIOpen;
-                if (chestUIOpen) {
-                    openedChestRow = clickedRow;
-                    openedChestCol = clickedCol;
-                } else {
-                    openedChestRow = -1;
-                    openedChestCol = -1;
-                }
-               
-            }*/
+           
             if (isChest(objects[clickedRow][clickedCol])) {
                 float dx = clickedCol - player.collider.x / TILE_SIZE;
                 float dy = clickedRow - player.collider.y / TILE_SIZE;

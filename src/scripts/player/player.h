@@ -24,6 +24,9 @@ typedef struct {
     int maxHealth;
     float lastDamageTime; // Global or part of the player struct
 
+    bool wasKnockedOutToday;
+
+
 
     
 

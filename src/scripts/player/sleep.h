@@ -15,5 +15,6 @@ bool canSleep();
 
 bool isNearBed(Vector2 playerPos);
 void tryToSleep(Camera2D camera);
+void triggerForcedSleep();
 
 #endif

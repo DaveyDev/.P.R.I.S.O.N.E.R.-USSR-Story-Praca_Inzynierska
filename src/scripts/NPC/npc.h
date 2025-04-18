@@ -42,6 +42,7 @@ typedef struct {
     float moveTimer;
     float pathUpdateTimer;
     float attackCooldown;
+    int health;
 
 
 } NPC;

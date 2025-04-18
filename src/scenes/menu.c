@@ -40,12 +40,7 @@ void menuScene(){
     Rectangle optionsBtn = {GetScreenWidth()/2 - 100, GetScreenHeight() / 2 + 80, 200, 50};
     Rectangle exitBtn = {GetScreenWidth()/2 - 100, GetScreenHeight() / 2 + 160, 200, 50};
 
-    //DrawText(title, GetScreenWidth() / 2 - MeasureText(title, dynamicTitleFontSize) / 2, GetScreenHeight() / 2 - GetScreenHeight() / 4, dynamicTitleFontSize, WHITE);
-    //DrawText(subtitle, GetScreenWidth() / 2 - MeasureText(subtitle, dynamicSubitleFontSize) / 2, GetScreenHeight() / 2 - GetScreenHeight() / 4 + dynamicTitleFontSize, dynamicSubitleFontSize, WHITE);
-
-    //DrawText(TextFormat("FPS: %d", GetFPS()), 10, 10, 20, GREEN);
-
-
+    
     // Draw title using the custom font
     Vector2 titlePos = {
         GetScreenWidth() / 2 - MeasureTextEx(baseFont, getTranslation("game_title"), dynamicTitleFontSize, 2).x / 2,

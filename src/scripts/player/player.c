@@ -10,6 +10,8 @@
 #include "../dayCycle.h"
 #include "../items/idList.h"
 #include "inventory.h"
+#include "../NPC/npc.h"
+#include "combat.h"
 
 Player player;
 
@@ -19,8 +21,11 @@ const int barbedWireDamage = 1;
 
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
-    player-> position.x = screenWidth/2;
-    player-> position.y = screenHeight/2;
+    //player-> position.x = screenWidth/2;
+    //player-> position.y = screenHeight/2;
+    player-> position = (Vector2) {32 * 20, 32 * 10}; // tile (10, 5) as example
+    
+
     player-> speed = speed;
     player-> collider  = (Rectangle){player-> position.x + 2, player->position.y + 50, 16, 25};
     player->footstepTimer = 0.5f;
@@ -74,6 +79,8 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> maxHealth = 30;
 
     player-> lastDamageTime = 0.0f;
+
+    player-> wasKnockedOutToday = false;
     
 }
 
@@ -83,8 +90,6 @@ void drawPlayer(Player *player) {
     Vector2 position = {player->position.x, player->position.y};
     Rectangle dest = {player-> position.x, player->position.y, 64, 128};
     Vector2 origin = {0};
-    //DrawRectangle(player->collider.x, player->collider.y, player->collider.width, player->collider.height, RED);
-    //DrawRectangle(player->position.x, player->position.y, 30,30, GREEN);
 
 
     if (IsKeyDown(KEY_LEFT) || IsKeyDown('A')) {
@@ -194,6 +199,14 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     calculatePlayerSteps(isMoving, deltaTime);
     handlePickupWithE(); 
 
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+
+        if (!tryAttackNPCs(worldPos, guards, numGuards)) {
+            tryAttackNPCs(worldPos, inmates, numInmates);
+        }
+    }
+
     
 
     // Update collider position
@@ -277,7 +290,7 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
                 closeDoor(row, col);
             }
 
-            // 🏁 Winning block
+            // Winning block
             if (objectID == WINNING_BLOCK) {
                 if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
                     playerWon = true;  // You should declare this flag somewhere globally

@@ -77,7 +77,7 @@ void startGameScene(){
         strcpy(mapName, "test");
         snprintf(mapPath, sizeof(mapPath), "data/saves/save1/%s.map", mapName);
         snprintf(itemPath, sizeof(itemPath), "data/saves/save1/items.dat");
-        //if(access(mapPath, F_OK) == 0) *currentScene = GAME;
+
         initInventory();
         loadInventory();
         numInmates = loadNPCsFromFile("data/saves/save1/inmates.dat", inmates, 10, inmateTexture);

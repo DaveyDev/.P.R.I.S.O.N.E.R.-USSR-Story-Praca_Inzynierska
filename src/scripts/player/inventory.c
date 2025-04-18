@@ -165,19 +165,7 @@ void handleInventoryClick() {
             Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
 
             if (CheckCollisionPointRec(mousePos, slot)) {
-                /*if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-                    // Left click: Pick up or return item
-                    if (selectedItem.id == -1 && inventory[i].id != -1) {
-                        // Pick up the item
-                        selectedItem = inventory[i];
-                        inventory[i].quantity--;
-                        if (inventory[i].quantity <= 0) inventory[i].id = -1;
-                    } else if (selectedItem.id != -1) {
-                        // Return item to inventory
-                        addItemToInventory(selectedItem.id, selectedItem.name);
-                        selectedItem.id = -1;
-                    }
-                }*/
+                
                 if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
                     if (inventory[i].id != -1) {
                         // Drop one item of that type at player's position or near cursor

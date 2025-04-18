@@ -101,11 +101,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     updateChests(map, rows, cols, camera);
     drawChestUI();
 
-    // Convert the time to a string with floating point precision
-    //char timeStr[20];
-    //sprintf(timeStr, "TIME: %.2f", getTime());
 
-    //DrawText(timeStr, GetScreenWidth() - 150, 20, 20, WHITE);
     DrawClock(GetScreenWidth(), GetScreenHeight(), 24, WHITE, Fade(BLACK, 0.6f));
 
     if (!isPlayerSleeping()) {
@@ -192,17 +188,10 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
     if(IsKeyPressed(KEY_ESCAPE)) {
         *currentScene = PAUSE;
-        //isCameraInitialized = false;  // Mark camera as initialized
-        //unloadPlayer(&player);
         
-       
+        
     } 
-    if(IsKeyPressed(KEY_E)) {
-        //*currentScene = INVENTORY;
-        //isCameraInitialized = false;  // Mark camera as initialized
-        //unloadPlayer(&player);
-       
-    } 
+
 }
 
 
