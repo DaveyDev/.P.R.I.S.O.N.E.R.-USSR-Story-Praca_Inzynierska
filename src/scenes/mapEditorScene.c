@@ -122,10 +122,10 @@ void mapsEditorScene() {
         //DrawText(TextFormat("%d", i), tileX + i * (tileSize + 5) + 15, tileY + 15, 20, BLACK);
 
         // Handle Tile Selection
-        Rectangle tileRect = {tileX + i * (tileSize + 5), tileY, tileSize, tileSize};
-        if (CheckCollisionPointRec(GetMousePosition(), tileRect) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            selectedTile = i;
-        }
+        //Rectangle tileRect = {tileX + i * (tileSize + 5), tileY, tileSize, tileSize};
+        //if (CheckCollisionPointRec(GetMousePosition(), tileRect) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            //selectedTile = i;
+        //}
     }
 
     // Save Button
@@ -181,7 +181,7 @@ void mapsEditorScene() {
     
 
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y < GetScreenHeight() - panelHeight) {
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y < GetScreenHeight()) {
         Vector2 worldMousePos = GetScreenToWorld2D(GetMousePosition(), cameraE);
 
         if (mode == 0) setTile(mouseTilePos, selectedTile, selectedObject);
