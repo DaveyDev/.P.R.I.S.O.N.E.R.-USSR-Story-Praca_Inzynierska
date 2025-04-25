@@ -29,6 +29,15 @@ void setTile(Vector2 mouseTilePos, int selectedTile, int selectedObject){
     objects[row][col] = selectedTile;  // Toggle to tree
         
 }
+void setTile2(Vector2 mouseTilePos, int selectedTile, int selectedObject){
+
+    printf("set tile function was called\n");
+
+    int row = mouseTilePos.y;
+    int col = mouseTilePos.x;
+    details[row][col] = selectedTile;  // Toggle to tree
+        
+}
 
 
 void createEmptyMap(int width, int height) {

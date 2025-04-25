@@ -26,6 +26,15 @@ int selectedTile = 11;   // Default selected tile
 int selectedObject = 0; // Default selected object
 int mode = 0;
 
+// Define mode names
+const char* modeNames[] = {
+    "Object Placement",
+    "Object Removal",
+    "Item Placement",
+    "Detail Placement",
+    "Detail Removal"
+};
+
 void mapsEditorScene() {
     ClearBackground(GRAY);
 
@@ -67,6 +76,9 @@ void mapsEditorScene() {
     if (IsKeyDown(KEY_S)) cameraE.target.y += cameraSpeed;
     if (IsKeyDown(KEY_W)) cameraE.target.y -= cameraSpeed;
 
+    if (IsKeyDown(KEY_Z)) cameraE.zoom -= 0.02f;
+    if (IsKeyDown(KEY_X)) cameraE.zoom += 0.02f;
+
     Player player;
 
     drawMap(cameraE);
@@ -92,22 +104,22 @@ void mapsEditorScene() {
     if(IsKeyPressed(KEY_E)) selectedTile += 1000;
 
     if (IsKeyPressed(KEY_SPACE)) {
-        mode = (mode + 1) % 3;
+        mode = (mode + 1) % 5;
     }
 
     selectedTile -= GetMouseWheelMove();
 
     // Draw UI Panel
     int panelHeight = 100;
-    DrawRectangle(0, GetScreenHeight() - panelHeight, GetScreenWidth(), panelHeight, DARKGRAY);
+    //DrawRectangle(0, GetScreenHeight() - panelHeight, GetScreenWidth(), panelHeight, DARKGRAY);
 
     // Draw Tile Selection
     int tileSize = 50;
     int tileX = 10;
     int tileY = GetScreenHeight() - panelHeight + 10;
     for (int i = 0; i < 10; i++) { // Example: 10 tiles
-        DrawRectangle(tileX + i * (tileSize + 5), tileY, tileSize, tileSize, (selectedTile == i) ? RED : LIGHTGRAY);
-        DrawText(TextFormat("%d", i), tileX + i * (tileSize + 5) + 15, tileY + 15, 20, BLACK);
+        //DrawRectangle(tileX + i * (tileSize + 5), tileY, tileSize, tileSize, (selectedTile == i) ? RED : LIGHTGRAY);
+        //DrawText(TextFormat("%d", i), tileX + i * (tileSize + 5) + 15, tileY + 15, 20, BLACK);
 
         // Handle Tile Selection
         Rectangle tileRect = {tileX + i * (tileSize + 5), tileY, tileSize, tileSize};
@@ -117,7 +129,7 @@ void mapsEditorScene() {
     }
 
     // Save Button
-    Rectangle saveButton = {GetScreenWidth() - 150, GetScreenHeight() - panelHeight + 10, 60, 30};
+    Rectangle saveButton = {GetScreenWidth() - 150, 10, 60, 30};
     DrawRectangleRec(saveButton, BLUE);
     DrawText("Save", saveButton.x + 10, saveButton.y + 5, 20, WHITE);
     if (CheckCollisionPointRec(GetMousePosition(), saveButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -132,7 +144,7 @@ void mapsEditorScene() {
     }
 
     // Exit Button
-    Rectangle exitButton = {GetScreenWidth() - 80, GetScreenHeight() - panelHeight + 10, 60, 30};
+    Rectangle exitButton = {GetScreenWidth() - 80, 10, 60, 30};
     DrawRectangleRec(exitButton, RED);
     DrawText("Exit", exitButton.x + 10, exitButton.y + 5, 20, WHITE);
     if (CheckCollisionPointRec(GetMousePosition(), exitButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -143,6 +155,8 @@ void mapsEditorScene() {
 
     DrawText(TextFormat("Tile: %d", selectedTile), 10, 40, 20, WHITE);
     DrawText(TextFormat("Mode: %d", mode), 10, 70, 20, WHITE);
+    // Draw mode name
+    DrawText(TextFormat("Mode: %s", modeNames[mode]), 10, 120, 20, WHITE);
     
     Rectangle block = { 150, 30, TILE_SIZE, TILE_SIZE }; // Position next to text
     
@@ -173,7 +187,8 @@ void mapsEditorScene() {
         if (mode == 0) setTile(mouseTilePos, selectedTile, selectedObject);
         if (mode == 1) setTile(mouseTilePos, 0, selectedObject);
         if (mode == 2) addItem(worldMousePos, selectedTile, 1, "Custom Item"); // Adjust name as needed
-
+        if (mode == 3) setTile2(mouseTilePos, selectedTile, selectedObject);
+        if (mode == 4) setTile2(mouseTilePos, 0, selectedObject);
     }
 
 
