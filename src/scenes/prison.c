@@ -49,14 +49,27 @@ void prisonScene() {
     }
 
     // Initialize the camera only once
-    if (!isCameraInitialized) {
-        camera.target = (Vector2){0, 0};
+   if (!isCameraInitialized) {
+        //camera.target = (Vector2){0, 0};
+        int halfWidth = GetScreenWidth() / 2;
+        int halfHeight = GetScreenHeight() / 2;
+
+        camera.target = (Vector2){player.collider.x, player.collider.y};
         camera.offset = (Vector2){0, 0};
         camera.rotation = 0.0f;
-        //camera.zoom = 1.0f;
         camera.zoom = (resolutions[currentResolutionIndex].height / 600.0f) * 2.0f;
         isCameraInitialized = true;  // Mark camera as initialized
+
+
+
     }
+
+
+    
+
+    
+   
+
     
     
     

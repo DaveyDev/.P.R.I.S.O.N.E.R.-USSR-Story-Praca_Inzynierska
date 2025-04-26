@@ -132,6 +132,9 @@ void triggerForcedSleep() {
     sleepTimer = 0.0f;
 
     // Force time skip and start a new day
+    
+
+
     setTimeOfDay(6.5f);
     setDayCount(getDayCount() + 1);
     newDayTrees();

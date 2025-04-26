@@ -23,7 +23,7 @@ const int barbedWireDamage = 1;
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
     //player-> position.x = screenWidth/2;
     //player-> position.y = screenHeight/2;
-    player-> position = (Vector2) {32 * 20, 32 * 10}; // tile (10, 5) as example
+    player-> position = (Vector2) {32 * 10, 32 * 10}; // tile (10, 5) as example
     
 
     player-> speed = speed;
@@ -271,7 +271,8 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
 
 
             if (objectID >= 2000 && objectID <= 2999 
-                && objectID != WOODEN_FLOOR 
+                && objectID != WOODEN_FLOOR
+                && objectID != OAK_WOODEN_FLOOR 
                 && objectID != STONE_FLOOR
                 && objectID != BARBED_WIRE
                 && objectID != BARBED_WIRE_VERTICAL) {

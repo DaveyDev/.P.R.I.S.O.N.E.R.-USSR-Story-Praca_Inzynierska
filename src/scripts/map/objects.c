@@ -57,10 +57,19 @@ void drawPlaceable(int placeableIndex, Rectangle block) {
 }
 
 bool isWallLike(int object) {
-    return (object == StoneWall || object == GREY_DOOR || object == LIGHTGREY_DOOR); // Add more IDs if needed
+    return (object == StoneWall 
+    || object == GREY_DOOR 
+    || object == LIGHTGREY_DOOR
+    || object == OPEN_GREY_DOOR
+    || object == OPEN_LIGHTGREY_DOOR
+    || object == IRON_BARS); // Add more IDs if needed
 }
 bool isWallLikeDetail(int detail) {
-    return (detail == GREY_DOOR || detail == LIGHTGREY_DOOR || detail == OPEN_GREY_DOOR || detail == OPEN_LIGHTGREY_DOOR); // Add more IDs if needed
+    return (detail == GREY_DOOR 
+    || detail == LIGHTGREY_DOOR 
+    || detail == OPEN_GREY_DOOR 
+    || detail == OPEN_LIGHTGREY_DOOR
+    || detail == IRON_BARS); // Add more IDs if needed
 }
 
 Rectangle calculateWallTile(int row, int col) {
