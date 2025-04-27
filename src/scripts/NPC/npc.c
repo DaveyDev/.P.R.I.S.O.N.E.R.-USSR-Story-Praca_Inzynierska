@@ -9,6 +9,7 @@
 #include "../items/idList.h"
 #include "../sound/soundManager.h"
 #include "../player/sleep.h"
+#include "../global.h"
 
 
 
@@ -19,6 +20,8 @@ int numInmates = 0;
 
 NPC guards[5];
 int numGuards = 0;
+
+
 
 
 
@@ -48,6 +51,8 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
 
     npc.health = 35;
 
+    npc.currentPatrolTarget = (Vector2){0,0};
+    npc.hasPatrolTarget = false;
 
 
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
@@ -117,6 +122,20 @@ Vector2 findNearestPatrolPoint(Vector2 from) {
 
     return closest;
 }
+
+Vector2 pickNextPatrolPoint(NPC *npc, int npcIndex) {
+    
+
+    if (patrolPointCount == 0) return npc->position; // no patrol points
+
+    int index = npcPatrolIndex[npcIndex];
+    index = (index + 1) % patrolPointCount;
+    npcPatrolIndex[npcIndex] = index;
+
+    return patrolPoints[index];
+}
+
+
 
 
 
@@ -235,7 +254,7 @@ if (npc->pathIndex < npc->pathLength) {
 
 
 } break;
-
+/*
 case BEHAVIOR_PATROL: {
     npc->moveTimer += deltaTime;
     npc->pathUpdateTimer += deltaTime;
@@ -272,6 +291,50 @@ case BEHAVIOR_PATROL: {
             npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
         }
 
+
+        Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
+        npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
+
+        npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
+                                                            (direction.y < 0 ? UP : DOWN);
+    }
+} break;
+*/
+case BEHAVIOR_PATROL: {
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
+        npc->pathUpdateTimer = 0.0f;
+
+        // If no target yet or reached current one, pick new one
+        if (!npc->hasPatrolTarget || Vector2Distance(npc->position, npc->currentPatrolTarget) < 4.0f) {
+            npc->currentPatrolTarget = pickNextPatrolPoint(npc, groupIndex);
+            npc->hasPatrolTarget = true;
+        }
+
+        npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+        npc->pathIndex = 0;
+    }
+
+    int lookahead = npc->pathIndex + 2;
+    if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+    if (npc->pathIndex < npc->pathLength) {
+        Vector2 target = npc->path[lookahead];
+        Vector2 delta = Vector2Subtract(target, npc->position);
+        float distance = Vector2Length(delta);
+
+        Vector2 direction = Vector2Normalize(delta);
+        float speed = 40.0f;
+        float step = speed * deltaTime;
+
+        if (distance <= step) {
+            npc->position = target;
+            npc->pathIndex = lookahead + 1;
+        } else {
+            npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+        }
 
         Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
         npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
@@ -394,4 +457,5 @@ bool isTileTemporarilyBlocked(int row, int col, NPC *self, NPC *all, int count) 
 
     return false;
 }
+
 

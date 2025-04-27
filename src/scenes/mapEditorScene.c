@@ -100,8 +100,17 @@ void mapsEditorScene() {
     Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), cameraE);
     Vector2 mouseTilePos = (Vector2){(int)(mouseWorldPos.x / TILE_SIZE), (int)(mouseWorldPos.y / TILE_SIZE)};
 
-    if(IsKeyPressed(KEY_Q)) selectedTile -= 1000;
-    if(IsKeyPressed(KEY_E)) selectedTile += 1000;
+    if(IsKeyPressed(KEY_Q)) {
+        selectedTile -= 1000;
+        if (selectedTile < 0) selectedTile = 3000;
+    }
+
+    if (IsKeyPressed(KEY_E)) {
+        selectedTile += 1000;
+        if (selectedTile > 3999) selectedTile = 0;
+    }
+
+
 
     if (IsKeyPressed(KEY_SPACE)) {
         mode = (mode + 1) % 5;
@@ -128,6 +137,11 @@ void mapsEditorScene() {
         //}
     }
 
+    // Draw Top Panel
+int topPanelHeight = 50;
+DrawRectangle(0, 0, GetScreenWidth(), topPanelHeight, DARKGRAY);
+
+
     // Save Button
     Rectangle saveButton = {GetScreenWidth() - 150, 10, 60, 30};
     DrawRectangleRec(saveButton, BLUE);
@@ -153,19 +167,19 @@ void mapsEditorScene() {
         wasMapLoadedE = false;
     }
 
-    DrawText(TextFormat("Tile: %d", selectedTile), 10, 40, 20, WHITE);
-    DrawText(TextFormat("Mode: %d", mode), 10, 70, 20, WHITE);
+    DrawText(TextFormat("Tile: %d", selectedTile), 10, 15, 20, WHITE);
+    DrawText(TextFormat("Mode: %d", mode), 130, 15, 20, WHITE);
     // Draw mode name
-    DrawText(TextFormat("Mode: %s", modeNames[mode]), 10, 120, 20, WHITE);
+    DrawText(TextFormat("Mode: %s", modeNames[mode]), 260, 15, 20, WHITE);
     
-    Rectangle block = { 150, 30, TILE_SIZE, TILE_SIZE }; // Position next to text
+    Rectangle block = { 150, 50, TILE_SIZE, TILE_SIZE }; // Position next to text
     
     // Determine the correct tile to draw
     int displayTile = selectedTile;
     if (selectedTile >= 2000 && selectedTile <= 2999) {
         displayTile -= 2000; // Adjust for placeables
         drawPlaceable(displayTile, block);
-    } else if (selectedTile >= 1000 && selectedTile <= 1999) {
+    } else if (selectedTile >= 1000 && selectedTile <= MAX_TREE_ID) {
         block = (Rectangle){ 150, 150, TILE_SIZE, TILE_SIZE };
         displayTile -= 1000; // Adjust for trees
         drawTree(displayTile, block);
@@ -181,7 +195,7 @@ void mapsEditorScene() {
     
 
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y < GetScreenHeight()) {
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y > topPanelHeight) {
         Vector2 worldMousePos = GetScreenToWorld2D(GetMousePosition(), cameraE);
 
         if (mode == 0) setTile(mouseTilePos, selectedTile, selectedObject);

@@ -46,11 +46,11 @@ void updateSleep() {
             setTimeOfDay(6.5f);
             setDayCount(getDayCount() + 1);
         } else {
-            setTimeOfDay(time + 6.0f);
-            if (getTimeOfDay() >= 24.0f) {
-                setTimeOfDay(getTimeOfDay() - 24.0f);
-                setDayCount(getDayCount() + 1);
-            }
+            //setTimeOfDay(time + 6.0f);
+            //if (getTimeOfDay() >= 24.0f) {
+                //setTimeOfDay(getTimeOfDay() - 24.0f);
+                //setDayCount(getDayCount() + 1);
+            //}
         }
         newDayTrees();
         player.wasKnockedOutToday = false;

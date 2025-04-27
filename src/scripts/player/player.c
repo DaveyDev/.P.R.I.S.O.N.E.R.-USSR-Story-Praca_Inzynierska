@@ -291,6 +291,21 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
                 closeDoor(row, col);
             }
 
+            if(detailID >= 2000 && detailID <= 2999
+            && detailID != OPEN_GREY_DOOR
+            && detailID != OPEN_LIGHTGREY_DOOR
+            && detailID != FANCY_BED_UPPER
+            && detailID != FANCY_BED_DOWN
+            && detailID != USELESS_BED_UPPER
+            && detailID != USELESS_BED_BOTTOM
+            && detailID != GREEN_BED_UPPER
+            && detailID != GREEN_BED_BOTTOM
+            ){
+                if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+                    return true;
+                }
+            }
+
             // Winning block
             if (objectID == WINNING_BLOCK) {
                 if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {

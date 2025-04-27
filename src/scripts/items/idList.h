@@ -9,6 +9,11 @@ typedef enum {
     LUMBER_WORK_CHEST = 13,
     PATROL_BLOCK = 14,
     SPAWN_BLOCK = 15,
+    FOOD_WORK_BLOCK = 16,
+    FOOD_TAKE_BLOCK = 17,
+    FOOD_WORK_CHEST = 18,
+    MINE_WORK_CHEST = 19,
+
 
     //TREES
     SPRUCE = 1000,

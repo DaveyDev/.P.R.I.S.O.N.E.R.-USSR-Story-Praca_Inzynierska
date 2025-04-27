@@ -39,11 +39,10 @@ void prisonScene() {
         if(!isNewGame) loadPlayerStats(&player);
 
         loadChests(); 
-        
 
-        
-        
 
+        findPatrolPointsFromMap();
+    
 
 
     }

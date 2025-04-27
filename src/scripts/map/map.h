@@ -40,5 +40,6 @@ void freeMap();  // Function to free allocated memory
 Rectangle calcutaleTile(int row, int col);
 void drawTree(int treeIndex, Rectangle block);
 void editMap(Camera2D cameraE);
+void findPatrolPointsFromMap();
 
 #endif // MAP_H

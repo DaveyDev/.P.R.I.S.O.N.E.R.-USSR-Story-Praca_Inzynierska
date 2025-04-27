@@ -7,6 +7,12 @@
 #define MAX_MAP_NAME_LENGTH 128 //mapName
 #define TILE_SIZE 32 //TILE_SIZE
 
+#define MAX_TREE_ID 1003
+#define MAX_OBJECT_ID 2032
+
+#define MAX_PATROL_POINTS 64
+#define MAX_NPC_COUNT 32
+
 extern AppScene *currentScene;
 extern int maxFPS;
 
@@ -51,6 +57,12 @@ extern bool musicPlaying;
 extern bool musicEnabled;
 extern bool playerWon;
 extern bool isEditor;
+
+
+extern Vector2 patrolPoints[MAX_PATROL_POINTS];
+extern int patrolPointCount;
+extern int npcPatrolIndex[MAX_NPC_COUNT];
+
 
 //work
 extern bool isWorkDone;

@@ -6,6 +6,7 @@
 
 #define MAX_NPC_PATH 64
 
+
 typedef enum {
     NPC_INMATE,
     NPC_GUARD
@@ -43,6 +44,10 @@ typedef struct {
     float pathUpdateTimer;
     float attackCooldown;
     int health;
+    Vector2 currentPatrolTarget;
+    bool hasPatrolTarget;
+    
+
 
 
 } NPC;

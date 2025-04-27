@@ -67,6 +67,12 @@ bool musicEnabled = false;
 bool isWorkDone = false;
 
 
+Vector2 patrolPoints[MAX_PATROL_POINTS] = {0};
+int patrolPointCount = 0;
+int npcPatrolIndex[MAX_NPC_COUNT] = {0};
+
+
+
 void initGlobals() {
     currentScene = (AppScene *)malloc(sizeof(AppScene));
     if (currentScene != NULL) {

@@ -243,15 +243,29 @@ void drawMap(Camera2D camera) {
                 drawTree(objects[row][col] - 1000, block);
             } else if (objects[row][col] == 11) {
                 drawWall(row, col, wallSet);
-            } else if (isEditor && objects[row][col] == WINNING_BLOCK) {
+            } else if (isEditor && (objects[row][col] == WINNING_BLOCK || details[row][col] == WINNING_BLOCK)) {
                 // Draw a yellow rectangle with a "W" inside
                 DrawRectangleLinesEx(block, 2, YELLOW);
                 DrawText("W", block.x + 10, block.y + 6, 16, YELLOW);
-            } else if (isEditor && objects[row][col] == PATROL_BLOCK) {
+            } else if (isEditor && (objects[row][col] == PATROL_BLOCK || details[row][col] == PATROL_BLOCK)) {
                 // Draw a yellow rectangle with a "W" inside
                 DrawRectangleLinesEx(block, 2, BLUE);
                 DrawText("P", block.x + 10, block.y + 6, 16, BLUE);
+            } 
+            else if (isEditor && (objects[row][col] == SPAWN_BLOCK || details[row][col] == SPAWN_BLOCK)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, RED);
+                DrawText("S", block.x + 10, block.y + 6, 16, RED);
+            }else if (isEditor && (objects[row][col] == FOOD_WORK_BLOCK || details[row][col] == FOOD_WORK_BLOCK)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, DARKGREEN);
+                DrawText("FW", block.x + 5, block.y + 6, 16, DARKGREEN);
+            }else if (isEditor && (objects[row][col] == FOOD_TAKE_BLOCK || details[row][col] == FOOD_TAKE_BLOCK)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, DARKGREEN);
+                DrawText("FT", block.x + 5, block.y + 6, 16, DARKGREEN);
             }
+
         }
     }
 
@@ -285,4 +299,19 @@ void drawMap(Camera2D camera) {
     EndMode2D();
 }
 
+void findPatrolPointsFromMap() {
+    patrolPointCount = 0;
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (objects[row][col] == PATROL_BLOCK || details[row][col] == PATROL_BLOCK) {
+                if (patrolPointCount < MAX_PATROL_POINTS) {
+                    patrolPoints[patrolPointCount++] = (Vector2){
+                        col * TILE_SIZE + TILE_SIZE / 2,
+                        row * TILE_SIZE + TILE_SIZE / 2
+                    };
+                }
+            }
+        }
+    }
+}
 
