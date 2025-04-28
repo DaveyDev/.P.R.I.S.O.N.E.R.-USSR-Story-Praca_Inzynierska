@@ -324,3 +324,22 @@ void findPatrolPointsFromMap() {
     }
 }
 
+void findFoodTakeBlocks() {
+    foodBlockCount = 0;
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (objects[row][col] == FOOD_TAKE_BLOCK || details[row][col] == FOOD_TAKE_BLOCK) {
+                if (foodBlockCount < MAX_FOOD_BLOCKS) {
+                    foodTakeBlocks[foodBlockCount++] = (Vector2){col * TILE_SIZE + TILE_SIZE/2, row * TILE_SIZE + TILE_SIZE/2};
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < MAX_FOOD_BLOCKS; i++) {
+        foodQueueLengths[i] = 0;
+    }
+}
+
+

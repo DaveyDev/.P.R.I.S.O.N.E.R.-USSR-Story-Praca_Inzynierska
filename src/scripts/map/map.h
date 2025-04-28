@@ -41,5 +41,6 @@ Rectangle calcutaleTile(int row, int col);
 void drawTree(int treeIndex, Rectangle block);
 void editMap(Camera2D cameraE);
 void findPatrolPointsFromMap();
+void findFoodTakeBlocks();
 
 #endif // MAP_H

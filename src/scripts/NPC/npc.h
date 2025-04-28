@@ -17,6 +17,7 @@ typedef enum {
     BEHAVIOR_FOLLOW,
     BEHAVIOR_PATROL,
     BEHAVIOR_SLEEP,
+    BEHAVIOR_LUNCH,
     // You can add more like BEHAVIOR_FOLLOW, BEHAVIOR_TALK
 } NPCBehavior;
 

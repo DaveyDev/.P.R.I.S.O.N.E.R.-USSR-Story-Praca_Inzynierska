@@ -12,6 +12,7 @@
 
 #define MAX_PATROL_POINTS 64
 #define MAX_NPC_COUNT 32
+#define MAX_FOOD_BLOCKS 8
 
 extern AppScene *currentScene;
 extern int maxFPS;
@@ -63,6 +64,9 @@ extern Vector2 patrolPoints[MAX_PATROL_POINTS];
 extern int patrolPointCount;
 extern int npcPatrolIndex[MAX_NPC_COUNT];
 
+extern Vector2 foodTakeBlocks[MAX_FOOD_BLOCKS];
+extern int foodBlockCount;
+extern int foodQueueLengths[MAX_FOOD_BLOCKS]; 
 
 //work
 extern bool isWorkDone;

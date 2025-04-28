@@ -433,9 +433,69 @@ case BEHAVIOR_SLEEP: {
     }
     
     printf("NPC %d going to sleep\n", groupIndex);
-    printf("Target: (%.1f, %.1f)\n", npc->currentPatrolTarget.x, npc->currentPatrolTarget.y);
-    printf("Path steps: %d\n", npc->pathLength);
+    //printf("Target: (%.1f, %.1f)\n", npc->currentPatrolTarget.x, npc->currentPatrolTarget.y);
+    //printf("Path steps: %d\n", npc->pathLength);
 
+} break;
+
+case BEHAVIOR_LUNCH: {
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    if (!npc->hasPatrolTarget) {
+        int bestIndex = -1;
+        float bestDist = 999999.0f;
+
+        for (int i = 0; i < foodBlockCount; i++) {
+            float dist = Vector2Distance(npc->position, foodTakeBlocks[i]);
+            if (dist < bestDist) {
+                bestDist = dist;
+                bestIndex = i;
+            }
+        }
+
+        if (bestIndex != -1) {
+            // Pick target with small offset based on queue length
+            int queuePos = foodQueueLengths[bestIndex];
+
+            Vector2 dir = {0, 1}; // simple direction: stand below the food block
+            Vector2 offset = Vector2Scale(dir, queuePos * TILE_SIZE);
+
+            npc->currentPatrolTarget = Vector2Add(foodTakeBlocks[bestIndex], offset);
+            npc->hasPatrolTarget = true;
+
+            //npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, MAX_NPC_PATH, npc, group, groupCount);
+            npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+            npc->pathIndex = 0;
+
+            foodQueueLengths[bestIndex]++; // claim your queue position
+        }
+    }
+
+    if (npc->hasPatrolTarget && npc->pathLength > 0) {
+        int lookahead = npc->pathIndex + 2;
+        if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+        if (npc->pathIndex < npc->pathLength) {
+            Vector2 target = npc->path[lookahead];
+            Vector2 delta = Vector2Subtract(target, npc->position);
+            float distance = Vector2Length(delta);
+
+            Vector2 direction = Vector2Normalize(delta);
+            float speed = 40.0f;
+            float step = speed * deltaTime;
+
+            if (distance <= step) {
+                npc->position = target;
+                npc->pathIndex = lookahead + 1;
+            } else {
+                npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+            }
+
+            npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
+                                                                (direction.y < 0 ? UP : DOWN);
+        }
+    }
 } break;
 
 

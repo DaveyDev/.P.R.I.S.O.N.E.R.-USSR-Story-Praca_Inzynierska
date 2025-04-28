@@ -71,6 +71,9 @@ Vector2 patrolPoints[MAX_PATROL_POINTS] = {0};
 int patrolPointCount = 0;
 int npcPatrolIndex[MAX_NPC_COUNT] = {0};
 
+Vector2 foodTakeBlocks[MAX_FOOD_BLOCKS];
+int foodBlockCount = 0;
+int foodQueueLengths[MAX_FOOD_BLOCKS]; // how many NPCs waiting at each block
 
 
 void initGlobals() {

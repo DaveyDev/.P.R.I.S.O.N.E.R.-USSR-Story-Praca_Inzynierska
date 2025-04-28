@@ -42,6 +42,7 @@ void prisonScene() {
 
 
         findPatrolPointsFromMap();
+        findFoodTakeBlocks();
     
 
 
