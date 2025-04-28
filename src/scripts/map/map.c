@@ -264,7 +264,16 @@ void drawMap(Camera2D camera) {
                 // Draw a yellow rectangle with an "S" inside
                 DrawRectangleLinesEx(block, 2, DARKGREEN);
                 DrawText("FT", block.x + 5, block.y + 6, 16, DARKGREEN);
+            }else if (isEditor && (objects[row][col] == INMATE_SPAWN || details[row][col] == INMATE_SPAWN)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, RED);
+                DrawText("IS", block.x + 5, block.y + 6, 16, RED);
+            }else if (isEditor && (objects[row][col] == GUARD_SPAWN || details[row][col] == GUARD_SPAWN)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, RED);
+                DrawText("GS", block.x + 5, block.y + 6, 16, RED);
             }
+            
 
         }
     }

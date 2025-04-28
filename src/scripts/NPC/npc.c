@@ -344,6 +344,101 @@ case BEHAVIOR_PATROL: {
     }
 } break;
 
+case BEHAVIOR_SLEEP: {
+
+    
+
+
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    // If no target yet, find an available spawn tile
+    if (!npc->hasPatrolTarget) {
+        int bestRow = -1, bestCol = -1;
+        float bestDist = 999999.0f;
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int obj = objects[row][col];
+                int det = details[row][col];
+
+                bool correctType = (npc->type == NPC_GUARD) ? (obj == GUARD_SPAWN || det == GUARD_SPAWN) 
+                                                            : (obj == INMATE_SPAWN || det == INMATE_SPAWN);
+                if (!correctType) continue;
+
+                // Check if already occupied
+                bool occupied = false;
+                for (int i = 0; i < groupCount; i++) {
+                    if (&group[i] == npc) continue;
+                    float dist = Vector2Distance(group[i].position, (Vector2){col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2});
+                    if (dist < 20.0f) {
+                        occupied = true;
+                        break;
+                    }
+                }
+                if (occupied) continue;
+
+                // Pick closest free spawn
+                Vector2 tileCenter = {col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2};
+                float dist = Vector2Distance(npc->position, tileCenter);
+
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestRow = row;
+                    bestCol = col;
+                }
+            }
+        }
+
+        if (bestRow != -1 && bestCol != -1) {
+            npc->currentPatrolTarget = (Vector2){bestCol * TILE_SIZE + TILE_SIZE / 2, bestRow * TILE_SIZE + TILE_SIZE / 2};
+            npc->hasPatrolTarget = true;
+
+            npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+            npc->pathIndex = 0;
+        }
+    }
+
+    if (npc->hasPatrolTarget) {
+        int lookahead = npc->pathIndex + 2;
+        if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+        if (npc->pathIndex < npc->pathLength) {
+            Vector2 target = npc->path[lookahead];
+            Vector2 delta = Vector2Subtract(target, npc->position);
+            float distance = Vector2Length(delta);
+
+            Vector2 direction = Vector2Normalize(delta);
+            float speed = 30.0f;
+            float step = speed * deltaTime;
+
+            if (distance <= step) {
+                npc->position = target;
+                npc->pathIndex = lookahead + 1;
+            } else {
+                npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+            }
+
+            npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
+                                                                (direction.y < 0 ? UP : DOWN);
+
+            
+
+        } else {
+            // Once reached, stay there
+            // (do nothing, no reset of hasPatrolTarget)
+        }
+
+        
+    }
+    
+    printf("NPC %d going to sleep\n", groupIndex);
+    printf("Target: (%.1f, %.1f)\n", npc->currentPatrolTarget.x, npc->currentPatrolTarget.y);
+    printf("Path steps: %d\n", npc->pathLength);
+
+} break;
+
+
 
 
 

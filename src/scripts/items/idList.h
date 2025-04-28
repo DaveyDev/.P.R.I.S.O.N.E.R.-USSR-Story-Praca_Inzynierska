@@ -5,6 +5,7 @@
 // Define your tile types with unique IDs
 typedef enum {
 
+    //WALL = 11,
     WINNING_BLOCK = 12,
     LUMBER_WORK_CHEST = 13,
     PATROL_BLOCK = 14,
@@ -13,6 +14,9 @@ typedef enum {
     FOOD_TAKE_BLOCK = 17,
     FOOD_WORK_CHEST = 18,
     MINE_WORK_CHEST = 19,
+    INMATE_SPAWN = 20,
+    GUARD_SPAWN = 21,
+
 
 
     //TREES
