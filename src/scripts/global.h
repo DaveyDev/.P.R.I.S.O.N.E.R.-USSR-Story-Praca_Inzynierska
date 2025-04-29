@@ -3,6 +3,8 @@
 #define GLOBAL_H
 
 #include "../scenes/scenes.h"
+#include "NPC/npc.h"
+
 
 #define MAX_MAP_NAME_LENGTH 128 //mapName
 #define TILE_SIZE 32 //TILE_SIZE
@@ -13,6 +15,8 @@
 #define MAX_PATROL_POINTS 64
 #define MAX_NPC_COUNT 32
 #define MAX_FOOD_BLOCKS 8
+#define MAX_QUEUE_PER_BLOCK 8
+#define MAX_FREE_TILES 256
 
 extern AppScene *currentScene;
 extern int maxFPS;
@@ -67,6 +71,10 @@ extern int npcPatrolIndex[MAX_NPC_COUNT];
 extern Vector2 foodTakeBlocks[MAX_FOOD_BLOCKS];
 extern int foodBlockCount;
 extern int foodQueueLengths[MAX_FOOD_BLOCKS]; 
+extern int foodQueueLengths[MAX_FOOD_BLOCKS];
+extern NPC *foodQueues[MAX_FOOD_BLOCKS][MAX_QUEUE_PER_BLOCK]; // pointers to NPCs in queue
+extern Vector2 freeTimeBlocks[MAX_FREE_TILES];
+extern int freeTimeBlockCount;
 
 //work
 extern bool isWorkDone;

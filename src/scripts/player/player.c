@@ -12,6 +12,7 @@
 #include "inventory.h"
 #include "../NPC/npc.h"
 #include "combat.h"
+#include "../NPC/startBehavior.h"
 
 Player player;
 
@@ -207,6 +208,10 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         }
     }
 
+    if(IsKeyPressed(KEY_G)) startLunchForAllNPCs();
+    if(IsKeyPressed(KEY_H)) startPatrolForAllNPCs();
+    if(IsKeyPressed(KEY_F)) startFoodForGuardNPC();
+    if(IsKeyPressed(KEY_V)) startFreeTimeForAllNPCs();
     
 
     // Update collider position

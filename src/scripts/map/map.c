@@ -200,9 +200,7 @@ void drawMap(Camera2D camera) {
         }
     }
     
-    EndMode2D();
-    drawItems(camera);
-    BeginMode2D(camera);
+
 
     // **Step 2: Draw details layer (always under the player)**
     for (int row = startRow; row <= endRow; row++) {
@@ -272,11 +270,19 @@ void drawMap(Camera2D camera) {
                 // Draw a yellow rectangle with an "S" inside
                 DrawRectangleLinesEx(block, 2, RED);
                 DrawText("GS", block.x + 5, block.y + 6, 16, RED);
+            }else if (isEditor && (objects[row][col] == FREE_TIME_BLOCK || details[row][col] == FREE_TIME_BLOCK)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, ORANGE);
+                DrawText("FT", block.x + 5, block.y + 6, 16, ORANGE);
             }
             
 
         }
     }
+
+    EndMode2D();
+    drawItems(camera);
+    BeginMode2D(camera);
 
     //for testing
     // **Step 2,5: Draw NPCs**
@@ -340,6 +346,25 @@ void findFoodTakeBlocks() {
     for (int i = 0; i < MAX_FOOD_BLOCKS; i++) {
         foodQueueLengths[i] = 0;
     }
+}
+
+void findFreeTimeBlocks() {
+    freeTimeBlockCount = 0;
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (objects[row][col] == FREE_TIME_BLOCK || details[row][col] == FREE_TIME_BLOCK) {
+                if (freeTimeBlockCount < MAX_FREE_TILES) {
+                    freeTimeBlocks[freeTimeBlockCount++] = (Vector2){
+                        col * TILE_SIZE + TILE_SIZE / 2,
+                        row * TILE_SIZE + TILE_SIZE / 2
+                    };
+                }
+            }
+        }
+    }
+
+    printf("Found %d free time blocks\n", freeTimeBlockCount);
 }
 
 

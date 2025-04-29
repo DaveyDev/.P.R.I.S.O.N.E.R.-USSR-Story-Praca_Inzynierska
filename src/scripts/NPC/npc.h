@@ -18,6 +18,8 @@ typedef enum {
     BEHAVIOR_PATROL,
     BEHAVIOR_SLEEP,
     BEHAVIOR_LUNCH,
+    BEHAVIOR_LUNCH_GUARD,
+    BEHAVIOR_FREE_TIME,
     // You can add more like BEHAVIOR_FOLLOW, BEHAVIOR_TALK
 } NPCBehavior;
 
@@ -48,6 +50,10 @@ typedef struct {
     int health;
     Vector2 currentPatrolTarget;
     bool hasPatrolTarget;
+    bool gotFood;
+    int queueIndex; // position in queue, 0 = first
+    int queueTargetBlock; // index of the food block they're queuing at
+
     
 
 

@@ -43,6 +43,7 @@ void prisonScene() {
 
         findPatrolPointsFromMap();
         findFoodTakeBlocks();
+        findFreeTimeBlocks();
     
 
 
@@ -195,7 +196,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     }
 
     
-    if(IsKeyPressed(KEY_G)) player.health = player.health - 1;
+    //if(IsKeyPressed(KEY_G)) player.health = player.health - 1;
 
     showFPS();
 

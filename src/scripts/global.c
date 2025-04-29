@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include "translation.h"
 #include "sound/soundManager.h"
+#include "NPC/npc.h"
+
 
 #define MAX_RESOLUTIONS 3 // Adjust based on the number of resolutions available
 
@@ -74,6 +76,10 @@ int npcPatrolIndex[MAX_NPC_COUNT] = {0};
 Vector2 foodTakeBlocks[MAX_FOOD_BLOCKS];
 int foodBlockCount = 0;
 int foodQueueLengths[MAX_FOOD_BLOCKS]; // how many NPCs waiting at each block
+int foodQueueLengths[MAX_FOOD_BLOCKS];
+NPC *foodQueues[MAX_FOOD_BLOCKS][MAX_QUEUE_PER_BLOCK]; // pointers to NPCs in queue
+Vector2 freeTimeBlocks[MAX_FREE_TILES];
+int freeTimeBlockCount = 0;
 
 
 void initGlobals() {

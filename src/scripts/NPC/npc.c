@@ -10,6 +10,8 @@
 #include "../sound/soundManager.h"
 #include "../player/sleep.h"
 #include "../global.h"
+#include "../items/items.h"
+#include "../items/idList.h"
 
 
 
@@ -53,7 +55,9 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
 
     npc.currentPatrolTarget = (Vector2){0,0};
     npc.hasPatrolTarget = false;
-
+    npc.gotFood = false;
+    npc.queueIndex = 0;
+    npc.queueTargetBlock = 0;
 
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
@@ -254,52 +258,8 @@ if (npc->pathIndex < npc->pathLength) {
 
 
 } break;
-/*
-case BEHAVIOR_PATROL: {
-    npc->moveTimer += deltaTime;
-    npc->pathUpdateTimer += deltaTime;
-
-    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
-        npc->pathUpdateTimer = 0.0f;
-
-        Vector2 patrolTarget = findNearestPatrolPoint(npc->position);
-        printf("Patrol target for NPC: (%.1f, %.1f)\n", patrolTarget.x, patrolTarget.y);
-        printf("NPC pos: (%.1f, %.1f)\n", npc->position.x, npc->position.y);
-
-        npc->pathLength = findPath(npc->position, patrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
-        npc->pathIndex = 0;
-        printf("Path to patrol target: %d steps\n", npc->pathLength);
-
-    }
-
-    int lookahead = npc->pathIndex + 2;
-    if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
-
-    if (npc->pathIndex < npc->pathLength) {
-        Vector2 target = npc->path[lookahead];
-        Vector2 delta = Vector2Subtract(target, npc->position);
-        float distance = Vector2Length(delta);
-
-        Vector2 direction = Vector2Normalize(delta);
-        float speed = 40.0f;
-        float step = speed * deltaTime;
-
-        if (distance <= step) {
-            npc->position = target;
-            npc->pathIndex = lookahead + 1;
-        } else {
-            npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
-        }
 
 
-        Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
-        npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
-
-        npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
-                                                            (direction.y < 0 ? UP : DOWN);
-    }
-} break;
-*/
 case BEHAVIOR_PATROL: {
     npc->moveTimer += deltaTime;
     npc->pathUpdateTimer += deltaTime;
@@ -432,17 +392,19 @@ case BEHAVIOR_SLEEP: {
         
     }
     
-    printf("NPC %d going to sleep\n", groupIndex);
+    //printf("NPC %d going to sleep\n", groupIndex);
     //printf("Target: (%.1f, %.1f)\n", npc->currentPatrolTarget.x, npc->currentPatrolTarget.y);
     //printf("Path steps: %d\n", npc->pathLength);
 
 } break;
 
+
 case BEHAVIOR_LUNCH: {
     npc->moveTimer += deltaTime;
     npc->pathUpdateTimer += deltaTime;
 
-    if (!npc->hasPatrolTarget) {
+    // STEP 1: Assign queue target if not already
+    if (!npc->hasPatrolTarget && !npc->gotFood) {
         int bestIndex = -1;
         float bestDist = 999999.0f;
 
@@ -455,48 +417,240 @@ case BEHAVIOR_LUNCH: {
         }
 
         if (bestIndex != -1) {
-            // Pick target with small offset based on queue length
+            //int queuePos = foodQueueLengths[bestIndex];
             int queuePos = foodQueueLengths[bestIndex];
+            npc->queueIndex = queuePos;
+            npc->queueTargetBlock = bestIndex;
 
-            Vector2 dir = {0, 1}; // simple direction: stand below the food block
+
+            Vector2 dir = (Vector2){0, 1}; // queue vertically down
             Vector2 offset = Vector2Scale(dir, queuePos * TILE_SIZE);
 
             npc->currentPatrolTarget = Vector2Add(foodTakeBlocks[bestIndex], offset);
             npc->hasPatrolTarget = true;
 
-            //npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, MAX_NPC_PATH, npc, group, groupCount);
             npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
             npc->pathIndex = 0;
 
-            foodQueueLengths[bestIndex]++; // claim your queue position
+            //foodQueueLengths[bestIndex]++;
+            npc->queueIndex = foodQueueLengths[bestIndex];
+            npc->queueTargetBlock = bestIndex;
+
+            foodQueues[bestIndex][npc->queueIndex] = npc;
+            foodQueueLengths[bestIndex]++;
+
+
+            printf("NPC %d assigned to food block %d at queue position %d\n", groupIndex, bestIndex, queuePos);
         }
     }
 
-    if (npc->hasPatrolTarget && npc->pathLength > 0) {
+    // STEP 2: Move along path (if assigned)
+    if (npc->pathIndex < npc->pathLength) {
         int lookahead = npc->pathIndex + 2;
         if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
 
-        if (npc->pathIndex < npc->pathLength) {
-            Vector2 target = npc->path[lookahead];
-            Vector2 delta = Vector2Subtract(target, npc->position);
-            float distance = Vector2Length(delta);
+        Vector2 target = npc->path[lookahead];
+        Vector2 move = Vector2Subtract(target, npc->position);
+        float moveDist = Vector2Length(move);
+        Vector2 direction = Vector2Normalize(move);
 
-            Vector2 direction = Vector2Normalize(delta);
-            float speed = 40.0f;
-            float step = speed * deltaTime;
+        float speed = 40.0f;
+        float step = speed * deltaTime;
 
-            if (distance <= step) {
-                npc->position = target;
-                npc->pathIndex = lookahead + 1;
-            } else {
-                npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+        if (moveDist <= step) {
+            npc->position = target;
+            npc->pathIndex = lookahead + 1;
+        } else {
+            npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+        }
+
+        npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
+                                                            (direction.y < 0 ? UP : DOWN);
+    }
+
+    // STEP 3: If close enough to queue position, get food and walk away
+    float distToTarget = Vector2Distance(npc->position, npc->currentPatrolTarget);
+    if (!npc->gotFood && npc->queueIndex == 0 && distToTarget < 12.0f) {
+        printf("NPC %d got food at distance %.2f\n", groupIndex, distToTarget);
+        npc->gotFood = true;
+        npc->hasPatrolTarget = false;
+
+        // Shift queue forward
+int block = npc->queueTargetBlock;
+for (int i = 1; i < foodQueueLengths[block]; i++) {
+    foodQueues[block][i - 1] = foodQueues[block][i];
+    foodQueues[block][i - 1]->queueIndex--;
+
+    // Reassign their target (move one tile forward)
+    Vector2 dir = (Vector2){0, 1};
+    Vector2 offset = Vector2Scale(dir, foodQueues[block][i - 1]->queueIndex * TILE_SIZE);
+    Vector2 newTarget = Vector2Add(foodTakeBlocks[block], offset);
+
+    foodQueues[block][i - 1]->currentPatrolTarget = newTarget;
+    foodQueues[block][i - 1]->hasPatrolTarget = true;
+    foodQueues[block][i - 1]->pathLength = findPath(
+        foodQueues[block][i - 1]->position,
+        newTarget,
+        foodQueues[block][i - 1]->path,
+        MAX_NPC_PATH,
+        foodQueues[block][i - 1],
+        group,
+        groupCount
+    );
+    foodQueues[block][i - 1]->pathIndex = 0;
+}
+
+// Clear last slot
+foodQueues[block][foodQueueLengths[block] - 1] = NULL;
+foodQueueLengths[block]--;
+
+
+        float randomX = npc->position.x + GetRandomValue(-100, 100);
+        float randomY = npc->position.y + GetRandomValue(50, 150); // walk away down
+        npc->currentPatrolTarget = (Vector2){randomX, randomY};
+
+        npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+        npc->pathIndex = 0;
+    }
+} break;
+
+case BEHAVIOR_LUNCH_GUARD: {
+    npc->moveTimer += deltaTime;
+
+    // Step 1: Walk to the nearest FOOD_WORK_BLOCK once
+    if (!npc->hasPatrolTarget) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (objects[row][col] == FOOD_WORK_BLOCK || details[row][col] == FOOD_WORK_BLOCK) {
+                    npc->currentPatrolTarget = (Vector2){col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2};
+                    npc->hasPatrolTarget = true;
+                    npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, guards, numGuards);
+                    npc->pathIndex = 0;
+                    break;
+                }
             }
+            if (npc->hasPatrolTarget) break;
+        }
+    }
 
-            npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
-                                                                (direction.y < 0 ? UP : DOWN);
+    // Step 2: Move to the work block
+    if (npc->hasPatrolTarget && npc->pathIndex < npc->pathLength) {
+        int lookahead = npc->pathIndex + 2;
+        if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+        Vector2 target = npc->path[lookahead];
+        Vector2 move = Vector2Subtract(target, npc->position);
+        float moveDist = Vector2Length(move);
+        Vector2 direction = Vector2Normalize(move);
+
+        float speed = 40.0f;
+        float step = speed * deltaTime;
+
+        if (moveDist <= step) {
+            npc->position = target;
+            npc->pathIndex = lookahead + 1;
+        } else {
+            npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+        }
+
+        npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
+                                                            (direction.y < 0 ? UP : DOWN);
+        return;
+    }
+
+    // Step 3: Once standing there, spawn item every 5 seconds
+    static float spawnTimer = 0.0f;
+    spawnTimer += deltaTime;
+
+    if (spawnTimer >= 5.0f) {
+        spawnTimer = 0.0f;
+
+        // Step 4: Find a table nearby
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int tileObj = objects[row][col];
+                int tileDet = details[row][col];
+                if (
+                    tileObj == SMALL_TABLE || tileObj == LEFT_TABLE || tileObj == MIDDLE_TABLE || tileObj == RIGHT_TABLE ||
+                    tileDet == SMALL_TABLE || tileDet == LEFT_TABLE || tileDet == MIDDLE_TABLE || tileDet == RIGHT_TABLE
+                ) {
+                    Vector2 tableCenter = {col * TILE_SIZE + TILE_SIZE / 4, row * TILE_SIZE + TILE_SIZE / 4};
+                    float dist = Vector2Distance(npc->position, tableCenter);
+                    if (dist < 120.0f) { // within ~4 tiles
+                        //int itemID = GetRandomValue(3000, 3004); // Random food
+                        int itemID = FOOD_ITEM_IDS[GetRandomValue(0, NUM_FOOD_ITEMS - 1)];
+
+
+
+                        addItem(tableCenter, itemID, 1, "Food");
+                        printf("Guard placed item %d on table at %.1f,%.1f\n", itemID, tableCenter.x, tableCenter.y);
+                        return;
+                    }
+                }
+            }
         }
     }
 } break;
+
+case BEHAVIOR_FREE_TIME: {
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    // Pick a random free-time block if idle
+    if (!npc->hasPatrolTarget && freeTimeBlockCount > 0) {
+        int targetIndex = GetRandomValue(0, freeTimeBlockCount - 1);
+        npc->currentPatrolTarget = freeTimeBlocks[targetIndex];
+        npc->hasPatrolTarget = true;
+
+        npc->pathLength = findPath(
+            npc->position,
+            npc->currentPatrolTarget,
+            npc->path,
+            MAX_NPC_PATH,
+            npc,
+            group,
+            groupCount
+        );
+        npc->pathIndex = 0;
+    }
+
+    // Movement toward the free-time tile
+    if (npc->pathIndex < npc->pathLength) {
+        int lookahead = npc->pathIndex + 2;
+        if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+        Vector2 target = npc->path[lookahead];
+        Vector2 delta = Vector2Subtract(target, npc->position);
+        float dist = Vector2Length(delta);
+        Vector2 dir = Vector2Normalize(delta);
+
+        float speed = 40.0f;
+        float step = speed * deltaTime;
+
+        if (dist <= step) {
+            npc->position = target;
+            npc->pathIndex = lookahead + 1;
+        } else {
+            npc->position = Vector2Add(npc->position, Vector2Scale(dir, step));
+        }
+
+        npc->dir = (fabs(dir.x) > fabs(dir.y)) ? (dir.x < 0 ? LEFT : RIGHT) :
+                                                  (dir.y < 0 ? UP : DOWN);
+    }
+
+    // Reached destination — idle or wander again after delay
+    if (Vector2Distance(npc->position, npc->currentPatrolTarget) < 8.0f && npc->hasPatrolTarget) {
+        static float idleTime = 0.0f;
+        idleTime += deltaTime;
+
+        if (idleTime > 4.0f) {
+            npc->hasPatrolTarget = false;
+            idleTime = 0.0f;
+        }
+    }
+} break;
+
+
 
 
 

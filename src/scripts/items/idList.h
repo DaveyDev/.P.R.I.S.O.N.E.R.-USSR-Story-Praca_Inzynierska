@@ -16,6 +16,9 @@ typedef enum {
     MINE_WORK_CHEST = 19,
     INMATE_SPAWN = 20,
     GUARD_SPAWN = 21,
+    FREE_TIME_BLOCK = 22,
+    
+
 
 
 
@@ -99,6 +102,10 @@ typedef struct {
     int id;
     const char* name;
 } IdNamePair;
+
+// Just declarations — no values here!
+extern const int FOOD_ITEM_IDS[];
+extern const int NUM_FOOD_ITEMS;
 
 // Declare, don't define
 extern IdNamePair itemNamesByID[];

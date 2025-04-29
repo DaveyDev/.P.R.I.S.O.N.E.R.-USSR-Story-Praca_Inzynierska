@@ -42,5 +42,6 @@ void drawTree(int treeIndex, Rectangle block);
 void editMap(Camera2D cameraE);
 void findPatrolPointsFromMap();
 void findFoodTakeBlocks();
+void findFreeTimeBlocks();
 
 #endif // MAP_H
