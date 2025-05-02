@@ -81,6 +81,19 @@ NPC *foodQueues[MAX_FOOD_BLOCKS][MAX_QUEUE_PER_BLOCK]; // pointers to NPCs in qu
 Vector2 freeTimeBlocks[MAX_FREE_TILES];
 int freeTimeBlockCount = 0;
 
+//attack 
+bool attackMode = false;
+
+//work
+
+
+Vector2 treeBlocks[MAX_RESOURCE_BLOCKS];
+int treeBlockCount = 0;
+
+Vector2 rockBlocks[MAX_RESOURCE_BLOCKS];
+int rockBlockCount = 0;
+
+
 
 void initGlobals() {
     currentScene = (AppScene *)malloc(sizeof(AppScene));

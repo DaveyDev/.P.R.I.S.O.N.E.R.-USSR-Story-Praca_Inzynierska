@@ -3,10 +3,14 @@
 #include "../../../lib/raymath.h"
 #include "../NPC/npc.h"
 #include "stdio.h"
+#include "../global.h"
 
 
 
 bool tryAttackNPCs(Vector2 clickPos, NPC *npcs, int npcCount) {
+
+    if (!attackMode) return false; // Only allow attacking in attack mode
+
     float attackRadius = 20.0f;
     int damage = 1;
 

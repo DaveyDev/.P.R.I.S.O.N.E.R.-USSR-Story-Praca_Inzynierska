@@ -208,10 +208,15 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         }
     }
 
-    if(IsKeyPressed(KEY_G)) startLunchForAllNPCs();
-    if(IsKeyPressed(KEY_H)) startPatrolForAllNPCs();
-    if(IsKeyPressed(KEY_F)) startFoodForGuardNPC();
-    if(IsKeyPressed(KEY_V)) startFreeTimeForAllNPCs();
+    //if(IsKeyPressed(KEY_G)) startLunchForAllNPCs();
+    //if(IsKeyPressed(KEY_H)) startPatrolForAllNPCs();
+    //if(IsKeyPressed(KEY_F)) startFoodForGuardNPC();
+    if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
+
+    if (IsKeyPressed(KEY_SPACE)) {
+        attackMode = !attackMode;
+    }
+
     
 
     // Update collider position

@@ -17,6 +17,7 @@
 #define MAX_FOOD_BLOCKS 8
 #define MAX_QUEUE_PER_BLOCK 8
 #define MAX_FREE_TILES 256
+#define MAX_RESOURCE_BLOCKS 256
 
 extern AppScene *currentScene;
 extern int maxFPS;
@@ -78,6 +79,16 @@ extern int freeTimeBlockCount;
 
 //work
 extern bool isWorkDone;
+
+//attack
+extern bool attackMode;
+
+//work
+extern Vector2 treeBlocks[MAX_RESOURCE_BLOCKS];
+extern int treeBlockCount;
+
+extern Vector2 rockBlocks[MAX_RESOURCE_BLOCKS];
+extern int rockBlockCount;
 
 
 

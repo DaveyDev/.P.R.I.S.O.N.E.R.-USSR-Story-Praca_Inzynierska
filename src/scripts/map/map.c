@@ -367,4 +367,34 @@ void findFreeTimeBlocks() {
     printf("Found %d free time blocks\n", freeTimeBlockCount);
 }
 
+void findTreeAndRockBlocks() {
+    treeBlockCount = 0;
+    rockBlockCount = 0;
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int tile = objects[row][col];
+
+            // Trees
+            if ((tile >= 1000 && tile <= 1003) && treeBlockCount < MAX_RESOURCE_BLOCKS) {
+                treeBlocks[treeBlockCount++] = (Vector2){
+                    col * TILE_SIZE + TILE_SIZE / 2,
+                    row * TILE_SIZE + TILE_SIZE / 2
+                };
+            }
+
+            // Rocks / Stones
+            if ((tile >= 2000 && tile <= 2006) && rockBlockCount < MAX_RESOURCE_BLOCKS) {
+                rockBlocks[rockBlockCount++] = (Vector2){
+                    col * TILE_SIZE + TILE_SIZE / 2,
+                    row * TILE_SIZE + TILE_SIZE / 2
+                };
+            }
+        }
+    }
+
+    printf("Found %d tree blocks and %d rock blocks\n", treeBlockCount, rockBlockCount);
+}
+
+
 

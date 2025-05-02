@@ -31,6 +31,8 @@ void prisonScene() {
 
     // Load the map if not already loaded
     if (!wasMapLoaded) {
+
+       
         
         loadMap(mapPath);
         loadItems(itemPath);
@@ -44,6 +46,9 @@ void prisonScene() {
         findPatrolPointsFromMap();
         findFoodTakeBlocks();
         findFreeTimeBlocks();
+        findTreeAndRockBlocks();
+
+        
     
 
 
@@ -114,6 +119,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     //chests
     updateChests(map, rows, cols, camera);
     drawChestUI();
+
+    
 
 
     DrawClock(GetScreenWidth(), GetScreenHeight(), 24, WHITE, Fade(BLACK, 0.6f));
@@ -207,6 +214,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     } 
 
 }
+
 
 
 

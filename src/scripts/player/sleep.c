@@ -121,8 +121,6 @@ void tryToSleep(Camera2D camera) {
             } else {
                 printf("Too far from the bed (%.2fpx).\n", dist);
             }
-        } else {
-            printf("Clicked tile is not a bed. id is %i\n", objects[tileY][tileX]);
         }
     }
 }
@@ -141,7 +139,7 @@ void triggerForcedSleep() {
 
     // Wake up nearly dead
     player.health = 1.0f;
-    player.food = 3.0f;  // optional
+    //player.food = 3.0f;  // optional
     
 
     printf("Player was knocked out and forced to sleep...\n");

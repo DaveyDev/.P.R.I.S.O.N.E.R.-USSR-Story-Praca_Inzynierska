@@ -43,5 +43,6 @@ void editMap(Camera2D cameraE);
 void findPatrolPointsFromMap();
 void findFoodTakeBlocks();
 void findFreeTimeBlocks();
+void findTreeAndRockBlocks();
 
 #endif // MAP_H

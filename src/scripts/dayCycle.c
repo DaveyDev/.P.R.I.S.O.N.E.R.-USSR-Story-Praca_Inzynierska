@@ -4,11 +4,16 @@
 #include "map/map.h"
 #include <stdlib.h> // for rand()
 #include "items/idList.h"
+#include "NPC/startBehavior.h"
 
 static float timeOfDay = 0.0f;
 static float daySpeed = 0.02f; // Default: 1 full day in 4 minutes
 static int dayCount = 1; // Starts at day 1
+static float lastTimeOfDay = 0.0f;
 
+bool timeReached(float hour) {
+    return (lastTimeOfDay < hour && timeOfDay >= hour);
+}
 
 void initDayCycle() {
     timeOfDay = 8.0f; // Start at 8 AM
@@ -37,13 +42,45 @@ void setDayCount(int count) {
 
 
 void updateDayCycle() {
+    float previousTime = timeOfDay;  // Store before updating
     timeOfDay += GetFrameTime() * daySpeed;
+
     if (timeOfDay >= 24.0f) {
         timeOfDay -= 24.0f;
         dayCount++;
         newDayTrees();
+        previousTime = 0.0f;  // Reset for next day triggers
     }
+
+    if (previousTime < 6.5f && timeOfDay >= 6.5f){
+        printf("roll call time triggered\n");
+        //startFoodForGuardNPC();
+    }
+
+    if (previousTime < 7.0f && timeOfDay >= 7.0f){
+        printf("Guard food time triggered\n");
+        startFoodForGuardNPC();
+    }
+
+    // Trigger only once when crossing the hour
+    if (previousTime < 8.0f && timeOfDay >= 8.0f) {
+        printf("Eating time triggered\n");
+        startLunchForAllNPCs();
+    }
+
+    if (previousTime < 9.0f && timeOfDay >= 9.0f) {
+        printf("free time triggered\n");
+        startFreeTimeForAllNPCs();
+
+    }
+
+
+
+    
+
+    lastTimeOfDay = timeOfDay;  // Optional if you use it elsewhere
 }
+
 
 
 void drawDayCycleOverlay(int screenWidth, int screenHeight) {

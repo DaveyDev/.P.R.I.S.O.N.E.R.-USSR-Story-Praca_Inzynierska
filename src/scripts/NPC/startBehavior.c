@@ -1,6 +1,8 @@
 #include "../global.h"
 #include "npc.h"
 #include "../../../lib/raylib.h"
+#include <stdio.h>
+
 
 
 
@@ -42,3 +44,20 @@ void startFreeTimeForAllNPCs() {
         inmates[i].pathLength = 0;
     }
 }
+
+void startWorkForAllNPCs() {
+    for (int i = 0; i < numInmates; i++) {
+        inmates[i].behavior = BEHAVIOR_WORK;
+        inmates[i].hasPatrolTarget = false;
+        inmates[i].pathIndex = 0;
+        inmates[i].pathLength = 0;
+        inmates[i].workTimer = 0.0f;
+
+        // Random job
+        inmates[i].job = (GetRandomValue(0, 1) == 0) ? JOB_WOOD : JOB_ROCK;
+        printf("Inmate %d assigned job: %s\n", i, (inmates[i].job == JOB_WOOD ? "Wood" : "Rock"));
+
+    }
+}
+
+

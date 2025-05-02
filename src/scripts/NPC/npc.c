@@ -650,6 +650,113 @@ case BEHAVIOR_FREE_TIME: {
     }
 } break;
 
+case BEHAVIOR_WORK: {
+    npc->moveTimer += deltaTime;
+
+    // Step 1: Assign target if needed
+    if (!npc->hasPatrolTarget) {
+        Vector2 *targets = NULL;
+        int count = 0;
+
+        if (npc->job == JOB_WOOD && treeBlockCount > 0) {
+            targets = treeBlocks;
+            count = treeBlockCount;
+        } else if (npc->job == JOB_ROCK && rockBlockCount > 0) {
+            targets = rockBlocks;
+            count = rockBlockCount;
+        } else {
+            // No resources available — skip behavior
+            return;
+        }
+
+        int bestIndex = -1;
+        float bestDist = 999999.0f;
+
+        for (int i = 0; i < count; i++) {
+            float dist = Vector2Distance(npc->position, targets[i]);
+            if (dist < bestDist) {
+                bestDist = dist;
+                bestIndex = i;
+            }
+        }
+
+        if (count > 0) {
+    int tries = 0;
+    const int maxTries = count;
+
+    while (tries < maxTries) {
+        int index = GetRandomValue(0, count - 1);
+        Vector2 resource = targets[index];
+
+        // Optional: Offset one tile down to avoid blocked center
+        Vector2 walkTarget = Vector2Add(resource, (Vector2){0, TILE_SIZE});
+
+        int pathLen = findPath(npc->position, walkTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+
+        if (pathLen > 0) {
+            npc->currentPatrolTarget = walkTarget;
+            npc->hasPatrolTarget = true;
+            npc->pathLength = pathLen;
+            npc->pathIndex = 0;
+
+            printf("NPC %d assigned to %s job, path length: %d → target (%.1f, %.1f)\n",
+                   groupIndex,
+                   npc->job == JOB_WOOD ? "wood" : "rock",
+                   pathLen,
+                   walkTarget.x,
+                   walkTarget.y);
+            break;
+        }
+
+        tries++;
+    }
+
+    if (tries == maxTries) {
+        printf("NPC %d could not find a reachable %s target.\n",
+               groupIndex,
+               npc->job == JOB_WOOD ? "tree" : "rock");
+    }
+}
+
+    }
+
+    // Step 2: Move to target
+    if (npc->pathIndex < npc->pathLength) {
+        int lookahead = npc->pathIndex + 2;
+        if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+        Vector2 target = npc->path[lookahead];
+        Vector2 move = Vector2Subtract(target, npc->position);
+        float moveDist = Vector2Length(move);
+        Vector2 direction = Vector2Normalize(move);
+
+        float speed = 40.0f;
+        float step = speed * deltaTime;
+
+        if (moveDist <= step) {
+            npc->position = target;
+            npc->pathIndex = lookahead + 1;
+        } else {
+            npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+        }
+
+        npc->dir = (fabs(direction.x) > fabs(direction.y)) ? (direction.x < 0 ? LEFT : RIGHT) :
+                                                            (direction.y < 0 ? UP : DOWN);
+    }
+
+    // Step 3: Work (stand still) when reached
+    if (npc->hasPatrolTarget && Vector2Distance(npc->position, npc->currentPatrolTarget) < 8.0f) {
+        npc->workTimer += deltaTime;
+        if (npc->workTimer > 3.0f) {
+            printf("NPC %d finished work at (%.1f, %.1f)\n", groupIndex, npc->position.x, npc->position.y);
+            npc->hasPatrolTarget = false;
+            npc->workTimer = 0.0f;
+        }
+    }
+} break;
+
+
+
 
 
 

@@ -9,6 +9,7 @@
 #include "../items/storage.h"
 #include "../items/idList.h"
 #include "../sound/soundManager.h"
+#include "../global.h"
 
 
 //#define INVENTORY_SIZE 5
@@ -123,7 +124,16 @@ void drawInventory() {
     for (int i = 0; i < INVENTORY_SIZE; i++) {
         Rectangle slot = { startX + i * (slotSize + spacing), startY, slotSize, slotSize };
         //DrawRectangleRec(slot, GRAY);
-        Color slotColor = (i == activeItemIndex) ? GREEN : GRAY;
+        //Color slotColor = (i == activeItemIndex) ? GREEN : GRAY;
+        Color slotColor;
+        if (i == activeItemIndex) {
+            slotColor = GREEN;
+        } else if (attackMode) {
+            slotColor = RED;
+        } else {
+            slotColor = GRAY;
+        }
+
         DrawRectangleRec(slot, slotColor);
 
         DrawRectangleLines(slot.x, slot.y, slot.width, slot.height, DARKGRAY);

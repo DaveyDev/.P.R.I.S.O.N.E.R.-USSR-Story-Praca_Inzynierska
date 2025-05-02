@@ -20,8 +20,18 @@ typedef enum {
     BEHAVIOR_LUNCH,
     BEHAVIOR_LUNCH_GUARD,
     BEHAVIOR_FREE_TIME,
+    BEHAVIOR_WORK,
     // You can add more like BEHAVIOR_FOLLOW, BEHAVIOR_TALK
 } NPCBehavior;
+
+typedef enum {
+    JOB_NONE,
+    JOB_WOOD,
+    JOB_ROCK,
+} JobType;
+
+
+
 
 typedef enum {
     UP,
@@ -53,6 +63,8 @@ typedef struct {
     bool gotFood;
     int queueIndex; // position in queue, 0 = first
     int queueTargetBlock; // index of the food block they're queuing at
+    JobType job;
+    float workTimer;
 
     
 

@@ -20,7 +20,7 @@ void initGuiStyle() {
     GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt((Color){ 255, 255, 255, 255 }));
     GuiSetStyle(DEFAULT, TEXT_COLOR_PRESSED, ColorToInt((Color){ 50, 50, 50, 255 }));
 
-    // 🔹 Disabled Button Customization (Fixes Whiteish Background)
+    //Disabled Button Customization (Fixes Whiteish Background)
     GuiSetStyle(BUTTON, BASE_COLOR_DISABLED, ColorToInt((Color){ 0, 0, 0, 0 }));   // Darker transparent gray
     GuiSetStyle(BUTTON, TEXT_COLOR_DISABLED, ColorToInt((Color){ 180, 180, 180, 255 })); // Light gray text
 

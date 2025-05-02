@@ -7,5 +7,6 @@ void startLunchForAllNPCs();
 void startPatrolForAllNPCs();
 void startFoodForGuardNPC();
 void startFreeTimeForAllNPCs();
+void startWorkForAllNPCs();
 
 #endif
