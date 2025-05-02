@@ -13,15 +13,15 @@ typedef enum {
 } NPCType;
 
 typedef enum {
-    BEHAVIOR_IDLE,
-    BEHAVIOR_FOLLOW,
-    BEHAVIOR_PATROL,
-    BEHAVIOR_SLEEP,
-    BEHAVIOR_LUNCH,
-    BEHAVIOR_LUNCH_GUARD,
-    BEHAVIOR_FREE_TIME,
-    BEHAVIOR_WORK,
-    // You can add more like BEHAVIOR_FOLLOW, BEHAVIOR_TALK
+    BEHAVIOR_IDLE,  //just standing
+    BEHAVIOR_FOLLOW, //Follows you and beats the shit out of you
+    BEHAVIOR_PATROL, //going from one patrol point to another
+    BEHAVIOR_SLEEP, //sleeping
+    BEHAVIOR_LUNCH, //receaving food and eating
+    BEHAVIOR_LUNCH_GUARD, //giving food
+    BEHAVIOR_FREE_TIME, // mostly standing 
+    BEHAVIOR_WORK, //working (cutting down trees and stones)
+    BEHAVIOR_TALKING, // talking with you
 } NPCBehavior;
 
 typedef enum {
@@ -65,6 +65,9 @@ typedef struct {
     int queueTargetBlock; // index of the food block they're queuing at
     JobType job;
     float workTimer;
+    Vector2 resourceTile;  // Stores the tile where the NPC is working
+    NPCBehavior lastBehavior;
+
 
     
 

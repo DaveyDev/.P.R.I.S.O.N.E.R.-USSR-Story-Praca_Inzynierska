@@ -16,7 +16,7 @@ bool timeReached(float hour) {
 }
 
 void initDayCycle() {
-    timeOfDay = 8.0f; // Start at 8 AM
+    timeOfDay = 6.5f; // Start at 6:30 AM
     daySpeed = 0.02f;
 }
 

@@ -213,6 +213,26 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     //if(IsKeyPressed(KEY_F)) startFoodForGuardNPC();
     if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
 
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
+    for (int i = 0; i < numInmates; i++) {
+        Rectangle hitbox = { inmates[i].position.x - 16, inmates[i].position.y - 32, 32, 32 };
+        if (CheckCollisionPointRec(worldMouse, hitbox)) {
+            if (inmates[i].behavior != BEHAVIOR_TALKING) {
+                inmates[i].lastBehavior = inmates[i].behavior;
+                inmates[i].behavior = BEHAVIOR_TALKING;
+                //inmates[i].isTalking = true;
+
+                // Start dialog UI or job logic
+                //openTalkMenuForNPC(&inmates[i]);
+                printf("Inmate says: 'Hey comrade... Need something?'\n"); // for testing
+                inmates[i].behavior = inmates[i].lastBehavior;
+            }
+        }
+    }
+}
+
+
     if (IsKeyPressed(KEY_SPACE)) {
         attackMode = !attackMode;
     }

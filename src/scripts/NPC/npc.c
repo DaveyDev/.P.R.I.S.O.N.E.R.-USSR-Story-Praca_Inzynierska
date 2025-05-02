@@ -58,6 +58,7 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.gotFood = false;
     npc.queueIndex = 0;
     npc.queueTargetBlock = 0;
+    npc.resourceTile = (Vector2){0,0};
 
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
@@ -691,6 +692,10 @@ case BEHAVIOR_WORK: {
         // Optional: Offset one tile down to avoid blocked center
         Vector2 walkTarget = Vector2Add(resource, (Vector2){0, TILE_SIZE});
 
+        npc->resourceTile = resource; // remember what we’re going to modify later
+
+
+
         int pathLen = findPath(npc->position, walkTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
 
         if (pathLen > 0) {
@@ -747,14 +752,43 @@ case BEHAVIOR_WORK: {
     // Step 3: Work (stand still) when reached
     if (npc->hasPatrolTarget && Vector2Distance(npc->position, npc->currentPatrolTarget) < 8.0f) {
         npc->workTimer += deltaTime;
-        if (npc->workTimer > 3.0f) {
+        /*if (npc->workTimer > 3.0f) {
             printf("NPC %d finished work at (%.1f, %.1f)\n", groupIndex, npc->position.x, npc->position.y);
             npc->hasPatrolTarget = false;
             npc->workTimer = 0.0f;
+        }*/
+       if (npc->workTimer > 3.0f) {
+        printf("NPC %d finished work at (%.1f, %.1f)\n", groupIndex, npc->position.x, npc->position.y);
+    // Determine tile coordinates
+    int col = npc->resourceTile.x / TILE_SIZE;
+    int row = npc->resourceTile.y / TILE_SIZE;
+
+    if (row >= 0 && row < rows && col >= 0 && col < cols) {
+        if (npc->job == JOB_WOOD) {
+            objects[row][col] = TREE_STUMP;
+            //addItem(npc->position, WOOD_LOG, 1, "Wood Log");
+            printf("NPC %d chopped tree at (%d, %d)\n", groupIndex, col, row);
+        } else if (npc->job == JOB_ROCK) {
+            objects[row][col] = STONE;
+            //addItem(npc->position, STONE_ITEM, 1, "Stone");
+            printf("NPC %d mined rock at (%d, %d)\n", groupIndex, col, row);
         }
+    }
+
+    npc->hasPatrolTarget = false;
+    npc->workTimer = 0.0f;
+}
+
     }
 } break;
 
+
+case BEHAVIOR_TALKING:
+    // Freeze NPC
+    npc->moveTimer = 0;
+    npc->pathUpdateTimer = 0;
+    // Maybe play idle anim or turn toward player
+    break;
 
 
 
