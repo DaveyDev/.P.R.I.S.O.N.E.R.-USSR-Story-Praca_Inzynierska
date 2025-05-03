@@ -55,6 +55,8 @@ bool eatItem(int index) {
         case SOAP:
             useHealth(5.0f); // Damage
             break;
+        default:
+            return false;
     }
 
     inventory[index].quantity--;

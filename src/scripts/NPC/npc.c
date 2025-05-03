@@ -31,6 +31,7 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     NPC npc;
     npc.texture = texture;
     npc.position = position;
+    npc.prevsPosition = position;
     npc.origin = position;
     npc.frame = 0;
     npc.frameCounter = 0;
@@ -59,12 +60,41 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.queueIndex = 0;
     npc.queueTargetBlock = 0;
     npc.resourceTile = (Vector2){0,0};
+    npc.animationNumber = 0;
 
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
         (Rectangle){32, 0, 32, 64},
         (Rectangle){64, 0, 32, 64},
         (Rectangle){96, 0, 32, 64},
+        
+    }, 4);
+    npc.npcAnimation[1] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
+        (Rectangle){0, 64, 32, 64}, 
+        (Rectangle){32, 64, 32, 64},
+        (Rectangle){64, 64, 32, 64},
+        (Rectangle){96, 64, 32, 64},
+        
+    }, 4);
+    npc.npcAnimation[2] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
+        (Rectangle){0, 128, 32, 64}, 
+        (Rectangle){32, 128, 32, 64},
+        (Rectangle){64, 128, 32, 64},
+        (Rectangle){96, 128, 32, 64},
+        
+    }, 4);
+    npc.npcAnimation[3] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
+        (Rectangle){0, 192, 32, 64}, 
+        (Rectangle){32, 192, 32, 64},
+        (Rectangle){64, 192, 32, 64},
+        (Rectangle){96, 192, 32, 64},
+        
+    }, 4);
+    npc.npcAnimation[4] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
+        (Rectangle){0, 256, 32, 64}, 
+        (Rectangle){32, 256, 32, 64},
+        (Rectangle){64, 256, 32, 64},
+        (Rectangle){96, 256, 32, 64},
         
     }, 4);
 
@@ -157,6 +187,8 @@ void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos, int groupIndex, int
 
     switch (npc->behavior) {
         
+
+    
 
 case BEHAVIOR_FOLLOW: {
 
@@ -801,6 +833,30 @@ case BEHAVIOR_TALKING:
         default:
             break;
     }
+
+Vector2 delta = {
+    npc->position.x - npc->prevsPosition.x,
+    npc->position.y - npc->prevsPosition.y,
+};
+
+if (delta.x == 0 && delta.y == 0) {
+    npc->animationNumber = 0; // standing
+} else {
+    if (delta.x < 0) {
+        npc->animationNumber = 4; // walking left
+    } else if (delta.x > 0) {
+        npc->animationNumber = 3; // walking right
+    } else if (delta.y < 0) {
+        npc->animationNumber = 2; // walking up
+    } else if (delta.y > 0) {
+        npc->animationNumber = 1; // walking down
+    }
+}
+
+npc->prevsPosition = npc->position;
+
+
+
 }
 
 
@@ -810,8 +866,8 @@ void drawNPC(NPC *npc, Camera2D camera) {
 
     Rectangle dest = { screenPos.x, screenPos.y, 64, 128 }; // scaled 2x from 32x64
     Vector2 origin = { 32 , 128 }; // origin at feet
-
-    drawSpriteAnimationPro(npc->npcAnimation[0], dest, origin, 0, WHITE);
+ 
+    drawSpriteAnimationPro(npc->npcAnimation[npc->animationNumber], dest, origin, 0, WHITE);
 
     BeginMode2D(camera);
 

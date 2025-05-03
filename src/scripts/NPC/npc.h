@@ -43,11 +43,13 @@ typedef enum {
 typedef struct {
     Texture2D texture;
     Vector2 position;
+    Vector2 prevsPosition;
     Vector2 origin;
     int frame;
     int frameCounter;
     int direction; // -1 or 1 for horizontal patrol
-    SpriteAnimation npcAnimation[1];
+    SpriteAnimation npcAnimation[5];
+    int animationNumber;
     Direction dir;
     NPCType type;
     NPCBehavior behavior;
