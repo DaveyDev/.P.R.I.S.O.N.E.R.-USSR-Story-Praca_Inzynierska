@@ -74,7 +74,9 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     }, 4);
 
     player-> food = 20.0f;
+    player-> extraFood = 0.0f;
     player-> health = 30.0f;
+    player-> extraHealth = 0.0f;
 
     player-> maxFood = 20;
     player-> maxHealth = 30;
@@ -349,7 +351,7 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
     return false;
 }
 
-
+/*
 // Function to draw player stats
 // Function to draw player stats with styled background
 void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
@@ -384,6 +386,48 @@ void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColo
     DrawText(healthText, textX, textY, fontSize, textColor);
     DrawText(foodText, textX, textY + fontSize + spacing, fontSize, textColor);
 }
+*/
+void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
+    int padding = 10;
+    int spacing = 8;
+
+    // Prepare text strings with extra values if present
+    char healthText[64];
+    if (player->extraHealth > 0) {
+        snprintf(healthText, sizeof(healthText), "Health: %d (+%d)", (int)player->health, (int)player->extraHealth);
+    } else {
+        snprintf(healthText, sizeof(healthText), "Health: %d", (int)player->health);
+    }
+
+    char foodText[64];
+    if (player->extraFood > 0) {
+        snprintf(foodText, sizeof(foodText), "Food: %d (+%d)", (int)player->food, (int)player->extraFood);
+    } else {
+        snprintf(foodText, sizeof(foodText), "Food: %d", (int)player->food);
+    }
+
+    // Measure text width
+    int healthWidth = MeasureText(healthText, fontSize);
+    int foodWidth = MeasureText(foodText, fontSize);
+    int maxWidth = (healthWidth > foodWidth) ? healthWidth : foodWidth;
+
+    int boxWidth = maxWidth + padding * 2;
+    int boxHeight = fontSize * 2 + spacing + padding * 2;
+
+    int boxX = 10;
+    int boxY = 10;
+
+    // Draw background box
+    DrawRectangleRounded((Rectangle){ boxX, boxY, boxWidth, boxHeight }, 0.2f, 8, bgColor);
+
+    // Draw text
+    int textX = boxX + padding;
+    int textY = boxY + padding;
+
+    DrawText(healthText, textX, textY, fontSize, textColor);
+    DrawText(foodText, textX, textY + fontSize + spacing, fontSize, textColor);
+}
+
 
 
 void savePlayerStats(Player *player) {
@@ -431,7 +475,7 @@ int loadPlayerStats(Player *player) {
 }
 
 
-
+/*
 void useFood(float foodAmount) {
     player.food -= foodAmount;
 
@@ -446,5 +490,113 @@ void useFood(float foodAmount) {
         }
     }
 }
+*/
+void useFood(float foodAmount) {
+    if (foodAmount < 0) { // Eating (healing food)
+        float totalFood = player.food - foodAmount; // foodAmount is negative
+
+        if (totalFood > player.maxFood) {
+            player.extraFood += totalFood - player.maxFood;
+            player.food = player.maxFood;
+        } else {
+            player.food = totalFood;
+        }
+    } else { // Losing food (damage)
+        float leftover = foodAmount;
+
+        // Drain extraFood first
+        if (player.extraFood > 0) {
+            float usedExtra = fminf(player.extraFood, leftover);
+            player.extraFood -= usedExtra;
+            leftover -= usedExtra;
+        }
+
+        // Then subtract from regular food
+        if (leftover > 0) {
+            if (player.food >= leftover) {
+                player.food -= leftover;
+            } else {
+                leftover -= player.food;
+                player.food = 0;
+
+                // If food is exhausted, reduce health
+                player.health -= leftover;
+                if (player.health < 0) player.health = 0;
+            }
+        }
+    }
+}
+
+void useHealth(float healthAmount) {
+    if (healthAmount < 0) { // Healing
+        float totalHealth = player.health - healthAmount; // healthAmount is negative
+
+        if (totalHealth > player.maxHealth) {
+            player.extraHealth += totalHealth - player.maxHealth;
+            player.health = player.maxHealth;
+        } else {
+            player.health = totalHealth;
+        }
+    } else { // Taking damage
+        float leftover = healthAmount;
+
+        // Drain extraHealth first
+        if (player.extraHealth > 0) {
+            float usedExtra = fminf(player.extraHealth, leftover);
+            player.extraHealth -= usedExtra;
+            leftover -= usedExtra;
+        }
+
+        // Then subtract from regular health
+        if (leftover > 0) {
+            player.health -= leftover;
+            if (player.health < 0) player.health = 0;
+        }
+    }
+}
+
+
+void drainExtraStats(float deltaTime) {
+    const float decayRate = 1.0f; // per second
+
+    float drainAmount = decayRate * deltaTime;
+
+    // --- Extra food logic ---
+    if (player.extraFood > 0) {
+        // Prioritize healing if health is not full
+        if (player.health < player.maxHealth) {
+            useHealth(-drainAmount); // heals, may go into extraHealth if over
+            player.extraFood -= drainAmount;
+            if (player.extraFood < 0) player.extraFood = 0;
+        }
+        // Then refill food if not full
+        else if (player.food < player.maxFood) {
+            useFood(-drainAmount);
+            player.extraFood -= drainAmount;
+            if (player.extraFood < 0) player.extraFood = 0;
+        }
+        // Still decay if everything is full
+        else {
+            player.extraFood -= drainAmount;
+            if (player.extraFood < 0) player.extraFood = 0;
+        }
+    }
+
+    // --- Extra health logic ---
+    if (player.extraHealth > 0) {
+        // Only heal if not full
+        if (player.health < player.maxHealth) {
+            useHealth(-drainAmount);
+            player.extraHealth -= drainAmount;
+            if (player.extraHealth < 0) player.extraHealth = 0;
+        } else {
+            // Still decay over time if not healing
+            player.extraHealth -= drainAmount;
+            if (player.extraHealth < 0) player.extraHealth = 0;
+        }
+    }
+}
+
+
 
 

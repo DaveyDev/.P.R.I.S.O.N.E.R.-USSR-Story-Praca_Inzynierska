@@ -40,24 +40,21 @@ bool eatItem(int index) {
             break;
         case CIGARETTES:
             useFood(-15.0f);
-            player.health = player.health - 10;
+            useHealth(10.0f); // Damage
             break;
         case BASIC_SOUP:
             useFood(-6.0f);
             break;
         case BOTTLE_OF_VODKA:
             useFood(-50.0f);
-            player.health = 1.0f;
+            player.health = 1.0f; // Special case
             break;
         case AID_KIT:
-            //useFood(-50.0f);
-            player.health = player.health + 30.0f;
+            useHealth(-30.0f); // Healing
             break;
         case SOAP:
-            player.health = player.health - 5.0f;
+            useHealth(5.0f); // Damage
             break;
-        default:
-            return false; // Not edible
     }
 
     inventory[index].quantity--;

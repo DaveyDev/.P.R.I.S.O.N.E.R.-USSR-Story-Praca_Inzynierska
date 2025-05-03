@@ -164,7 +164,7 @@ case BEHAVIOR_FOLLOW: {
     npc->pathUpdateTimer += deltaTime;
 
     float attackRange = 20.0f;
-    float attackRate = 1.5f;  // seconds between attacks
+    float attackRate = 1.0f;  // seconds between attacks
 
     // Check distance to player
     float toPlayer = Vector2Distance(npc->position, playerPos);
@@ -191,7 +191,7 @@ case BEHAVIOR_FOLLOW: {
             return;
         }
 
-        player.health -= 5;
+        useHealth(5.0f);
         printf("Guard attacked! Player HP: %f\n", player.health);
     }
 

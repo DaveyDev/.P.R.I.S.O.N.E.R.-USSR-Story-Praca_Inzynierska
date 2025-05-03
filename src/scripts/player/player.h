@@ -20,7 +20,9 @@ typedef struct {
     float colliderRadiusY;   // Vertical radius
 
     float food;
+    float extraFood;
     float health;
+    float extraHealth;
     int maxFood;
     int maxHealth;
     float lastDamageTime; // Global or part of the player struct
@@ -47,6 +49,8 @@ void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColo
 void savePlayerStats(Player *player);
 int loadPlayerStats(Player *player);
 void useFood(float foodAmound);
+void useHealth(float healthAmount);
+void drainExtraStats(float deltaTime);
 
 
 #endif  // PLAYER_H

@@ -27,6 +27,7 @@ bool isCameraInitialized = false;
 
 void prisonScene() {
     ClearBackground(RED);
+    
 
 
     // Load the map if not already loaded
@@ -81,6 +82,8 @@ void prisonScene() {
     
 float cameraSpeed = 150.0f * GetFrameTime(); // Adjust speed here
 
+float deltaTime = GetFrameTime();
+
 if (player.position.x < GetScreenWidth() / 2 - 64 && player.position.x > 0 && camera.target.x > 16) {
     camera.target.x -= cameraSpeed;
     player.position.x += player.speed * GetFrameTime();
@@ -120,6 +123,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     updateChests(map, rows, cols, camera);
     drawChestUI();
 
+    drainExtraStats(deltaTime);
+
     
 
 
@@ -151,7 +156,7 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
 
 
     
-    float deltaTime = GetFrameTime();
+    
 
     
     
