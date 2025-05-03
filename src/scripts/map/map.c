@@ -230,11 +230,36 @@ void drawMap(Camera2D camera) {
             Rectangle block = { position.x, position.y, 32, 32 };
 
             // **Draw the player at the correct row**
-            if (playerRow == row) {
-                EndMode2D();
-                drawPlayer(&player);
-                BeginMode2D(camera);
+            
+            EndMode2D();
+            for (int i = 0; i < itemCount; i++) {
+                int itemRow = (int)(items[i].itemPos.y / 32);
+                if (itemRow == row) {
+                    drawItem(&items[i], camera);
+                }
             }
+                // Draw NPCs on this row
+            for (int i = 0; i < numInmates; i++) {
+                int npcRow = (int)(inmates[i].position.y / 32);
+                if (npcRow == row) {
+                    drawNPC(&inmates[i], camera);
+                }
+            }
+            for (int i = 0; i < numGuards; i++) {
+                int npcRow = (int)(guards[i].position.y / 32);
+                if (npcRow == row) {
+                    drawNPC(&guards[i], camera);
+                }
+            }
+
+            if (playerRow == row) {    
+                drawPlayer(&player);
+                
+            }
+           
+
+            BeginMode2D(camera);
+
 
             // **Draw objects**
             if (objects[row][col] >= 1000 && objects[row][col] <= 1999) {
@@ -281,37 +306,8 @@ void drawMap(Camera2D camera) {
     }
 
     EndMode2D();
-    drawItems(camera);
-    BeginMode2D(camera);
-
-    //for testing
-    // **Step 2,5: Draw NPCs**
-    for (int i = 0; i < numInmates; i++) { // Make sure to define 'numInmates'
-        int npcRow = (int)(inmates[i].position.y / 32); // Convert NPC world Y to tile row
-        if (npcRow >= startRow && npcRow <= endRow) { // Ensure NPC is within the visible rows
-            EndMode2D();
-            for (int i = 0; i < numInmates; i++) {
-            drawNPC(&inmates[i], camera);
-            //DrawNPC(&guards[i], camera);
-            }
-
-            BeginMode2D(camera);
-        }
-    }
-    for (int i = 0; i < numGuards; i++) { // Make sure to define 'numInmates'
-        int npcRow = (int)(guards[i].position.y / 32); // Convert NPC world Y to tile row
-        if (npcRow >= startRow && npcRow <= endRow) { // Ensure NPC is within the visible rows
-            EndMode2D();
-            for (int i = 0; i < numGuards; i++) {
-            //DrawNPC(&inmates[i], camera);
-            drawNPC(&guards[i], camera);
-            }
-
-            BeginMode2D(camera);
-        }
-    }
-
-    EndMode2D();
+    //drawItems(camera);
+   
 }
 
 void findPatrolPointsFromMap() {

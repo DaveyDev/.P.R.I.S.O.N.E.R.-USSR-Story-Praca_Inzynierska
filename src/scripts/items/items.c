@@ -163,6 +163,32 @@ void drawItems(Camera2D camera) {
     }
 }
 
+void drawItem(Item* item, Camera2D camera) {
+    if (item->id == 0) return; // skip empty slots
+
+    Vector2 screenPos = GetWorldToScreen2D(item->itemPos, camera); // use global camera
+    int itemsWidth = 32;
+    int itemsHeight = 32;
+    int itemsPerRow = itemsSet.width / itemsWidth;
+    int itemIndex = item->id - 3000;
+
+    int row = itemIndex / itemsPerRow;
+    int col = itemIndex % itemsPerRow;
+
+    Rectangle itemSource = { col * itemsWidth, row * itemsHeight, itemsWidth, itemsHeight };
+    Rectangle itemDest = { screenPos.x, screenPos.y, itemsWidth, itemsHeight };
+
+    DrawTexturePro(itemsSet, itemSource, itemDest, (Vector2){0, 0}, 0.0f, WHITE);
+
+    // Draw quantity if stackable
+    if (item->quantity > 1) {
+        char quantityText[8];
+        snprintf(quantityText, sizeof(quantityText), "x%d", item->quantity);
+        DrawText(quantityText, screenPos.x + 10, screenPos.y + 10, 14, BLACK);
+    }
+}
+
+
 void addItem(Vector2 position, int itemID, int quantity, const char *name) {
     if (itemCount >= MAX_ITEMS) {
         printf("Cannot add more items, inventory is full!\n");

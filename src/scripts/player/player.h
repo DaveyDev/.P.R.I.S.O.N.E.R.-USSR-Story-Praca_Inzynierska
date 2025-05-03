@@ -6,6 +6,7 @@
 
 
 
+
 typedef struct {
     Vector2 position;
     Texture2D playerTexture;
@@ -25,6 +26,7 @@ typedef struct {
     float lastDamageTime; // Global or part of the player struct
 
     bool wasKnockedOutToday;
+    //JobPlayer currentJob;
 
 
 
