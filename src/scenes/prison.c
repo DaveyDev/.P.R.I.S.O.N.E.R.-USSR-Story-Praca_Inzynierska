@@ -123,6 +123,8 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     updateChests(map, rows, cols, camera);
     drawChestUI();
 
+    DrawBarterUI();
+
     drainExtraStats(deltaTime);
 
     

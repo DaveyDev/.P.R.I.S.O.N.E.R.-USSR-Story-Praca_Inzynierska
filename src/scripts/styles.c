@@ -23,5 +23,12 @@ void initGuiStyle() {
     //Disabled Button Customization (Fixes Whiteish Background)
     GuiSetStyle(BUTTON, BASE_COLOR_DISABLED, ColorToInt((Color){ 0, 0, 0, 0 }));   // Darker transparent gray
     GuiSetStyle(BUTTON, TEXT_COLOR_DISABLED, ColorToInt((Color){ 180, 180, 180, 255 })); // Light gray text
+    
+
+    GuiSetStyle(DEFAULT, BACKGROUND_COLOR, 0x303030FF); // Dark gray background
+    //GuiSetStyle(DEFAULT, TEXT_COLOR, 0xFFFFFFFF);        // White text
+    //GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL, 0x505050FF); // Buttons default
+    GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, 0x606060FF); // Window border
+    GuiSetStyle(DEFAULT, LINE_COLOR, 0x808080FF);        // Separators etc.
 
 }

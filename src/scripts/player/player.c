@@ -210,10 +210,12 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         }
     }
 
-    //if(IsKeyPressed(KEY_G)) startLunchForAllNPCs();
+    if(IsKeyPressed(KEY_G)) startLunchForAllNPCs();
     //if(IsKeyPressed(KEY_H)) startPatrolForAllNPCs();
     //if(IsKeyPressed(KEY_F)) startFoodForGuardNPC();
-    if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
+    //if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
+
+    
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
     Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
@@ -223,12 +225,13 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
             if (inmates[i].behavior != BEHAVIOR_TALKING) {
                 inmates[i].lastBehavior = inmates[i].behavior;
                 inmates[i].behavior = BEHAVIOR_TALKING;
-                //inmates[i].isTalking = true;
 
+                
+                handleNPCClick(i);
                 // Start dialog UI or job logic
-                //openTalkMenuForNPC(&inmates[i]);
+                
                 printf("Inmate says: 'Hey comrade... Need something?'\n"); // for testing
-                inmates[i].behavior = inmates[i].lastBehavior;
+                //inmates[i].behavior = inmates[i].lastBehavior;
             }
         }
     }
@@ -596,6 +599,7 @@ void drainExtraStats(float deltaTime) {
         }
     }
 }
+
 
 
 

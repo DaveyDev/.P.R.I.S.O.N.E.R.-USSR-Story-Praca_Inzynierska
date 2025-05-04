@@ -3,8 +3,10 @@
 
 #include "../../../lib/raylib.h"
 #include "../animation.h"
+#include "../player/inventory.h"
 
 #define MAX_NPC_PATH 64
+
 
 
 typedef enum {
@@ -69,7 +71,10 @@ typedef struct {
     float workTimer;
     Vector2 resourceTile;  // Stores the tile where the NPC is working
     NPCBehavior lastBehavior;
-
+    int requestedItemId;   // ID of item they want
+    int rewardItemId;      // ID of item they give
+    char rewardItemName[20];
+    bool tradeCompleted;    // optional flag to prevent repeating trade
 
     
 
@@ -93,5 +98,7 @@ void drawNPC(NPC *npc, Camera2D camera);
 void saveNPCsToFile(const char *filename, NPC *npcArray, int count);
 int loadNPCsFromFile(const char *filename, NPC *npcArray, int maxCount, Texture2D texture);
 bool isTileTemporarilyBlocked(int row, int col, NPC *self, NPC *all, int count);
+void handleNPCClick(int inmateNo);
+void DrawBarterUI();
 
 #endif

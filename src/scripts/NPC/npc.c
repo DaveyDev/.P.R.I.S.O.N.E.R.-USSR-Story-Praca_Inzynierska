@@ -12,6 +12,7 @@
 #include "../global.h"
 #include "../items/items.h"
 #include "../items/idList.h"
+#include "../../../lib/raygui.h"
 
 
 
@@ -23,6 +24,10 @@ int numInmates = 0;
 NPC guards[5];
 int numGuards = 0;
 
+NPC *activeTradeNPC = NULL;
+Rectangle tradeWindowBounds = { 300, 200, 400, 200 };
+Rectangle acceptButton = { 350, 330, 80, 30 };
+Rectangle closeButton = { 470, 330, 80, 30 };
 
 
 
@@ -61,6 +66,11 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.queueTargetBlock = 0;
     npc.resourceTile = (Vector2){0,0};
     npc.animationNumber = 0;
+
+    npc.requestedItemId = 0;
+    npc.rewardItemId = 0;
+    npc.rewardItemName[0] = '\0';
+    npc.tradeCompleted = false;
 
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
@@ -964,4 +974,117 @@ bool isTileTemporarilyBlocked(int row, int col, NPC *self, NPC *all, int count) 
     return false;
 }
 
+bool TryBarterWithNPC(NPC *npc) {
+    if (npc->tradeCompleted) return false;
+
+    for (int i = 0; i < INVENTORY_SIZE; i++) {
+        if (inventory[i].id == npc->requestedItemId && inventory[i].quantity > 0) {
+            // Remove 1 of the requested item
+            inventory[i].quantity--;
+
+            // Add the reward item
+            addItemToInventory(npc->rewardItemId, npc->rewardItemName);
+
+            npc->tradeCompleted = 1;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void handleNPCClick(int i) {
+    for (int i = 0; i < numInmates; i++) {
+        Rectangle npcRect = { inmates[i].position.x, inmates[i].position.y, TILE_SIZE, TILE_SIZE };
+
+        
+            activeTradeNPC = &inmates[i];
+            printf("trading with NPC no: %i \n", i);
+            
+        
+    }
+}
+/*
+void DrawBarterUI() {
+    if (!activeTradeNPC) return;
+
+    DrawRectangleRec(tradeWindowBounds, DARKGRAY);
+    DrawText("Trade Offer", tradeWindowBounds.x + 20, tradeWindowBounds.y + 10, 20, WHITE);
+
+    // Find NPC index
+    int npcIndex = -1;
+    for (int i = 0; i < numInmates; i++) {
+        if (&inmates[i] == activeTradeNPC) {
+            npcIndex = i;
+            break;
+        }
+    }
+
+    if (npcIndex != -1) {
+        char inmateLabel[64];
+        snprintf(inmateLabel, sizeof(inmateLabel), "Inmate #%d", npcIndex);
+        DrawText(inmateLabel, tradeWindowBounds.x + 250, tradeWindowBounds.y + 10, 20, ORANGE);
+    }
+
+    DrawText("Wants:", tradeWindowBounds.x + 20, tradeWindowBounds.y + 50, 18, RAYWHITE);
+    // Uncomment when GetItemNameById works:
+    char buffer[16];
+    snprintf(buffer, sizeof(buffer), "%d", activeTradeNPC->requestedItemId);
+    DrawText(buffer, tradeWindowBounds.x + 100, tradeWindowBounds.y + 50, 18, YELLOW);
+
+    DrawText("Gives:", tradeWindowBounds.x + 20, tradeWindowBounds.y + 90, 18, RAYWHITE);
+    snprintf(buffer, sizeof(buffer), "%d", activeTradeNPC->rewardItemId);
+    DrawText(buffer, tradeWindowBounds.x + 100, tradeWindowBounds.y + 90, 18, GREEN);
+
+
+    // Buttons
+    DrawRectangleRec(acceptButton, GREEN);
+    DrawText("Accept", acceptButton.x + 10, acceptButton.y + 5, 18, BLACK);
+
+    DrawRectangleRec(closeButton, RED);
+    DrawText("Close", closeButton.x + 10, closeButton.y + 5, 18, BLACK);
+}
+
+*/
+void DrawBarterUI() {
+    if (!activeTradeNPC) return;
+
+    GuiWindowBox(tradeWindowBounds, TextFormat("Trade with Inmate #%d", (int)(activeTradeNPC - inmates)));
+
+    GuiLabel((Rectangle){ tradeWindowBounds.x + 20, tradeWindowBounds.y + 40, 60, 20 }, "Wants:");
+    char wantBuffer[32];
+    snprintf(wantBuffer, sizeof(wantBuffer), "%d", activeTradeNPC->requestedItemId);
+    GuiLabel((Rectangle){ tradeWindowBounds.x + 100, tradeWindowBounds.y + 40, 100, 20 }, wantBuffer);
+
+    GuiLabel((Rectangle){ tradeWindowBounds.x + 20, tradeWindowBounds.y + 80, 60, 20 }, "Gives:");
+    char giveBuffer[32];
+    snprintf(giveBuffer, sizeof(giveBuffer), "%d", activeTradeNPC->rewardItemId);
+    GuiLabel((Rectangle){ tradeWindowBounds.x + 100, tradeWindowBounds.y + 80, 100, 20 }, giveBuffer);
+
+    if (GuiButton(acceptButton, "Accept")) {
+        // Handle trade acceptance here
+    }
+
+    if (GuiButton(closeButton, "Close")) {
+        activeTradeNPC = NULL;
+    }
+}
+
+
+void HandleBarterUIClick(Vector2 mousePos) {
+    if (!activeTradeNPC) return;
+
+    if (CheckCollisionPointRec(mousePos, acceptButton)) {
+        if (TryBarterWithNPC(activeTradeNPC)) {
+            printf("Trade successful!\n");
+        } else {
+            printf("Trade failed.\n");
+        }
+        activeTradeNPC = NULL;
+    }
+
+    if (CheckCollisionPointRec(mousePos, closeButton)) {
+        activeTradeNPC = NULL;
+    }
+}
 

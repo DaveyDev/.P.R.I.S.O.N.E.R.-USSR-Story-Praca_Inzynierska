@@ -48,7 +48,7 @@ void updateDayCycle() {
     if (timeOfDay >= 24.0f) {
         timeOfDay -= 24.0f;
         dayCount++;
-        newDayTrees();
+        newDayNature();
         previousTime = 0.0f;  // Reset for next day triggers
     }
 
@@ -151,7 +151,7 @@ void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor,
     DrawText(dayText, boxX, boxY + boxHeight + 4, fontSize - 4, textColor); // Slightly below the clock
 
 }
-
+/*
 void newDayTrees() {
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
@@ -164,6 +164,80 @@ void newDayTrees() {
         }
     }
 }
+
+void newDayTrees() {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (objects[row][col] == TREE_STUMP) {
+                if (rand() % 3 == 0) { // ~33% chance
+                    int regrowRow = row + (rand() % 3 - 1); // -1, 0, or 1
+                    int regrowCol = col + (rand() % 3 - 1); // -1, 0, or 1
+
+                    // Clamp to map bounds
+                    if (regrowRow >= 0 && regrowRow < rows &&
+                        regrowCol >= 0 && regrowCol < cols &&
+                        objects[regrowRow][regrowCol] == 0) {
+
+                        objects[row][col] = 0;
+                        objects[regrowRow][regrowCol] = SPRUCE;
+                    }
+                }
+            }
+        }
+    }
+}
+*/
+void newDayNature() {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int obj = objects[row][col];
+
+            // TREE STUMP to SPRUCE
+            if (obj == TREE_STUMP) {
+                if (rand() % 3 == 0) {
+                    int regrowRow = row + (rand() % 3 - 1);
+                    int regrowCol = col + (rand() % 3 - 1);
+
+                    if (regrowRow >= 0 && regrowRow < rows &&
+                        regrowCol >= 0 && regrowCol < cols &&
+                        objects[regrowRow][regrowCol] == 0) {
+
+                        objects[row][col] = 0;
+                        objects[regrowRow][regrowCol] = SPRUCE;
+                    }
+                }
+            }
+
+            // STONE to SIMPLE_STONE
+            else if (obj == STONE) {
+                if (rand() % 3 == 0) {
+                    int regrowRow = row + (rand() % 3 - 1);
+                    int regrowCol = col + (rand() % 3 - 1);
+
+                    if (regrowRow >= 0 && regrowRow < rows &&
+                        regrowCol >= 0 && regrowCol < cols &&
+                        objects[regrowRow][regrowCol] == 0) {
+
+                        objects[row][col] = 0;
+                        objects[regrowRow][regrowCol] = SIMPLE_STONE;
+                    }
+                }
+            }
+
+            // SIMPLE_STONE to random ore
+            else if (obj == SIMPLE_STONE) {
+                if (rand() % 3 == 0) {
+                    
+                        int ores[] = {COPPER_ORE, COAL_ORE, IRON_ORE, URANIUM_ORE, GOLD_ORE};
+                        int oreIndex = rand() % 5;
+                        objects[row][col] = ores[oreIndex];
+                    
+                }
+            }
+        }
+    }
+}
+
 
 
 

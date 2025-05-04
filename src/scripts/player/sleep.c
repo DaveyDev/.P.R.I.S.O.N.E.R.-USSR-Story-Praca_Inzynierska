@@ -52,7 +52,7 @@ void updateSleep() {
                 //setDayCount(getDayCount() + 1);
             //}
         }
-        newDayTrees();
+        newDayNature();
         player.wasKnockedOutToday = false;
         isSleeping = false;
     }
@@ -143,7 +143,7 @@ void triggerForcedSleep() {
 
     setTimeOfDay(6.5f);
     setDayCount(getDayCount() + 1);
-    newDayTrees();
+    newDayNature();
 
     // Wake up nearly dead
     player.health = 1.0f;

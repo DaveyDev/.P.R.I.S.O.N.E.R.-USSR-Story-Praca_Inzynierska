@@ -26,7 +26,7 @@ void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor,
 
 void setTimeOfDay(float time);
 void setDayCount(int count);
-void newDayTrees();
+void newDayNature();
 
 
 
