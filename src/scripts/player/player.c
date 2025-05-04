@@ -354,42 +354,7 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
     return false;
 }
 
-/*
-// Function to draw player stats
-// Function to draw player stats with styled background
-void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
-    int padding = 10;
-    int spacing = 8;
 
-    // Prepare text strings
-    char healthText[32];
-    snprintf(healthText, sizeof(healthText), "Health: %d", (int)player->health);
-
-    char foodText[32];
-    snprintf(foodText, sizeof(foodText), "Food: %d", (int)player->food);
-
-    // Measure text width to find the widest one
-    int healthWidth = MeasureText(healthText, fontSize);
-    int foodWidth = MeasureText(foodText, fontSize);
-    int maxWidth = (healthWidth > foodWidth) ? healthWidth : foodWidth;
-
-    int boxWidth = maxWidth + padding * 2;
-    int boxHeight = fontSize * 2 + spacing + padding * 2;
-
-    int boxX = 10;
-    int boxY = 10;
-
-    // Draw background box
-    DrawRectangleRounded((Rectangle){ boxX, boxY, boxWidth, boxHeight }, 0.2f, 8, bgColor);
-
-    // Draw text lines
-    int textX = boxX + padding;
-    int textY = boxY + padding;
-
-    DrawText(healthText, textX, textY, fontSize, textColor);
-    DrawText(foodText, textX, textY + fontSize + spacing, fontSize, textColor);
-}
-*/
 void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
     int padding = 10;
     int spacing = 8;
@@ -478,22 +443,7 @@ int loadPlayerStats(Player *player) {
 }
 
 
-/*
-void useFood(float foodAmount) {
-    player.food -= foodAmount;
 
-    if (player.food < 0) {
-        // Convert the "overdrawn" food into health loss
-        float leftover = -player.food;
-        player.food = 0;
-
-        player.health -= leftover;
-        if (player.health < 0) {
-            player.health = 0;
-        }
-    }
-}
-*/
 void useFood(float foodAmount) {
     if (foodAmount < 0) { // Eating (healing food)
         float totalFood = player.food - foodAmount; // foodAmount is negative
