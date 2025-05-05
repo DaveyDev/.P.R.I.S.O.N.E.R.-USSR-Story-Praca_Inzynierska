@@ -401,6 +401,32 @@ void handlePickupWithE() {
 }
 
 
+bool hasItemInInventory(int id) {
+    for (int i = 0; i < INVENTORY_SIZE; i++) {
+        if (inventory[i].id == id && inventory[i].quantity > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool removeItemFromInventory(int id) {
+    for (int i = 0; i < INVENTORY_SIZE; i++) {
+        if (inventory[i].id == id && inventory[i].quantity > 0) {
+            inventory[i].quantity--;
+
+            if (inventory[i].quantity <= 0) {
+                inventory[i].id = -1;
+                inventory[i].name[0] = '\0';
+            }
+
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 
 

@@ -27,6 +27,8 @@ void drawSelectedItem();
 void storeSelectedItem(int selectedItemIndex, Inventory *playerInventory);
 void tryUseActiveItem(Vector2 worldPos);
 void handlePickupWithE();
+bool hasItemInInventory(int id);
+bool removeItemFromInventory(int id);
 
 
 #endif

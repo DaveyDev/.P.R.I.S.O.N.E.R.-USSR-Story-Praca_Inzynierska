@@ -13,6 +13,7 @@
 #include "../items/items.h"
 #include "../items/idList.h"
 #include "../../../lib/raygui.h"
+#include "trade.h"
 
 
 
@@ -28,6 +29,8 @@ NPC *activeTradeNPC = NULL;
 Rectangle tradeWindowBounds = { 300, 200, 400, 200 };
 Rectangle acceptButton = { 350, 330, 80, 30 };
 Rectangle closeButton = { 470, 330, 80, 30 };
+
+int activeTradeNPCIndex;
 
 
 
@@ -67,10 +70,11 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.resourceTile = (Vector2){0,0};
     npc.animationNumber = 0;
 
-    npc.requestedItemId = 0;
-    npc.rewardItemId = 0;
+    npc.requestedItemId = 3006;
+    npc.rewardItemId = 3007;
     npc.rewardItemName[0] = '\0';
     npc.tradeCompleted = false;
+    npc.isTalking = false;
 
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
@@ -830,6 +834,8 @@ case BEHAVIOR_TALKING:
     npc->moveTimer = 0;
     npc->pathUpdateTimer = 0;
     // Maybe play idle anim or turn toward player
+    
+
     break;
 
 
@@ -994,79 +1000,80 @@ bool TryBarterWithNPC(NPC *npc) {
 }
 
 void handleNPCClick(int i) {
-    for (int i = 0; i < numInmates; i++) {
-        Rectangle npcRect = { inmates[i].position.x, inmates[i].position.y, TILE_SIZE, TILE_SIZE };
+    
+    Rectangle npcRect = { inmates[i].position.x, inmates[i].position.y, TILE_SIZE, TILE_SIZE };
 
         
-            activeTradeNPC = &inmates[i];
-            printf("trading with NPC no: %i \n", i);
+    activeTradeNPC = &inmates[i];
+    activeTradeNPCIndex = i;
+    printf("trading with NPC no: %i \n", i);
             
         
-    }
+    
 }
-/*
+
+void drawItemFromId(int id, Vector2 pos) {
+    if (id == 0) return;
+
+    int itemsWidth = 32;
+    int itemsHeight = 32;
+    int itemsPerRow = itemsSet.width / itemsWidth;
+    int itemIndex = id - 3000;
+
+    int row = itemIndex / itemsPerRow;
+    int col = itemIndex % itemsPerRow;
+
+    Rectangle itemSource = { col * itemsWidth, row * itemsHeight, itemsWidth, itemsHeight };
+    Rectangle itemDest = { pos.x, pos.y, itemsWidth, itemsHeight };
+
+    DrawTexturePro(itemsSet, itemSource, itemDest, (Vector2){0, 0}, 0.0f, WHITE);
+}
+
 void DrawBarterUI() {
     if (!activeTradeNPC) return;
 
     DrawRectangleRec(tradeWindowBounds, DARKGRAY);
-    DrawText("Trade Offer", tradeWindowBounds.x + 20, tradeWindowBounds.y + 10, 20, WHITE);
 
-    // Find NPC index
-    int npcIndex = -1;
-    for (int i = 0; i < numInmates; i++) {
-        if (&inmates[i] == activeTradeNPC) {
-            npcIndex = i;
-            break;
-        }
-    }
+    // Centered title
+    const char *title = "Trade Offer";
+    int titleWidth = MeasureText(title, 20);
+    DrawText(title, tradeWindowBounds.x + (tradeWindowBounds.width - titleWidth) / 2, tradeWindowBounds.y + 10, 20, WHITE);
 
-    if (npcIndex != -1) {
-        char inmateLabel[64];
-        snprintf(inmateLabel, sizeof(inmateLabel), "Inmate #%d", npcIndex);
-        DrawText(inmateLabel, tradeWindowBounds.x + 250, tradeWindowBounds.y + 10, 20, ORANGE);
-    }
-
+    // Wants section
     DrawText("Wants:", tradeWindowBounds.x + 20, tradeWindowBounds.y + 50, 18, RAYWHITE);
-    // Uncomment when GetItemNameById works:
-    char buffer[16];
-    snprintf(buffer, sizeof(buffer), "%d", activeTradeNPC->requestedItemId);
-    DrawText(buffer, tradeWindowBounds.x + 100, tradeWindowBounds.y + 50, 18, YELLOW);
+    Vector2 wantsIconPos = { tradeWindowBounds.x + 100, tradeWindowBounds.y + 50 };
+    drawItemFromId(activeTradeNPC->requestedItemId, wantsIconPos);
 
+    // Gives section
     DrawText("Gives:", tradeWindowBounds.x + 20, tradeWindowBounds.y + 90, 18, RAYWHITE);
-    snprintf(buffer, sizeof(buffer), "%d", activeTradeNPC->rewardItemId);
-    DrawText(buffer, tradeWindowBounds.x + 100, tradeWindowBounds.y + 90, 18, GREEN);
-
+    Vector2 givesIconPos = { tradeWindowBounds.x + 100, tradeWindowBounds.y + 90 };
+    drawItemFromId(activeTradeNPC->rewardItemId, givesIconPos);
 
     // Buttons
-    DrawRectangleRec(acceptButton, GREEN);
-    DrawText("Accept", acceptButton.x + 10, acceptButton.y + 5, 18, BLACK);
+    if (GuiButton(acceptButton, "Accept")) {
+    int wanted = activeTradeNPC->requestedItemId;
+    int reward = activeTradeNPC->rewardItemId;
 
-    DrawRectangleRec(closeButton, RED);
-    DrawText("Close", closeButton.x + 10, closeButton.y + 5, 18, BLACK);
+    if (hasItemInInventory(wanted)) {
+    removeItemFromInventory(wanted);
+    addItemToInventory(reward, "unknown"); // Assuming you have this
 }
 
-*/
-void DrawBarterUI() {
-    if (!activeTradeNPC) return;
+}
 
-    GuiWindowBox(tradeWindowBounds, TextFormat("Trade with Inmate #%d", (int)(activeTradeNPC - inmates)));
-
-    GuiLabel((Rectangle){ tradeWindowBounds.x + 20, tradeWindowBounds.y + 40, 60, 20 }, "Wants:");
-    char wantBuffer[32];
-    snprintf(wantBuffer, sizeof(wantBuffer), "%d", activeTradeNPC->requestedItemId);
-    GuiLabel((Rectangle){ tradeWindowBounds.x + 100, tradeWindowBounds.y + 40, 100, 20 }, wantBuffer);
-
-    GuiLabel((Rectangle){ tradeWindowBounds.x + 20, tradeWindowBounds.y + 80, 60, 20 }, "Gives:");
-    char giveBuffer[32];
-    snprintf(giveBuffer, sizeof(giveBuffer), "%d", activeTradeNPC->rewardItemId);
-    GuiLabel((Rectangle){ tradeWindowBounds.x + 100, tradeWindowBounds.y + 80, 100, 20 }, giveBuffer);
-
-    if (GuiButton(acceptButton, "Accept")) {
-        // Handle trade acceptance here
-    }
 
     if (GuiButton(closeButton, "Close")) {
+
+        if(inmates[activeTradeNPCIndex].isTalking){
+            inmates[activeTradeNPCIndex].behavior = inmates[activeTradeNPCIndex].lastBehavior;
+            inmates[activeTradeNPCIndex].isTalking = false;
+            printf("Ended trading with NPC no: %i\n", activeTradeNPCIndex);
+        }
         activeTradeNPC = NULL;
+        activeTradeNPCIndex = -1;
+        
+        
+        
     }
 }
 
@@ -1085,6 +1092,19 @@ void HandleBarterUIClick(Vector2 mousePos) {
 
     if (CheckCollisionPointRec(mousePos, closeButton)) {
         activeTradeNPC = NULL;
+    }
+}
+
+void assignRandomTradeToNPC(NPC *npc) {
+    if (tradeListSize == 0) return;
+    int randomIndex = GetRandomValue(0, tradeListSize - 1);
+    npc->requestedItemId = tradeList[randomIndex].wantedItemID;
+    npc->rewardItemId = tradeList[randomIndex].rewardItemID;
+}
+
+void assignTradesToAllNPCs(NPC *npcs, int npcCount) {
+    for (int i = 0; i < npcCount; i++) {
+        assignRandomTradeToNPC(&npcs[i]);
     }
 }
 

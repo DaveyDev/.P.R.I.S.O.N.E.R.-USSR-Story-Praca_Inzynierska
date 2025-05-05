@@ -75,7 +75,7 @@ typedef struct {
     int rewardItemId;      // ID of item they give
     char rewardItemName[20];
     bool tradeCompleted;    // optional flag to prevent repeating trade
-
+    bool isTalking;
     
 
 
@@ -100,5 +100,7 @@ int loadNPCsFromFile(const char *filename, NPC *npcArray, int maxCount, Texture2
 bool isTileTemporarilyBlocked(int row, int col, NPC *self, NPC *all, int count);
 void handleNPCClick(int inmateNo);
 void DrawBarterUI();
+void assignRandomTradeToNPC(NPC *npc);
+void assignTradesToAllNPCs(NPC *npcs, int npcCount);
 
 #endif

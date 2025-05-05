@@ -5,6 +5,8 @@
 #include <stdlib.h> // for rand()
 #include "items/idList.h"
 #include "NPC/startBehavior.h"
+#include "NPC/npc.h"
+#include "NPC/trade.h"
 
 static float timeOfDay = 0.0f;
 static float daySpeed = 0.02f; // Default: 1 full day in 4 minutes
@@ -49,6 +51,7 @@ void updateDayCycle() {
         timeOfDay -= 24.0f;
         dayCount++;
         newDayNature();
+        assignTradesToAllNPCs(inmates, numInmates);
         previousTime = 0.0f;  // Reset for next day triggers
     }
 
@@ -263,4 +266,5 @@ void LoadDayCycle(const char *filename) {
         fclose(file);
     }
 }
+
 

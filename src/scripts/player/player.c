@@ -211,7 +211,7 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     }
 
     if(IsKeyPressed(KEY_G)) startLunchForAllNPCs();
-    //if(IsKeyPressed(KEY_H)) startPatrolForAllNPCs();
+    if(IsKeyPressed(KEY_H)) assignTradesToAllNPCs(inmates, numInmates);
     //if(IsKeyPressed(KEY_F)) startFoodForGuardNPC();
     //if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
 
@@ -225,7 +225,10 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
             if (inmates[i].behavior != BEHAVIOR_TALKING) {
                 inmates[i].lastBehavior = inmates[i].behavior;
                 inmates[i].behavior = BEHAVIOR_TALKING;
+                inmates[i].isTalking = true;
 
+                //activeTradeNPC = &inmates[i];
+                //activeTradeNPCIndex = i;
                 
                 handleNPCClick(i);
                 // Start dialog UI or job logic
