@@ -33,6 +33,14 @@ Rectangle closeButton = { 470, 330, 80, 30 };
 int activeTradeNPCIndex;
 
 
+bool spawnReserved[MAX_ROWS][MAX_COLS] = {0};
+
+
+
+
+
+
+
 
 
 NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior) {
@@ -75,7 +83,7 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.rewardItemName[0] = '\0';
     npc.tradeCompleted = false;
     npc.isTalking = false;
-
+/*
     npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
         (Rectangle){0, 0, 32, 64}, 
         (Rectangle){32, 0, 32, 64},
@@ -112,9 +120,20 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
         
     }, 4);
 
-    
+    */
 
     return npc;
+}
+
+void InitNPCAnimations(NPC *npc, Texture2D texture, int rowOffset) {
+    npc->texture = texture;
+    for (int anim = 0; anim < ANIMATIONS_PER_NPC; anim++) {
+        Rectangle frames[FRAMES_PER_ANIMATION];
+        for (int f = 0; f < FRAMES_PER_ANIMATION; f++) {
+            frames[f] = (Rectangle){ f * 32, (rowOffset + anim) * 64, 32, 64 };
+        }
+        npc->npcAnimation[anim] = createSpriteAnimation(texture, 3, frames, FRAMES_PER_ANIMATION);
+    }
 }
 
 Vector2 avoidOtherNPCs(NPC *self, NPC *all, int count) {
@@ -359,8 +378,11 @@ case BEHAVIOR_SLEEP: {
     npc->moveTimer += deltaTime;
     npc->pathUpdateTimer += deltaTime;
 
+    
+
+
     // If no target yet, find an available spawn tile
-    if (!npc->hasPatrolTarget) {
+    /*if (!npc->hasPatrolTarget) {
         int bestRow = -1, bestCol = -1;
         float bestDist = 999999.0f;
 
@@ -384,6 +406,8 @@ case BEHAVIOR_SLEEP: {
                     }
                 }
                 if (occupied) continue;
+                //if (spawnReserved[row][col]) continue;
+
 
                 // Pick closest free spawn
                 Vector2 tileCenter = {col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2};
@@ -404,7 +428,57 @@ case BEHAVIOR_SLEEP: {
             npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
             npc->pathIndex = 0;
         }
+    }*/
+   if (!npc->hasPatrolTarget) {
+    int bestRow = -1, bestCol = -1;
+    float bestDist = 999999.0f;
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int obj = objects[row][col];
+            int det = details[row][col];
+
+            bool correctType = (npc->type == NPC_GUARD)
+                ? (obj == GUARD_SPAWN || det == GUARD_SPAWN)
+                : (obj == INMATE_SPAWN || det == INMATE_SPAWN);
+            if (!correctType) continue;
+
+            if (spawnReserved[row][col]) continue; // Already taken
+
+            // Optional: distance-based occupancy check (if needed)
+            bool occupied = false;
+            for (int i = 0; i < groupCount; i++) {
+                if (&group[i] == npc) continue;
+                float dist = Vector2Distance(group[i].position, (Vector2){col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2});
+                if (dist < 20.0f) {
+                    occupied = true;
+                    break;
+                }
+            }
+            if (occupied) continue;
+
+            Vector2 tileCenter = {col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2};
+            float dist = Vector2Distance(npc->position, tileCenter);
+
+            if (dist < bestDist) {
+                bestDist = dist;
+                bestRow = row;
+                bestCol = col;
+            }
+        }
     }
+
+    if (bestRow != -1 && bestCol != -1) {
+        spawnReserved[bestRow][bestCol] = true;  // Reserve it now
+
+        npc->currentPatrolTarget = (Vector2){bestCol * TILE_SIZE + TILE_SIZE / 2, bestRow * TILE_SIZE + TILE_SIZE / 2};
+        npc->hasPatrolTarget = true;
+
+        npc->pathLength = findPath(npc->position, npc->currentPatrolTarget, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+        npc->pathIndex = 0;
+    }
+}
+
 
     if (npc->hasPatrolTarget) {
         int lookahead = npc->pathIndex + 2;
@@ -1042,17 +1116,17 @@ void DrawBarterUI() {
     // Wants section
     DrawText("Wants:", tradeWindowBounds.x + 20, tradeWindowBounds.y + 50, 18, RAYWHITE);
     Vector2 wantsIconPos = { tradeWindowBounds.x + 100, tradeWindowBounds.y + 50 };
-    drawItemFromId(activeTradeNPC->requestedItemId, wantsIconPos);
+    drawItemFromId(inmates[activeTradeNPCIndex].requestedItemId, wantsIconPos);
 
     // Gives section
     DrawText("Gives:", tradeWindowBounds.x + 20, tradeWindowBounds.y + 90, 18, RAYWHITE);
     Vector2 givesIconPos = { tradeWindowBounds.x + 100, tradeWindowBounds.y + 90 };
-    drawItemFromId(activeTradeNPC->rewardItemId, givesIconPos);
+    drawItemFromId(inmates[activeTradeNPCIndex].rewardItemId, givesIconPos);
 
     // Buttons
     if (GuiButton(acceptButton, "Accept")) {
-    int wanted = activeTradeNPC->requestedItemId;
-    int reward = activeTradeNPC->rewardItemId;
+    int wanted = inmates[activeTradeNPCIndex].requestedItemId;
+    int reward = inmates[activeTradeNPCIndex].rewardItemId;
 
     if (hasItemInInventory(wanted)) {
     removeItemFromInventory(wanted);

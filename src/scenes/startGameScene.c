@@ -50,7 +50,7 @@ void startGameScene(){
 
 
 
-
+/*
     if (GuiButton(playBtn, getTranslation("startgame_newgame"))) { // starts new game
         
         strcpy(mapName, "N-21");
@@ -67,30 +67,68 @@ void startGameScene(){
         isNewGame = true;
         *currentScene = GAME;
     }
+*/
+    if (GuiButton(playBtn, getTranslation("startgame_newgame"))) {
+    strcpy(mapName, "N-21");
+    snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
+    snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
+
+    makeGameSave(mapName);
+    initInventory();
+    initDayCycle();
+
+    numInmates = loadNPCsFromFile("data/saves/save1/inmates.dat", inmates, 10, inmateTexture);
+    numGuards = loadNPCsFromFile("data/saves/save1/guards.dat", guards, 5, guardTexture);
+
+    // Initialize animations for inmates
+    for (int i = 0; i < numInmates; i++) {
+        InitNPCAnimations(&inmates[i], inmateTexture, i * 5);
+    }
+
+    // Initialize animations for guards
+    for (int i = 0; i < numGuards; i++) {
+        InitNPCAnimations(&guards[i], guardTexture, i * 5);
+    }
+
+    isNewGame = true;
+    *currentScene = GAME;
+}
+
     
 
     
-    bool saveExists = (access("data/saves/save1/test.map", F_OK) == 0); // Check if the file exists
-    GuiSetState(saveExists ? STATE_NORMAL : STATE_DISABLED); // Set button state
+bool saveExists = (access("data/saves/save1/test.map", F_OK) == 0);
+GuiSetState(saveExists ? STATE_NORMAL : STATE_DISABLED);
 
-    if (GuiButton(optionsBtn, getTranslation("startgame_loadsave"))) { // starts game from a save
-        strcpy(mapName, "test");
-        snprintf(mapPath, sizeof(mapPath), "data/saves/save1/%s.map", mapName);
-        snprintf(itemPath, sizeof(itemPath), "data/saves/save1/items.dat");
+if (GuiButton(optionsBtn, getTranslation("startgame_loadsave"))) {
+    strcpy(mapName, "test");
+    snprintf(mapPath, sizeof(mapPath), "data/saves/save1/%s.map", mapName);
+    snprintf(itemPath, sizeof(itemPath), "data/saves/save1/items.dat");
 
-        initInventory();
-        loadInventory();
-        numInmates = loadNPCsFromFile("data/saves/save1/inmates.dat", inmates, 10, inmateTexture);
-        numGuards = loadNPCsFromFile("data/saves/save1/guards.dat", guards, 5, guardTexture);
-        isNewGame = false;
-        *currentScene = GAME;  
-        
+    initInventory();
+    loadInventory();
+
+    numInmates = loadNPCsFromFile("data/saves/save1/inmates.dat", inmates, 10, inmateTexture);
+    numGuards = loadNPCsFromFile("data/saves/save1/guards.dat", guards, 5, guardTexture);
+
+    // Initialize animations for loaded NPCs
+    for (int i = 0; i < numInmates; i++) {
+        InitNPCAnimations(&inmates[i], inmateTexture, i * 5);
     }
-    GuiSetState(STATE_NORMAL); // Reset GUI state
-
-    if (GuiButton(exitBtn, getTranslation("general_back"))) {
-        *currentScene = MENU;
+    for (int i = 0; i < numGuards; i++) {
+        InitNPCAnimations(&guards[i], guardTexture, i * 5);
     }
+
+    isNewGame = false;
+    *currentScene = GAME;  
+}
+
+GuiSetState(STATE_NORMAL);
+
+if (GuiButton(exitBtn, getTranslation("general_back"))) {
+    *currentScene = MENU;
+}
+
 
 
     

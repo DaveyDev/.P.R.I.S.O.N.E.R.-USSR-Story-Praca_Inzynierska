@@ -65,7 +65,6 @@ void updateDayCycle() {
         startFoodForGuardNPC();
     }
 
-    // Trigger only once when crossing the hour
     if (previousTime < 8.0f && timeOfDay >= 8.0f) {
         printf("Eating time triggered\n");
         startLunchForAllNPCs();
@@ -74,16 +73,19 @@ void updateDayCycle() {
     if (previousTime < 9.0f && timeOfDay >= 9.0f) {
         printf("free time triggered\n");
         startFreeTimeForAllNPCs();
-
     }
 
-
-
-    
+    if (previousTime < 22.0f && timeOfDay >= 22.0f) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                spawnReserved[row][col] = false;
+            }
+        }
+        startSleepForAllNPCs();
+    }
 
     lastTimeOfDay = timeOfDay;  // Optional if you use it elsewhere
 }
-
 
 
 void drawDayCycleOverlay(int screenWidth, int screenHeight) {

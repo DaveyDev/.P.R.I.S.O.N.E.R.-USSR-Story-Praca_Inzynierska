@@ -6,7 +6,12 @@
 #include "../player/inventory.h"
 
 #define MAX_NPC_PATH 64
+#define MAX_ROWS 100
+#define MAX_COLS 100
 
+
+#define ANIMATIONS_PER_NPC 5
+#define FRAMES_PER_ANIMATION 4
 
 
 typedef enum {
@@ -76,6 +81,9 @@ typedef struct {
     char rewardItemName[20];
     bool tradeCompleted;    // optional flag to prevent repeating trade
     bool isTalking;
+    int reservedRow;
+    int reservedCol;
+
     
 
 
@@ -90,6 +98,8 @@ extern int numInmates;
 extern NPC guards[5];
 extern int numGuards;
 
+extern bool spawnReserved[MAX_ROWS][MAX_COLS];
+
 NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behavior);
 //void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos);
 void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos, int groupIndex, int groupSize);
@@ -102,5 +112,6 @@ void handleNPCClick(int inmateNo);
 void DrawBarterUI();
 void assignRandomTradeToNPC(NPC *npc);
 void assignTradesToAllNPCs(NPC *npcs, int npcCount);
+void InitNPCAnimations(NPC *npc, Texture2D texture, int rowOffset);
 
 #endif

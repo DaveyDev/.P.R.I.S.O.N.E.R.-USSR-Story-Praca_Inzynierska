@@ -60,5 +60,13 @@ void startWorkForAllNPCs() {
     }
 }
 
+void startSleepForAllNPCs() {
+    for (int i = 0; i < numInmates; i++) {
+        inmates[i].behavior = BEHAVIOR_SLEEP;
+        inmates[i].hasPatrolTarget = false;  // Reset so they search for a sleep spot again
+    }
+}
+
+
 
 

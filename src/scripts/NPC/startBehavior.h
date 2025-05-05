@@ -8,5 +8,6 @@ void startPatrolForAllNPCs();
 void startFoodForGuardNPC();
 void startFreeTimeForAllNPCs();
 void startWorkForAllNPCs();
+void startSleepForAllNPCs();
 
 #endif
