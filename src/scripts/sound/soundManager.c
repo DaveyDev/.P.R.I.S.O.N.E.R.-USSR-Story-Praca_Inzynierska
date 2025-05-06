@@ -8,6 +8,7 @@ static Sound doorCloseSound;
 static Sound pickupItemSound;
 static Sound footstepSound;
 static Sound attackSound;
+static Sound bellSound;
 
 //static Music backgroundMusic;
 //static bool musicPlaying = false;
@@ -21,6 +22,7 @@ void initSoundManager() {
     backgroundMusic = LoadMusicStream("data/sound/background.mp3");
     footstepSound = LoadSound("data/sound/footstep.wav"); 
     attackSound = LoadSound("data/sound/attack1.wav"); 
+    bellSound = LoadSound("data/sound/timeBell.wav");
 
     SetMusicVolume(backgroundMusic, 0.5f);
     
@@ -46,6 +48,9 @@ void playFootstepSound() {
 }
 void playAttackSound() {
     PlaySound(attackSound);
+}
+void playBellSound() {
+    PlaySound(bellSound);
 }
 
 void playBackgroundMusic() {
@@ -81,6 +86,7 @@ void unloadSoundManager() {
     UnloadMusicStream(backgroundMusic);
     UnloadSound(footstepSound);
     UnloadSound(attackSound);
+    UnloadSound(bellSound);
 
 
     CloseAudioDevice();

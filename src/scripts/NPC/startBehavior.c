@@ -20,8 +20,8 @@ void startLunchForAllNPCs() {
 }
 
 void startPatrolForAllNPCs() {
-    for (int i = 0; i < numInmates; i++) {
-        inmates[i].behavior = BEHAVIOR_PATROL;
+    for (int i = 0; i < numGuards; i++) {
+        guards[i].behavior = BEHAVIOR_PATROL;
         //inmates[i].hasPatrolTarget = false;
         //inmates[i].gotFood = false;
     }
@@ -61,11 +61,48 @@ void startWorkForAllNPCs() {
 }
 
 void startSleepForAllNPCs() {
+    // Clear all reservations
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            spawnReserved[row][col] = false;
+        }
+    }
+
+    // Assign sleep behavior
     for (int i = 0; i < numInmates; i++) {
         inmates[i].behavior = BEHAVIOR_SLEEP;
         inmates[i].hasPatrolTarget = false;  // Reset so they search for a sleep spot again
+        inmates[i].pathIndex = 0;
+        inmates[i].pathLength = 0;
     }
 }
+
+
+void startRollCallForAllNPCs() {
+
+    // Clear all reservations
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            spawnReserved[row][col] = false;
+        }
+    }
+
+
+    for (int i = 0; i < numInmates; i++) {
+        inmates[i].behavior = BEHAVIOR_ROLLCALL;
+        inmates[i].hasPatrolTarget = false;
+        inmates[i].pathIndex = 0;
+        inmates[i].pathLength = 0;
+    }
+
+    for (int i = 0; i < numGuards; i++) {
+        guards[i].behavior = BEHAVIOR_ROLLCALL;
+        guards[i].hasPatrolTarget = false;
+        guards[i].pathIndex = 0;
+        guards[i].pathLength = 0;
+    }
+}
+
 
 
 

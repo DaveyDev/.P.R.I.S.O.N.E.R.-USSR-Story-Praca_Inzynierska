@@ -14,6 +14,7 @@ void playPickupItemSound();
 void playFootstepSound();
 void playAttackSound();
 void calculatePlayerSteps(bool isMoving, float deltaTime);
+void playBellSound();
 
 
 

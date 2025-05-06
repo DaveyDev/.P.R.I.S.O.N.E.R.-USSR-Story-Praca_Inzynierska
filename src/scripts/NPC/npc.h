@@ -29,6 +29,7 @@ typedef enum {
     BEHAVIOR_FREE_TIME, // mostly standing 
     BEHAVIOR_WORK, //working (cutting down trees and stones)
     BEHAVIOR_TALKING, // talking with you
+    BEHAVIOR_ROLLCALL, 
 } NPCBehavior;
 
 typedef enum {

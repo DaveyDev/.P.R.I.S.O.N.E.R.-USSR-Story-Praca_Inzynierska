@@ -299,6 +299,14 @@ void drawMap(Camera2D camera) {
                 // Draw a yellow rectangle with an "S" inside
                 DrawRectangleLinesEx(block, 2, ORANGE);
                 DrawText("FT", block.x + 5, block.y + 6, 16, ORANGE);
+            }else if (isEditor && (objects[row][col] == ROLLCALL_BLOCK || details[row][col] == ROLLCALL_BLOCK)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, DARKPURPLE);
+                DrawText("RI", block.x + 5, block.y + 6, 16, DARKPURPLE);
+            }else if (isEditor && (objects[row][col] == ROLLCALL_GUARD_BLOCK || details[row][col] == ROLLCALL_GUARD_BLOCK)) {
+                // Draw a yellow rectangle with an "S" inside
+                DrawRectangleLinesEx(block, 2, DARKBLUE);
+                DrawText("RG", block.x + 5, block.y + 6, 16, DARKBLUE);
             }
             
 

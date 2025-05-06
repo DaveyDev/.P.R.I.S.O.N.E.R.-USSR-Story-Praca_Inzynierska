@@ -210,18 +210,10 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         }
     }
 
-    if(IsKeyPressed(KEY_G)) startLunchForAllNPCs();
+    if(IsKeyPressed(KEY_G)) startRollCallForAllNPCs();
     if(IsKeyPressed(KEY_H)) assignTradesToAllNPCs(inmates, numInmates);
-    if(IsKeyPressed(KEY_F)) {
-        for (int row = 0; row < rows; row++) {
-    for (int col = 0; col < cols; col++) {
-        spawnReserved[row][col] = false;
-    }
-}
+    if(IsKeyPressed(KEY_F)) startSleepForAllNPCs();
 
-    startSleepForAllNPCs();
-
-    }
     //if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
 
     

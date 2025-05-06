@@ -9,5 +9,6 @@ void startFoodForGuardNPC();
 void startFreeTimeForAllNPCs();
 void startWorkForAllNPCs();
 void startSleepForAllNPCs();
+void startRollCallForAllNPCs();
 
 #endif

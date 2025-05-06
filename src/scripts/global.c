@@ -85,7 +85,7 @@ int freeTimeBlockCount = 0;
 bool attackMode = false;
 
 //work
-
+bool wasFoodGiven = false;
 
 Vector2 treeBlocks[MAX_RESOURCE_BLOCKS];
 int treeBlockCount = 0;

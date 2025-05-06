@@ -17,7 +17,8 @@ typedef enum {
     INMATE_SPAWN = 20,
     GUARD_SPAWN = 21,
     FREE_TIME_BLOCK = 22,
-    
+    ROLLCALL_BLOCK = 23,
+    ROLLCALL_GUARD_BLOCK = 24,
 
 
 

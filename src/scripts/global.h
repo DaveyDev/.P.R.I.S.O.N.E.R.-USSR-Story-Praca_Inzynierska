@@ -64,6 +64,7 @@ extern bool musicEnabled;
 extern bool playerWon;
 extern bool isEditor;
 
+extern bool wasFoodGiven;
 
 extern Vector2 patrolPoints[MAX_PATROL_POINTS];
 extern int patrolPointCount;

@@ -7,6 +7,8 @@
 #include "NPC/startBehavior.h"
 #include "NPC/npc.h"
 #include "NPC/trade.h"
+#include "sound/soundManager.h"
+#include "global.h"
 
 static float timeOfDay = 0.0f;
 static float daySpeed = 0.02f; // Default: 1 full day in 4 minutes
@@ -55,25 +57,58 @@ void updateDayCycle() {
         previousTime = 0.0f;  // Reset for next day triggers
     }
 
-    if (previousTime < 6.5f && timeOfDay >= 6.5f){
+    if (previousTime < 7.0f && timeOfDay >= 7.0f){ //roll call
         printf("roll call time triggered\n");
+        startRollCallForAllNPCs();
+        playBellSound();
+        wasFoodGiven = false;
         //startFoodForGuardNPC();
     }
 
-    if (previousTime < 7.0f && timeOfDay >= 7.0f){
+    if (previousTime < 7.5f && timeOfDay >= 7.5f){ // food
         printf("Guard food time triggered\n");
         startFoodForGuardNPC();
     }
 
-    if (previousTime < 8.0f && timeOfDay >= 8.0f) {
+    if (previousTime < 8.0f && timeOfDay >= 8.0f) { // food
         printf("Eating time triggered\n");
         startLunchForAllNPCs();
+        startPatrolForAllNPCs();
+        startFoodForGuardNPC();
+        playBellSound();
     }
 
-    if (previousTime < 9.0f && timeOfDay >= 9.0f) {
+    if (previousTime < 9.0f && timeOfDay >= 9.0f) { // free time
         printf("free time triggered\n");
         startFreeTimeForAllNPCs();
+        startPatrolForAllNPCs();
+        playBellSound();
     }
+
+    if (previousTime < 10.0f && timeOfDay >= 10.0f) { //work time
+        printf("work time triggered\n");
+        startWorkForAllNPCs();
+        playBellSound();
+    }
+
+    if (previousTime < 18.0f && timeOfDay >= 18.0f) { //free time
+        printf("free time triggered\n");
+        startFreeTimeForAllNPCs();
+        playBellSound();
+    }
+
+    if (previousTime < 21.0f && timeOfDay >= 21.0f) { //free time
+        printf("free time triggered\n");
+        startRollCallForAllNPCs();
+        playBellSound();
+    }
+
+    if (previousTime < 22.0f && timeOfDay >= 22.0f) { //free time
+        printf("free time triggered\n");
+        startSleepForAllNPCs();
+        playBellSound();
+    }
+
 
     if (previousTime < 22.0f && timeOfDay >= 22.0f) {
         for (int row = 0; row < rows; row++) {
