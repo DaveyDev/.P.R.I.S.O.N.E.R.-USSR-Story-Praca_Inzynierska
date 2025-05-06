@@ -13,6 +13,7 @@
 #include "../scripts/NPC/npc.h"
 #include "../scripts/textures.h"
 #include "../scripts/dayCycle.h"
+#include "../scripts/NPC/startBehavior.h"
 
 
 
@@ -89,6 +90,9 @@ void startGameScene(){
     for (int i = 0; i < numGuards; i++) {
         InitNPCAnimations(&guards[i], guardTexture, i * 5);
     }
+
+    startSleepForAllNPCs(); //temp
+    
 
     isNewGame = true;
     *currentScene = GAME;
