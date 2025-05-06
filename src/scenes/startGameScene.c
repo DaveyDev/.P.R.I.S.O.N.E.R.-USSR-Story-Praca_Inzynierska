@@ -91,7 +91,7 @@ void startGameScene(){
         InitNPCAnimations(&guards[i], guardTexture, i * 5);
     }
 
-    startSleepForAllNPCs(); //temp
+    startSleepForAllNPCs(); //temporary
     
 
     isNewGame = true;

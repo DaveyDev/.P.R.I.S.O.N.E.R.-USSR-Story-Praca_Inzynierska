@@ -998,16 +998,16 @@ void drawNPC(NPC *npc, Camera2D camera) {
 
     // Draw red lines between path steps
     for (int i = 1; i < npc->pathLength; i++) {
-        DrawLineV(npc->path[i - 1], npc->path[i], (Color){255, 0, 0, 128}); // semi-transparent red
+        //DrawLineV(npc->path[i - 1], npc->path[i], (Color){255, 0, 0, 128}); // semi-transparent red
     }
 
     // Draw current position and current target
-    DrawCircleV(npc->position, 1, YELLOW);
+    //DrawCircleV(npc->position, 1, YELLOW);
     if (npc->pathIndex < npc->pathLength) {
-        DrawCircleV(npc->path[npc->pathIndex], 2, RED);
+       // DrawCircleV(npc->path[npc->pathIndex], 2, RED);
     }
 
-    DrawCircleLines(npc->position.x, npc->position.y, 20, (Color){255, 100, 100, 60});
+    //DrawCircleLines(npc->position.x, npc->position.y, 20, (Color){255, 100, 100, 60});
 
 
     EndMode2D();
