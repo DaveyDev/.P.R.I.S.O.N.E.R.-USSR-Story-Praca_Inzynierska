@@ -27,8 +27,8 @@ int numGuards = 0;
 
 NPC *activeTradeNPC = NULL;
 Rectangle tradeWindowBounds = { 300, 200, 400, 200 };
-Rectangle acceptButton = { 350, 330, 80, 30 };
-Rectangle closeButton = { 470, 330, 80, 30 };
+Rectangle acceptButton = { 350, 330, 120, 30 };
+Rectangle closeButton = { 470, 330, 120, 30 };
 
 int activeTradeNPCIndex;
 
@@ -1132,7 +1132,7 @@ void drawItemFromId(int id, Vector2 pos) {
 
     DrawTexturePro(itemsSet, itemSource, itemDest, (Vector2){0, 0}, 0.0f, WHITE);
 }
-
+/*
 void DrawBarterUI() {
     if (!activeTradeNPC) return;
 
@@ -1178,6 +1178,83 @@ void DrawBarterUI() {
         
         
         
+    }
+}
+
+*/
+void DrawBarterUI() {
+    if (!activeTradeNPC) return;
+
+    DrawRectangleRec(tradeWindowBounds, DARKGRAY);
+
+    const char *title = "Trade Offer";
+    int titleFontSize = 20;
+    int titleWidth = MeasureText(title, titleFontSize);
+    DrawText(title,
+             tradeWindowBounds.x + (tradeWindowBounds.width - titleWidth) / 2,
+             tradeWindowBounds.y + 10,
+             titleFontSize,
+             WHITE);
+
+    int labelFontSize = 18;
+    float iconSize = 32;
+    float spacing = 20;
+
+    // Calculate layout width (label + spacing + icon)
+    int wantsLabelWidth = MeasureText("Wants:", labelFontSize);
+    int givesLabelWidth = MeasureText("Gives:", labelFontSize);
+    float layoutWidth = fmaxf(wantsLabelWidth, givesLabelWidth) + spacing + iconSize;
+
+    float startX = tradeWindowBounds.x + (tradeWindowBounds.width - layoutWidth) / 2;
+    float wantsY = tradeWindowBounds.y + 50;
+    float givesY = wantsY + 40;
+
+    // Wants
+    DrawText("Wants:", startX, wantsY, labelFontSize, RAYWHITE);
+    Vector2 wantsIconPos = { startX + wantsLabelWidth + spacing, wantsY };
+    drawItemFromId(inmates[activeTradeNPCIndex].requestedItemId, wantsIconPos);
+
+    // Gives
+    DrawText("Gives:", startX, givesY, labelFontSize, RAYWHITE);
+    Vector2 givesIconPos = { startX + givesLabelWidth + spacing, givesY };
+    drawItemFromId(inmates[activeTradeNPCIndex].rewardItemId, givesIconPos);
+
+    // Buttons (centered below)
+    float buttonWidth = 100;
+    float buttonHeight = 30;
+    float buttonY = givesY + 50;
+
+    acceptButton = (Rectangle){
+        tradeWindowBounds.x + (tradeWindowBounds.width / 2) - buttonWidth - 10,
+        buttonY,
+        buttonWidth,
+        buttonHeight
+    };
+    closeButton = (Rectangle){
+        tradeWindowBounds.x + (tradeWindowBounds.width / 2) + 10,
+        buttonY,
+        buttonWidth,
+        buttonHeight
+    };
+
+    if (GuiButton(acceptButton, "Accept")) {
+        int wanted = inmates[activeTradeNPCIndex].requestedItemId;
+        int reward = inmates[activeTradeNPCIndex].rewardItemId;
+
+        if (hasItemInInventory(wanted)) {
+            removeItemFromInventory(wanted);
+            addItemToInventory(reward, "unknown");
+        }
+    }
+
+    if (GuiButton(closeButton, "Close")) {
+        if (inmates[activeTradeNPCIndex].isTalking) {
+            inmates[activeTradeNPCIndex].behavior = inmates[activeTradeNPCIndex].lastBehavior;
+            inmates[activeTradeNPCIndex].isTalking = false;
+            printf("Ended trading with NPC no: %i\n", activeTradeNPCIndex);
+        }
+        activeTradeNPC = NULL;
+        activeTradeNPCIndex = -1;
     }
 }
 
