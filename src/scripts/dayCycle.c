@@ -61,6 +61,7 @@ void updateDayCycle() {
         printf("roll call time triggered\n");
         startRollCallForAllNPCs();
         playBellSound();
+        updateDayState(1);
         wasFoodGiven = false;
         //startFoodForGuardNPC();
     }
@@ -145,18 +146,20 @@ void drawDayCycleOverlay(int screenWidth, int screenHeight) {
 float getTime(){
     return timeOfDay;
 }
+/*
+
 
 void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor, Color bgColor) {
     int hour = (int)timeOfDay;
     int minute = (int)((timeOfDay - hour) * 60.0f);
 
     char timeText[6];
-    snprintf(timeText, sizeof(timeText), "%02d:%02d", hour, minute);  // "08:11"
+    snprintf(timeText, sizeof(timeText), "%02d:%02d", hour, minute);
 
     int padding = 10;
-    float charBoxWidth = fontSize * 0.6f;  // fixed slot width for each character
+    float charBoxWidth = fontSize * 0.6f;
 
-    int totalTextWidth = charBoxWidth * 5; // 5 characters: 2 digits + colon + 2 digits
+    int totalTextWidth = charBoxWidth * 5;
     int boxWidth = totalTextWidth + padding * 2;
     int boxHeight = fontSize + padding * 2;
 
@@ -166,31 +169,88 @@ void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor,
 
     DrawRectangleRounded((Rectangle){ boxX, boxY, boxWidth, boxHeight }, 0.2f, 8, bgColor);
 
-    // Adjust for the colon to be centered
     for (int i = 0; i < 5; i++) {
         const char *chr = TextSubtext(timeText, i, 1);
         int charActualWidth = MeasureText(chr, fontSize);
-
-        // Position digits normally but ensure colon is centered
         float charX = boxX + padding + i * charBoxWidth;
 
-        // For the colon, manually center it between the digits
         if (i == 2) {
-            // Manually adjust for the colon's centered position
             float offsetX = boxX + padding + (charBoxWidth * 2) + (charBoxWidth / 2 - charActualWidth / 2);
             DrawText(chr, (int)offsetX, textY, fontSize, textColor);
         } else {
-            // For all other characters, just right-align them within their box
             float offsetX = charX + (charBoxWidth - charActualWidth);
             DrawText(chr, (int)offsetX, textY, fontSize, textColor);
         }
     }
-    
+
+    // Draw day count
     char dayText[16];
     snprintf(dayText, sizeof(dayText), "Day %d", dayCount);
-    DrawText(dayText, boxX, boxY + boxHeight + 4, fontSize - 4, textColor); // Slightly below the clock
+    int line1Y = boxY + boxHeight + 4;
+    DrawText(dayText, boxX, line1Y, fontSize - 4, textColor);
 
+    // Draw current state of the day
+    if (currentDayState >= 0 && currentDayState < NUM_DAY_STATES) {
+        int line2Y = line1Y + fontSize - 4 + 2;  // Add small spacing between lines
+        DrawText(dayStates[currentDayState], boxX, line2Y, fontSize - 4, textColor);
+    }
 }
+*/
+void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor, Color bgColor) {
+    int hour = (int)timeOfDay;
+    int minute = (int)((timeOfDay - hour) * 60.0f);
+
+    char timeText[6];
+    snprintf(timeText, sizeof(timeText), "%02d:%02d", hour, minute);
+
+    char dayText[16];
+    snprintf(dayText, sizeof(dayText), "Day %d", dayCount);
+
+    const char* stateText = "";
+    if (currentDayState >= 0 && currentDayState < NUM_DAY_STATES) {
+        stateText = dayStates[currentDayState];
+    }
+
+    int padding = 10;
+    float charBoxWidth = fontSize * 0.6f;
+    int timeTextWidth = charBoxWidth * 5;
+    int dayTextWidth = MeasureText(dayText, fontSize - 4);
+    int stateTextWidth = MeasureText(stateText, fontSize - 4);
+
+    // Define top bar dimensions
+    int barWidth = screenWidth / 2;
+    int barHeight = fontSize + padding * 2;
+    int barX = (screenWidth - barWidth) / 2;
+    int barY = 10;
+    int textY = barY + padding;
+
+    DrawRectangleRounded((Rectangle){ barX, barY, barWidth, barHeight }, 0.2f, 8, bgColor);
+
+    // Draw clock on the right side of the bar
+    for (int i = 0; i < 5; i++) {
+        const char *chr = TextSubtext(timeText, i, 1);
+        int charActualWidth = MeasureText(chr, fontSize);
+        float charX = barX + barWidth - padding - timeTextWidth + i * charBoxWidth;
+
+        if (i == 2) {
+            float offsetX = charX + (charBoxWidth / 2 - charActualWidth / 2);
+            DrawText(chr, (int)offsetX, textY, fontSize, textColor);
+        } else {
+            float offsetX = charX + (charBoxWidth - charActualWidth);
+            DrawText(chr, (int)offsetX, textY, fontSize, textColor);
+        }
+    }
+
+    // Draw day text near the left side
+    int dayTextX = barX + padding;
+    DrawText(dayText, dayTextX, textY, fontSize - 4, textColor);
+
+    // Draw state text centered
+    int stateTextX = barX + (barWidth - stateTextWidth) / 2;
+    DrawText(stateText, stateTextX, textY, fontSize - 4, textColor);
+}
+
+
 /*
 void newDayTrees() {
     for (int row = 0; row < rows; row++) {
@@ -304,4 +364,9 @@ void LoadDayCycle(const char *filename) {
     }
 }
 
+void updateDayState(int stateNo) {
+    if (stateNo >= 0 && stateNo < NUM_DAY_STATES) {
+        currentDayState = stateNo;
+    }
+}
 

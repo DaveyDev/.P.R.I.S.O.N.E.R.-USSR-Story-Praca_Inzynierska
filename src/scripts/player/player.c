@@ -358,7 +358,7 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
     return false;
 }
 
-
+/*
 void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
     int padding = 10;
     int spacing = 8;
@@ -398,6 +398,46 @@ void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColo
 
     DrawText(healthText, textX, textY, fontSize, textColor);
     DrawText(foodText, textX, textY + fontSize + spacing, fontSize, textColor);
+}
+*/
+void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
+    int padding = 10;
+    int spacing = 8;
+    int screenWidth = GetScreenWidth();
+
+    // Prepare text strings
+    char healthText[64];
+    if (player->extraHealth > 0) {
+        snprintf(healthText, sizeof(healthText), "Health: %d (+%d)", (int)player->health, (int)player->extraHealth);
+    } else {
+        snprintf(healthText, sizeof(healthText), "Health: %d", (int)player->health);
+    }
+
+    char foodText[64];
+    if (player->extraFood > 0) {
+        snprintf(foodText, sizeof(foodText), "Food: %d (+%d)", (int)player->food, (int)player->extraFood);
+    } else {
+        snprintf(foodText, sizeof(foodText), "Food: %d", (int)player->food);
+    }
+
+    // Measure text widths
+    int healthWidth = MeasureText(healthText, fontSize);
+    int foodWidth = MeasureText(foodText, fontSize);
+
+    int boxHeight = fontSize + padding * 2;
+    int boxY = 10;
+
+    // Health box (left)
+    int healthBoxWidth = healthWidth + padding * 2;
+    int healthBoxX = 10;
+    DrawRectangleRounded((Rectangle){ healthBoxX, boxY, healthBoxWidth, boxHeight }, 0.2f, 8, bgColor);
+    DrawText(healthText, healthBoxX + padding, boxY + padding, fontSize, textColor);
+
+    // Food box (right)
+    int foodBoxWidth = foodWidth + padding * 2;
+    int foodBoxX = screenWidth - foodBoxWidth - 10;
+    DrawRectangleRounded((Rectangle){ foodBoxX, boxY, foodBoxWidth, boxHeight }, 0.2f, 8, bgColor);
+    DrawText(foodText, foodBoxX + padding, boxY + padding, fontSize, textColor);
 }
 
 

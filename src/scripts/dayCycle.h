@@ -28,6 +28,8 @@ void setTimeOfDay(float time);
 void setDayCount(int count);
 void newDayNature();
 
+void updateDayState(int stateNo);
+
 
 
 #endif

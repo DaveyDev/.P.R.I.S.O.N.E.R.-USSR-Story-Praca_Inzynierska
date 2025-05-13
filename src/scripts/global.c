@@ -51,6 +51,21 @@ const int numResolutions = sizeof(resolutions) / sizeof(resolutions[0]);  // Now
 
 char language[16] = "ENG";       // Default language
 
+const char *dayStates[] = {
+    "ROLL CALL",    // 0: 
+    "BREAKFAST",  // 1: 
+    "FREE TIME",     // 2: 
+    "WORK",   // 3: 
+    "SLEEP", //4
+    "WORKOUT" //5
+};
+
+
+const int NUM_DAY_STATES = sizeof(dayStates) / sizeof(dayStates[0]);
+
+int currentDayState = 0;  // index to dayStates
+
+
 //map and items
 char mapPath[256] = "\0";
 char itemPath[256] = "\0";

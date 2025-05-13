@@ -50,6 +50,10 @@ extern Resolution resolutions[];
 extern int currentResolutionIndex;
 extern const int numResolutions;  // Declare the number of resolutions
 
+extern const char *dayStates[];
+extern const int NUM_DAY_STATES;
+extern int currentDayState;
+
 //map and items
 extern char mapPath[256];
 extern char itemPath[256];
@@ -90,6 +94,8 @@ extern int treeBlockCount;
 
 extern Vector2 rockBlocks[MAX_RESOURCE_BLOCKS];
 extern int rockBlockCount;
+
+
 
 
 
