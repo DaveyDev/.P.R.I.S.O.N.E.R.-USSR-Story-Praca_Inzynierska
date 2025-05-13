@@ -14,7 +14,9 @@
 #include "../scripts/NPC/npc.h"
 #include "../scripts/dayCycle.h"
 #include "../scripts/player/sleep.h"
-
+#include "../scripts/player/player.h"
+#include "../scripts/NPC/npc.h"
+#include <string.h>
 
 
 
@@ -36,6 +38,8 @@ void prisonScene() {
        
         
         loadMap(mapPath);
+        allocateProcessedDoors(rows, cols);
+
         loadItems(itemPath);
          
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
@@ -126,6 +130,34 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     DrawBarterUI();
 
     drainExtraStats(deltaTime);
+
+
+    Vector2 worldPos = GetScreenToWorld2D((Vector2){player.position.x, player.position.y}, camera);
+    //updateDoors(worldPos, player.colliderRadiusX, player.colliderRadiusY, npcs, npcCount);
+    //updateDoors(worldPos, player.colliderRadiusX, player.colliderRadiusY, inmates, numInmates);
+    //updateDoors(worldPos, player.colliderRadiusX, player.colliderRadiusY, guards, numGuards);
+
+    NPC allNPCs[MAX_NPC_COUNT];
+    int totalCount = 0;
+
+    memcpy(allNPCs, inmates, sizeof(NPC) * numInmates);
+    totalCount += numInmates;
+
+    memcpy(allNPCs + totalCount, guards, sizeof(NPC) * numGuards);
+    totalCount += numGuards;
+
+    updateDoors(worldPos, player.colliderRadiusX, player.colliderRadiusY, allNPCs, totalCount);
+
+
+
+
+
+    // at start of each frame:
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            processedDoors[r][c] = false;
+        }
+    }
 
     
 

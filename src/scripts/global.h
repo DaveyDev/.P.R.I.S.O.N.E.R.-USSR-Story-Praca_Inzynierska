@@ -95,12 +95,14 @@ extern int treeBlockCount;
 extern Vector2 rockBlocks[MAX_RESOURCE_BLOCKS];
 extern int rockBlockCount;
 
+extern bool **processedDoors;
 
 
 
 
 void initGlobals();
 void loadProperties(const char *filename);
-
+void allocateProcessedDoors(int mapRows, int mapCols);
+void freeProcessedDoors(int mapRows);
 
 #endif

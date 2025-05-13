@@ -14,6 +14,7 @@
 #include "../items/idList.h"
 #include "../../../lib/raygui.h"
 #include "trade.h"
+#include "../map/objects.h"
 
 
 
@@ -217,6 +218,13 @@ void updateNPC(NPC *npc, float deltaTime, Vector2 playerPos, int groupIndex, int
 
     NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
     int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
+    Vector2 npcCenter = {
+    npc->position.x,  // center of tile assuming 32x32 sprite
+    npc->position.y,
+    };
+    checkNpcCollisionAndDoors(npcCenter, 12, 12, objects, details);
+
 
     switch (npc->behavior) {
         
@@ -1289,3 +1297,70 @@ void assignTradesToAllNPCs(NPC *npcs, int npcCount) {
     }
 }
 
+void checkNpcCollisionAndDoors(Vector2 npcCenter, float radiusX, float radiusY, int **objects, int **details) {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int detailID = details[row][col];
+
+            Rectangle tileCollider = {col * 32, row * 32, 32, 32};
+
+            // NPC opens door if it touches a closed door
+            // For NPCs:
+            /*
+            if (processedDoors[row][col]) continue;
+            if ((detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) &&
+                CheckCollisionEllipseRec(npcCenter, radiusX, radiusY, tileCollider)) {
+                openDoor(row, col, false);
+                processedDoors[row][col] = true;
+            }
+            // NPC closes dorr if doesnt touch them
+            if ((detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR) &&
+                !CheckCollisionEllipseRec(npcCenter, radiusX, radiusY, tileCollider)) {
+                closeDoor(row, col, false);
+                processedDoors[row][col] = true;
+            }
+            */
+
+        }
+    }
+}
+
+void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY,
+                 NPC *npcs, int npcCount) {
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int detailID = details[row][col];
+            if (detailID != GREY_DOOR && detailID != LIGHTGREY_DOOR &&
+                detailID != OPEN_GREY_DOOR && detailID != OPEN_LIGHTGREY_DOOR) continue;
+
+            Rectangle tileRect = {col * 32, row * 32, 32, 32};
+
+            bool someoneTouching = false;
+
+            // Check player
+            if (CheckCollisionEllipseRec(playerPos, playerRadiusX, playerRadiusY, tileRect)) {
+                someoneTouching = true;
+                
+            }
+
+            // Check all NPCs
+            for (int i = 0; i < npcCount; i++) {
+                if (CheckCollisionEllipseRec(npcs[i].position, playerRadiusX, playerRadiusY, tileRect)) {
+                    someoneTouching = true;
+                    break;
+                }
+            }
+
+            // Perform action based on contact
+            if (someoneTouching) {
+                if (detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) {
+                    openDoor(row, col, false);
+                }
+            } else {
+                if (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR) {
+                    closeDoor(row, col, false);
+                }
+            }
+        }
+    }
+}

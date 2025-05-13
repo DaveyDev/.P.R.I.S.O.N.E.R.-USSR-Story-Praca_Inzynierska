@@ -114,5 +114,9 @@ void DrawBarterUI();
 void assignRandomTradeToNPC(NPC *npc);
 void assignTradesToAllNPCs(NPC *npcs, int npcCount);
 void InitNPCAnimations(NPC *npc, Texture2D texture, int rowOffset);
+void checkNpcCollisionAndDoors(Vector2 npcCenter, float radiusX, float radiusY, int **objects, int **details);
+
+void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY, NPC *npcs, int npcCount);
+
 
 #endif

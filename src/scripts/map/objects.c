@@ -150,16 +150,16 @@ void freeObjects(int **objects, int rows) {
 }
 
 
-void openDoor(int row, int col){
+void openDoor(int row, int col, bool isPlayer){
     if(details[row][col] == GREY_DOOR) details[row][col] = OPEN_GREY_DOOR;
     if(details[row][col] == LIGHTGREY_DOOR) details[row][col] = OPEN_LIGHTGREY_DOOR;
-    useFood(0.05f); // uses food each time player opens a door.
+    if(isPlayer) useFood(0.05f); // uses food each time player opens a door.
     playOpenDoorSound();
 
 }
-void closeDoor(int row, int col){
+void closeDoor(int row, int col, bool isPlayer){
     if(details[row][col] == OPEN_GREY_DOOR) details[row][col] = GREY_DOOR;
     if(details[row][col] == OPEN_LIGHTGREY_DOOR) details[row][col] = LIGHTGREY_DOOR;
-    useFood(0.05f); // Uses food each time the player closes a door.
+    if(isPlayer) useFood(0.05f); // Uses food each time the player closes a door.
     playCloseDoorSound();
 }

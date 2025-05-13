@@ -210,9 +210,9 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         }
     }
 
-    if(IsKeyPressed(KEY_G)) startRollCallForAllNPCs();
-    if(IsKeyPressed(KEY_H)) assignTradesToAllNPCs(inmates, numInmates);
-    if(IsKeyPressed(KEY_F)) startSleepForAllNPCs();
+    //if(IsKeyPressed(KEY_G)) startRollCallForAllNPCs();
+    //if(IsKeyPressed(KEY_H)) assignTradesToAllNPCs(inmates, numInmates);
+    //if(IsKeyPressed(KEY_F)) startSleepForAllNPCs();
 
     //if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
 
@@ -321,14 +321,18 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
                     return true;
                 }
             }
-
-            if ((detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) && CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
-                openDoor(row, col);
+/*
+            if ((detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) 
+            && CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+                openDoor(row, col, true);
             }
 
-            if (!CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider) && (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR)) {
-                closeDoor(row, col);
+            if (!CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider) 
+            && (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR)) {
+                closeDoor(row, col, true);
             }
+*/
+
 
             if(detailID >= 2000 && detailID <= 2999
             && detailID != OPEN_GREY_DOOR
@@ -593,6 +597,7 @@ void drainExtraStats(float deltaTime) {
         }
     }
 }
+
 
 
 

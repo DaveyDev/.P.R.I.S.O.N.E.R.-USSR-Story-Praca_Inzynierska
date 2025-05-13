@@ -169,3 +169,23 @@ void loadProperties(const char *filename) {
 
     fclose(file);
 }
+
+
+bool **processedDoors = NULL;
+
+void allocateProcessedDoors(int mapRows, int mapCols) {
+    processedDoors = malloc(mapRows * sizeof(bool *));
+    for (int i = 0; i < mapRows; i++) {
+        processedDoors[i] = malloc(mapCols * sizeof(bool));
+        for (int j = 0; j < mapCols; j++) {
+            processedDoors[i][j] = false;
+        }
+    }
+}
+
+void freeProcessedDoors(int mapRows) {
+    for (int i = 0; i < mapRows; i++) {
+        free(processedDoors[i]);
+    }
+    free(processedDoors);
+}

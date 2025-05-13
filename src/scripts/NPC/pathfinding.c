@@ -185,7 +185,12 @@ bool isTileWalkable(int row, int col) {
     && objects[row][col] != OPEN_LIGHTGREY_DOOR
     && objects[row][col] != STONE_FLOOR
     && objects[row][col] != OAK_WOODEN_FLOOR
-    && objects[row][col] != WOODEN_FLOOR) return false;
+    && objects[row][col] != WOODEN_FLOOR
+    || details[row][col] == IRON_BARS
+    || details[row][col] == LEFT_TABLE
+    || details[row][col] == MIDDLE_TABLE
+    || details[row][col] == RIGHT_TABLE
+    || details[row][col] == SMALL_TABLE) return false;
 
     return true;
 }

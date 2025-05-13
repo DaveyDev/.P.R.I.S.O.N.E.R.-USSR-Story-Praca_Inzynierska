@@ -7,6 +7,7 @@
 
 
 
+
 typedef struct {
     Vector2 position;
     Texture2D playerTexture;
@@ -51,6 +52,9 @@ int loadPlayerStats(Player *player);
 void useFood(float foodAmound);
 void useHealth(float healthAmount);
 void drainExtraStats(float deltaTime);
+//struct NPC; // forward declaration
+//void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY, struct NPC *npcs, int npcCount);
+
 
 
 #endif  // PLAYER_H

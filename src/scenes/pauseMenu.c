@@ -90,6 +90,8 @@ void pauseScene(){
         saveNPCsToFile("data/saves/save1/inmates.dat", inmates, numInmates);
         saveNPCsToFile("data/saves/save1/guards.dat", guards, numGuards);
 
+        freeProcessedDoors(rows);
+
         *currentScene = MENU;
     }
 

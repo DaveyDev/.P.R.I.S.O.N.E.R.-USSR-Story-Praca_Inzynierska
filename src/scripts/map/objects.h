@@ -14,8 +14,8 @@ void drawObjects(int **objects, int rows, int cols, Texture2D treesTileset, Text
 void freeObjects(int **objects, int rows);
 bool isWallLike(int object);
 bool isWallLikeDetail(int detail);
-void openDoor(int row, int col);
-void closeDoor(int row, int col);
+void openDoor(int row, int col, bool isPlayer);
+void closeDoor(int row, int col, bool isPlayer);
 
 
 // Define your tile types
