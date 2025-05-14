@@ -214,7 +214,7 @@ void loadChests() {
 
     int row, col, slotCount;
     while (fscanf(file, "%d:%d:%d:", &row, &col, &slotCount) == 3) {
-        if (isChest(objects[row][col])) {
+        if (isChest(objects[row][col]) || isChest(details[row][col])) {
             Chest *chest = &chestData[row][col];
             chest->storage.itemCount = 0;
 
@@ -247,7 +247,7 @@ void saveChests(const char *filename) {
 
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
-            if (isChest(objects[row][col])) {
+            if (isChest(objects[row][col]) || isChest(details[row][col])) {
                 Chest *chest = &chestData[row][col];
 
                 // Recalculate itemCount based on valid items
