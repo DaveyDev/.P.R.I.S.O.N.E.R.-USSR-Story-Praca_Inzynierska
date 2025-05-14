@@ -1112,7 +1112,8 @@ bool TryBarterWithNPC(NPC *npc) {
 }
 
 void handleNPCClick(int i) {
-    
+    if(attackMode) return;
+
     Rectangle npcRect = { inmates[i].position.x, inmates[i].position.y, TILE_SIZE, TILE_SIZE };
 
         
@@ -1325,8 +1326,19 @@ void checkNpcCollisionAndDoors(Vector2 npcCenter, float radiusX, float radiusY, 
     }
 }
 
+
+
 void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY,
                  NPC *npcs, int npcCount) {
+
+    static float foodCooldown = 0.0f; // seconds
+
+    // Update the cooldown timer
+    if (foodCooldown > 0.0f) {
+        foodCooldown -= GetFrameTime();
+    }      
+
+
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
             int detailID = details[row][col];
@@ -1336,10 +1348,12 @@ void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY,
             Rectangle tileRect = {col * 32, row * 32, 32, 32};
 
             bool someoneTouching = false;
+            bool playerTouching = false;
 
             // Check player
             if (CheckCollisionEllipseRec(playerPos, playerRadiusX, playerRadiusY, tileRect)) {
                 someoneTouching = true;
+                playerTouching = true;
                 
             }
 
@@ -1356,6 +1370,14 @@ void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY,
                 if (detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) {
                     openDoor(row, col, false);
                 }
+
+                // Use food only if player is touching and cooldown passed
+                if (playerTouching && foodCooldown <= 0.0f) {
+                    useFood(0.01f);
+                    foodCooldown = 0.1f; // 1 second cooldown
+                    //printf("Food: %.2f\n", player.food); // assuming player.food is a float
+                }
+
             } else {
                 if (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR) {
                     closeDoor(row, col, false);

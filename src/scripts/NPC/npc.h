@@ -6,8 +6,9 @@
 #include "../player/inventory.h"
 
 #define MAX_NPC_PATH 64
-#define MAX_ROWS 100
-#define MAX_COLS 100
+#define MAX_DIALOGUE_LENGTH 64
+#define MAX_ROWS 200
+#define MAX_COLS 200
 
 
 #define ANIMATIONS_PER_NPC 5

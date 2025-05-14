@@ -51,7 +51,7 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
 
         if (clickedRow >= 0 && clickedCol >= 0 && clickedRow < mapRows && clickedCol < mapCols) {
            
-            if (isChest(objects[clickedRow][clickedCol])) {
+            if (isChest(objects[clickedRow][clickedCol]) || isChest(details[clickedRow][clickedCol])) {
                 float dx = clickedCol - player.collider.x / TILE_SIZE;
                 float dy = clickedRow - player.collider.y / TILE_SIZE;
                 float distance = sqrtf(dx * dx + dy * dy);
@@ -168,7 +168,7 @@ void drawChestUI() {
 }
 
 bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory) {
-    if (!isChest(objects[row][col])) return false;
+    if (!isChest(objects[row][col]) && !isChest(details[row][col])) return false;
 
     Chest *chest = &chestData[row][col];
 
@@ -185,7 +185,7 @@ bool storeItemInChest(int row, int col, int itemID, Inventory *playerInventory) 
     return false;
 }
 bool retrieveItemFromChest(int row, int col, int slotIndex, Inventory *playerInventory) {
-    if (!isChest(objects[row][col])) return false;
+    if (!isChest(objects[row][col]) && !isChest(details[row][col])) return false;
 
     Chest *chest = &chestData[row][col];
 

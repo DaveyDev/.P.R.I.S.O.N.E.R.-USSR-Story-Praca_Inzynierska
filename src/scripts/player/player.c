@@ -164,7 +164,7 @@ bool CheckCollisionEllipseCircle(Vector2 ellipseCenter, float radiusX, float rad
 }
 
 
-
+/*
 void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     Vector2 newColliderCenter = player->colliderCenter;
@@ -240,6 +240,82 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         }
     }
 }
+*/
+void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
+    float speedPerSecond = player->speed * deltaTime;
+    bool isMoving = false;
+
+    Vector2 newPos = player->position;
+
+    // Try horizontal movement
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D')) {
+        Vector2 newColliderCenter = player->colliderCenter;
+        newColliderCenter.x += speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            newPos.x += speedPerSecond;
+            isMoving = true;
+        }
+    }
+    if (IsKeyDown(KEY_LEFT) || IsKeyDown('A')) {
+        Vector2 newColliderCenter = player->colliderCenter;
+        newColliderCenter.x -= speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            newPos.x -= speedPerSecond;
+            isMoving = true;
+        }
+    }
+
+    // Apply horizontal movement first
+    player->position.x = newPos.x;
+
+    // Try vertical movement
+    if (IsKeyDown(KEY_DOWN) || IsKeyDown('S')) {
+        Vector2 newColliderCenter = player->colliderCenter;
+        newColliderCenter.y += speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            player->position.y += speedPerSecond;
+            isMoving = true;
+        }
+    }
+    if (IsKeyDown(KEY_UP) || IsKeyDown('W')) {
+        Vector2 newColliderCenter = player->colliderCenter;
+        newColliderCenter.y -= speedPerSecond;
+        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
+            player->position.y -= speedPerSecond;
+            isMoving = true;
+        }
+    }
+
+    calculatePlayerSteps(isMoving, deltaTime);
+    handlePickupWithE(); 
+
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), camera);
+
+        if (!tryAttackNPCs(worldPos, guards, numGuards)) {
+            tryAttackNPCs(worldPos, inmates, numInmates);
+        }
+    }
+
+    // Handle NPC clicking
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
+        for (int i = 0; i < numInmates; i++) {
+            Rectangle hitbox = { inmates[i].position.x - 16, inmates[i].position.y - 32, 32, 32 };
+            if (CheckCollisionPointRec(worldMouse, hitbox)) {
+                if (inmates[i].behavior != BEHAVIOR_TALKING) {
+                    inmates[i].lastBehavior = inmates[i].behavior;
+                    inmates[i].behavior = BEHAVIOR_TALKING;
+                    inmates[i].isTalking = true;
+
+                    handleNPCClick(i);
+
+                    printf("Inmate says: 'Hey comrade... Need something?'\n");
+                }
+            }
+        }
+    }
+
 
 
     if (IsKeyPressed(KEY_SPACE)) {
@@ -343,6 +419,8 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
             && detailID != USELESS_BED_BOTTOM
             && detailID != GREEN_BED_UPPER
             && detailID != GREEN_BED_BOTTOM
+            && detailID != GREY_DOOR
+            && detailID != LIGHTGREY_DOOR
             ){
                 if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
                     return true;

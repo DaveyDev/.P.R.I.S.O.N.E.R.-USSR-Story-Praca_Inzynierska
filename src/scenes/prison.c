@@ -132,10 +132,11 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     drainExtraStats(deltaTime);
 
 
-    Vector2 worldPos = GetScreenToWorld2D((Vector2){player.position.x, player.position.y}, camera);
-    //updateDoors(worldPos, player.colliderRadiusX, player.colliderRadiusY, npcs, npcCount);
-    //updateDoors(worldPos, player.colliderRadiusX, player.colliderRadiusY, inmates, numInmates);
-    //updateDoors(worldPos, player.colliderRadiusX, player.colliderRadiusY, guards, numGuards);
+    Vector2 worldPos = GetScreenToWorld2D((Vector2){player.position.x + 32, player.position.y + 128}, camera);
+    //BeginMode2D(camera);
+    //DrawCircleV(worldPos, 2.0f, YELLOW);
+    //EndMode2D();
+
 
     NPC allNPCs[MAX_NPC_COUNT];
     int totalCount = 0;
