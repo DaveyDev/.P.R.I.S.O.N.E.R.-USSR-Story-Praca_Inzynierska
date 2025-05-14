@@ -190,6 +190,7 @@ void drawMap(Camera2D camera) {
     // Convert player screen position to world position
     Vector2 playerWorldPos = GetScreenToWorld2D(player.position, camera);
     int playerRow = (int)(playerWorldPos.y / 32) + 1;  // Convert world Y to tile row
+    
 
     BeginMode2D(camera);
 

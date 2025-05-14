@@ -65,8 +65,12 @@ void prisonScene() {
         int halfWidth = GetScreenWidth() / 2;
         int halfHeight = GetScreenHeight() / 2;
 
-        camera.target = (Vector2){player.collider.x, player.collider.y};
+        camera.target = (Vector2){190, 230};
+        
+
         camera.offset = (Vector2){0, 0};
+        //camera.offset = (Vector2){ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
+
         camera.rotation = 0.0f;
         camera.zoom = (resolutions[currentResolutionIndex].height / 600.0f) * 2.0f;
         isCameraInitialized = true;  // Mark camera as initialized
@@ -105,6 +109,9 @@ if (player.position.y > GetScreenHeight() / 2 && player.position.y < GetScreenHe
     player.position.y -= player.speed * GetFrameTime();
 }
 
+//Vector2 tempPos = GetScreenToWorld2D(player.position, camera);
+//camera.target = (Vector2){player.position.x, player.position.y};
+//camera.offset = (Vector2){ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f };
 
     //map
     drawMap(camera);

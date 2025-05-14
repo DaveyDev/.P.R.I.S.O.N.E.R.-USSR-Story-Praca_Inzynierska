@@ -22,10 +22,10 @@ const int barbedWireDamage = 1;
 
 
 void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) {
-    //player-> position.x = screenWidth/2;
-    //player-> position.y = screenHeight/2;
-    player-> position = (Vector2) {32 * 10, 32 * 10}; // tile (10, 5) as example
-    
+    player-> position.x = screenWidth/2;
+    player-> position.y = screenHeight/2;
+    //player-> position = (Vector2) {32 * 10, 32 * 10}; // tile (10, 5) as example
+    //player-> position = (Vector2) {screenWidth/2, screenHeight/2};
 
     player-> speed = speed;
     player-> collider  = (Rectangle){player-> position.x + 2, player->position.y + 50, 16, 25};
@@ -246,7 +246,10 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     bool isMoving = false;
 
     Vector2 newPos = player->position;
+    //Vector2 newPos2 = GetScreenToWorld2D(player->position, camera);
 
+    //printf("player pos: %f, %f\n", player->position.x, player->position.y);
+    //printf("player pos: %f, %f\n", newPos2.x, newPos2.y);
     // Try horizontal movement
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D')) {
         Vector2 newColliderCenter = player->colliderCenter;
@@ -267,6 +270,8 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
 
     // Apply horizontal movement first
     player->position.x = newPos.x;
+    //camera.target.x = newPos.x;
+    
 
     // Try vertical movement
     if (IsKeyDown(KEY_DOWN) || IsKeyDown('S')) {
@@ -282,13 +287,14 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
         newColliderCenter.y -= speedPerSecond;
         if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
             player->position.y -= speedPerSecond;
+            
             isMoving = true;
         }
     }
 
     calculatePlayerSteps(isMoving, deltaTime);
     handlePickupWithE(); 
-
+/*
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), camera);
 
@@ -315,6 +321,30 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
             }
         }
     }
+*/
+if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
+    
+    if (!tryAttackNPCs(worldMouse, guards, numGuards)) {
+        tryAttackNPCs(worldMouse, inmates, numInmates);
+    }
+
+    // Example: interaction with NPC hitbox
+    for (int i = 0; i < numInmates; i++) {
+        Rectangle hitbox = { inmates[i].position.x - 16, inmates[i].position.y - 32, 32, 32 };
+        if (CheckCollisionPointRec(worldMouse, hitbox)) {
+            if (inmates[i].behavior != BEHAVIOR_TALKING) {
+                    inmates[i].lastBehavior = inmates[i].behavior;
+                    inmates[i].behavior = BEHAVIOR_TALKING;
+                    inmates[i].isTalking = true;
+
+                    handleNPCClick(i);
+
+                    printf("Inmate says: 'Hey comrade... Need something?'\n");
+                }
+        }
+    }
+}
 
 
 
