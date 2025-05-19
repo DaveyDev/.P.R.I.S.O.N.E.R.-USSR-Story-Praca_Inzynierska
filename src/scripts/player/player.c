@@ -554,21 +554,22 @@ void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColo
 
 
 
-void savePlayerStats(Player *player) {
+void savePlayerStats(Player *player, Camera2D camera) {
     FILE *file = fopen("data/saves/save1/player.dat", "w");
     if (!file) {
         fprintf(stderr, "Error saving player stats\n");
         return;
     }
 
-    // Save format: health:food:timeOfDay:dayCount
-    fprintf(file, "%f:%f:%f:%d", player->health, player->food, getTimeOfDay(), getDayCount());
+    // Save format: health:food:timeOfDay:dayCount:camera_target_x:camera_target_y
+    fprintf(file, "%f:%f:%f:%d:%f:%f", player->health, player->food, getTimeOfDay(), getDayCount(),
+            camera.target.x, camera.target.y);
 
     fclose(file);
 }
 
 
-int loadPlayerStats(Player *player) {
+int loadPlayerStats(Player *player, Camera2D camera) {
     FILE *file = fopen("data/saves/save1/player.dat", "r");
     if (!file) {
         fprintf(stderr, "Error loading player stats\n");
@@ -577,9 +578,12 @@ int loadPlayerStats(Player *player) {
 
     float loadedTimeOfDay;
     int loadedDayCount;
+    
+    
 
     // Read format must match saved format
-    if (fscanf(file, "%f:%f:%f:%d", &player->health, &player->food, &loadedTimeOfDay, &loadedDayCount) != 4) {
+    if (fscanf(file, "%f:%f:%f:%d:%f:%f", &player->health, &player->food, &loadedTimeOfDay, &loadedDayCount,
+               &cameraTargetX, &cameraTargetY) != 6) {
         fprintf(stderr, "Error reading player stats\n");
         fclose(file);
         return 0;
@@ -595,6 +599,7 @@ int loadPlayerStats(Player *player) {
     setTimeOfDay(loadedTimeOfDay);
     setDayCount(loadedDayCount);
 
+    
     return 1;
 }
 

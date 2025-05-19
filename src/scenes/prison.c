@@ -21,10 +21,6 @@
 
 
 
-// Persistent camera state variables
-Camera2D camera = { 0 };   // Define the camera outside of the function
-bool isCameraInitialized = false;
-
 
 
 void prisonScene() {
@@ -43,7 +39,7 @@ void prisonScene() {
         loadItems(itemPath);
          
         initPlayer(&player, resolutions[currentResolutionIndex].width, resolutions[currentResolutionIndex].height, 200.0f); // Initial position and speed
-        if(!isNewGame) loadPlayerStats(&player);
+        if(!isNewGame) loadPlayerStats(&player, camera);
 
         loadChests(); 
 
@@ -52,6 +48,12 @@ void prisonScene() {
         findFoodTakeBlocks();
         findFreeTimeBlocks();
         findTreeAndRockBlocks();
+
+        if(isNewGame){
+            numInmates = 0;
+            numGuards = 0;
+            loadNPCsFromMap(inmates, 10, guards, 5, inmateTexture, guardTexture, &numInmates, &numGuards);
+        }
 
         
     
@@ -65,7 +67,13 @@ void prisonScene() {
         int halfWidth = GetScreenWidth() / 2;
         int halfHeight = GetScreenHeight() / 2;
 
-        camera.target = (Vector2){190, 230};
+        if(isNewGame) {
+            camera.target = (Vector2){190, 230};
+        } else {
+            camera.target.x = cameraTargetX;
+            camera.target.y = cameraTargetY; //lol that's a funny story
+        }
+
         
 
         camera.offset = (Vector2){0, 0};

@@ -118,6 +118,7 @@ void InitNPCAnimations(NPC *npc, Texture2D texture, int rowOffset);
 void checkNpcCollisionAndDoors(Vector2 npcCenter, float radiusX, float radiusY, int **objects, int **details);
 
 void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY, NPC *npcs, int npcCount);
+int loadNPCsFromMap(NPC *inmates, int maxInmates, NPC *guards, int maxGuards, Texture2D inmateTexture, Texture2D guardTexture, int *outInmateCount, int *outGuardCount);
 
 
 #endif

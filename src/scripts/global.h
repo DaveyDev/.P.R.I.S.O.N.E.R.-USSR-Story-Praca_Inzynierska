@@ -39,6 +39,14 @@ extern Color bgColor;
 
 extern Font baseFont;
 
+// Persistent camera state variables
+extern Camera2D camera;   // Define the camera outside of the function
+extern bool isCameraInitialized;
+
+extern float cameraTargetX;
+extern float cameraTargetY;
+
+
 // Define a struct for screen resolutions
 typedef struct {
     int width;

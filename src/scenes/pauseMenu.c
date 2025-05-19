@@ -80,7 +80,7 @@ void pauseScene(){
     if (GuiButton(exitBtn, getTranslation("pause_exit"))) {
         saveItems();
         saveInventory();
-        savePlayerStats(&player);
+        savePlayerStats(&player, camera);
         char chestPath[256];
         
         snprintf(chestPath, sizeof(chestPath), "data/saves/save1/chests.dat");

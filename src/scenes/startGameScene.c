@@ -69,6 +69,7 @@ void startGameScene(){
         *currentScene = GAME;
     }
 */
+/*
     if (GuiButton(playBtn, getTranslation("startgame_newgame"))) {
     strcpy(mapName, "N-21");
     snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
@@ -93,6 +94,28 @@ void startGameScene(){
 
     startSleepForAllNPCs(); //temporary
     
+
+    isNewGame = true;
+    *currentScene = GAME;
+}
+
+*/
+if (GuiButton(playBtn, getTranslation("startgame_newgame"))) {
+    strcpy(mapName, "N-21");
+    snprintf(mapPath, sizeof(mapPath), "data/levels/%s/%s.map", mapName, mapName);
+    snprintf(itemPath, sizeof(itemPath), "data/levels/%s/items.dat", mapName);
+
+    makeGameSave(mapName);
+    initInventory();
+    initDayCycle();
+
+    //numInmates = 0;
+    //numGuards = 0;
+    //loadNPCsFromMap(inmates, 10, guards, 5, inmateTexture, guardTexture, &numInmates, &numGuards);
+
+
+
+    startSleepForAllNPCs(); // temporary
 
     isNewGame = true;
     *currentScene = GAME;

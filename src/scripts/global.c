@@ -38,6 +38,14 @@ Color noColor = (Color){0, 0, 0, 0};
 Color bgColor = (Color){100, 150, 100, 255};
 
 
+// Persistent camera state variables
+Camera2D camera = { 0 };   // Define the camera outside of the function
+bool isCameraInitialized = false;
+
+float cameraTargetX = 0;
+float cameraTargetY = 0;
+
+
 // Initialize resolutions
 Resolution resolutions[] = {
     {800, 600},

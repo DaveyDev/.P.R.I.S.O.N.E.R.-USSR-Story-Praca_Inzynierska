@@ -80,48 +80,11 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.animationNumber = 0;
 
     npc.requestedItemId = 3006;
-    npc.rewardItemId = 3007;
+    npc.rewardItemId = 3006;
     npc.rewardItemName[0] = '\0';
     npc.tradeCompleted = false;
     npc.isTalking = false;
-/*
-    npc.npcAnimation[0] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
-        (Rectangle){0, 0, 32, 64}, 
-        (Rectangle){32, 0, 32, 64},
-        (Rectangle){64, 0, 32, 64},
-        (Rectangle){96, 0, 32, 64},
-        
-    }, 4);
-    npc.npcAnimation[1] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
-        (Rectangle){0, 64, 32, 64}, 
-        (Rectangle){32, 64, 32, 64},
-        (Rectangle){64, 64, 32, 64},
-        (Rectangle){96, 64, 32, 64},
-        
-    }, 4);
-    npc.npcAnimation[2] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
-        (Rectangle){0, 128, 32, 64}, 
-        (Rectangle){32, 128, 32, 64},
-        (Rectangle){64, 128, 32, 64},
-        (Rectangle){96, 128, 32, 64},
-        
-    }, 4);
-    npc.npcAnimation[3] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
-        (Rectangle){0, 192, 32, 64}, 
-        (Rectangle){32, 192, 32, 64},
-        (Rectangle){64, 192, 32, 64},
-        (Rectangle){96, 192, 32, 64},
-        
-    }, 4);
-    npc.npcAnimation[4] = createSpriteAnimation(npc.texture, 3, (Rectangle[]){
-        (Rectangle){0, 256, 32, 64}, 
-        (Rectangle){32, 256, 32, 64},
-        (Rectangle){64, 256, 32, 64},
-        (Rectangle){96, 256, 32, 64},
-        
-    }, 4);
 
-    */
 
     return npc;
 }
@@ -1386,3 +1349,44 @@ void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY,
         }
     }
 }
+int loadNPCsFromMap(NPC *inmates, int maxInmates, NPC *guards, int maxGuards,
+                    Texture2D inmateTexture, Texture2D guardTexture,
+                    int *outInmateCount, int *outGuardCount) {
+    int inmateCount = 0;
+    int guardCount = 0;
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            int tile = details[row][col]; // or details[row][col], depending where spawn tiles are
+            Vector2 pos = { col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2 };
+
+            //printf("Scanning tile at row=%d col=%d: tile=%d\n", row, col, tile);
+
+
+            if (tile == INMATE_SPAWN && inmateCount < maxInmates) {
+                printf("Inmate spawn found at (%d, %d)\n", row, col);
+                NPC npc = initNPC(inmateTexture, pos, NPC_INMATE, BEHAVIOR_SLEEP);
+                npc.origin = pos;
+                npc.direction = 0;
+                npc.dir = DOWN;
+                inmates[inmateCount] = npc;
+                InitNPCAnimations(&inmates[inmateCount], inmateTexture, inmateCount * 5);
+                inmateCount++;
+            } else if (tile == GUARD_SPAWN && guardCount < maxGuards) {
+                printf("Guard spawn found at (%d, %d)\n", row, col);
+                NPC npc = initNPC(guardTexture, pos, NPC_GUARD, BEHAVIOR_SLEEP);
+                npc.origin = pos;
+                npc.direction = 0;
+                npc.dir = DOWN;
+                guards[guardCount] = npc;
+                InitNPCAnimations(&guards[guardCount], guardTexture, guardCount * 5);
+                guardCount++;
+            }
+        }
+    }
+
+    *outInmateCount = inmateCount;
+    *outGuardCount = guardCount;
+    return inmateCount + guardCount;
+}
+
