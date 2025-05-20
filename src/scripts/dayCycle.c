@@ -61,7 +61,7 @@ void updateDayCycle() {
         printf("roll call time triggered\n");
         startRollCallForAllNPCs();
         playBellSound();
-        updateDayState(1);
+        updateDayState(0);
         wasFoodGiven = false;
         //startFoodForGuardNPC();
     }
@@ -77,6 +77,7 @@ void updateDayCycle() {
         startPatrolForAllNPCs();
         startFoodForGuardNPC();
         playBellSound();
+        updateDayState(1);
     }
 
     if (previousTime < 9.0f && timeOfDay >= 9.0f) { // free time
@@ -84,30 +85,35 @@ void updateDayCycle() {
         startFreeTimeForAllNPCs();
         startPatrolForAllNPCs();
         playBellSound();
+        updateDayState(2);
     }
 
     if (previousTime < 10.0f && timeOfDay >= 10.0f) { //work time
         printf("work time triggered\n");
         startWorkForAllNPCs();
         playBellSound();
+        updateDayState(3);
     }
 
     if (previousTime < 18.0f && timeOfDay >= 18.0f) { //free time
         printf("free time triggered\n");
         startFreeTimeForAllNPCs();
         playBellSound();
+        updateDayState(2);
     }
 
-    if (previousTime < 21.0f && timeOfDay >= 21.0f) { //free time
+    if (previousTime < 21.0f && timeOfDay >= 21.0f) { //roll call
         printf("free time triggered\n");
         startRollCallForAllNPCs();
         playBellSound();
+        updateDayState(0);
     }
 
-    if (previousTime < 22.0f && timeOfDay >= 22.0f) { //free time
+    if (previousTime < 22.0f && timeOfDay >= 22.0f) { //sleep 
         printf("free time triggered\n");
         startSleepForAllNPCs();
         playBellSound();
+        updateDayState(4);
     }
 
 
@@ -146,56 +152,7 @@ void drawDayCycleOverlay(int screenWidth, int screenHeight) {
 float getTime(){
     return timeOfDay;
 }
-/*
 
-
-void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor, Color bgColor) {
-    int hour = (int)timeOfDay;
-    int minute = (int)((timeOfDay - hour) * 60.0f);
-
-    char timeText[6];
-    snprintf(timeText, sizeof(timeText), "%02d:%02d", hour, minute);
-
-    int padding = 10;
-    float charBoxWidth = fontSize * 0.6f;
-
-    int totalTextWidth = charBoxWidth * 5;
-    int boxWidth = totalTextWidth + padding * 2;
-    int boxHeight = fontSize + padding * 2;
-
-    int boxX = screenWidth - boxWidth - 10;
-    int boxY = 10;
-    int textY = boxY + padding;
-
-    DrawRectangleRounded((Rectangle){ boxX, boxY, boxWidth, boxHeight }, 0.2f, 8, bgColor);
-
-    for (int i = 0; i < 5; i++) {
-        const char *chr = TextSubtext(timeText, i, 1);
-        int charActualWidth = MeasureText(chr, fontSize);
-        float charX = boxX + padding + i * charBoxWidth;
-
-        if (i == 2) {
-            float offsetX = boxX + padding + (charBoxWidth * 2) + (charBoxWidth / 2 - charActualWidth / 2);
-            DrawText(chr, (int)offsetX, textY, fontSize, textColor);
-        } else {
-            float offsetX = charX + (charBoxWidth - charActualWidth);
-            DrawText(chr, (int)offsetX, textY, fontSize, textColor);
-        }
-    }
-
-    // Draw day count
-    char dayText[16];
-    snprintf(dayText, sizeof(dayText), "Day %d", dayCount);
-    int line1Y = boxY + boxHeight + 4;
-    DrawText(dayText, boxX, line1Y, fontSize - 4, textColor);
-
-    // Draw current state of the day
-    if (currentDayState >= 0 && currentDayState < NUM_DAY_STATES) {
-        int line2Y = line1Y + fontSize - 4 + 2;  // Add small spacing between lines
-        DrawText(dayStates[currentDayState], boxX, line2Y, fontSize - 4, textColor);
-    }
-}
-*/
 void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor, Color bgColor) {
     int hour = (int)timeOfDay;
     int minute = (int)((timeOfDay - hour) * 60.0f);
@@ -251,42 +208,6 @@ void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor,
 }
 
 
-/*
-void newDayTrees() {
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            if (objects[row][col] == TREE_STUMP) {
-                // Optional: random chance to regrow
-                if (rand() % 3 == 0) { // ~33% chance
-                    objects[row][col] = SPRUCE; //temporary 
-                }
-            }
-        }
-    }
-}
-
-void newDayTrees() {
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            if (objects[row][col] == TREE_STUMP) {
-                if (rand() % 3 == 0) { // ~33% chance
-                    int regrowRow = row + (rand() % 3 - 1); // -1, 0, or 1
-                    int regrowCol = col + (rand() % 3 - 1); // -1, 0, or 1
-
-                    // Clamp to map bounds
-                    if (regrowRow >= 0 && regrowRow < rows &&
-                        regrowCol >= 0 && regrowCol < cols &&
-                        objects[regrowRow][regrowCol] == 0) {
-
-                        objects[row][col] = 0;
-                        objects[regrowRow][regrowCol] = SPRUCE;
-                    }
-                }
-            }
-        }
-    }
-}
-*/
 void newDayNature() {
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {

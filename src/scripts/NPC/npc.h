@@ -85,6 +85,7 @@ typedef struct {
     bool isTalking;
     int reservedRow;
     int reservedCol;
+    bool patrolInitialized;
 
     
 

@@ -36,6 +36,7 @@ int activeTradeNPCIndex;
 
 bool spawnReserved[MAX_ROWS][MAX_COLS] = {0};
 
+bool patrolTaken[32] = { false }; // or dynamically allocate if needed
 
 
 
@@ -84,6 +85,7 @@ NPC initNPC(Texture2D texture, Vector2 position, NPCType type, NPCBehavior behav
     npc.rewardItemName[0] = '\0';
     npc.tradeCompleted = false;
     npc.isTalking = false;
+    npc.patrolInitialized = false;
 
 
     return npc;
@@ -306,6 +308,28 @@ case BEHAVIOR_PATROL: {
 
         // If no target yet or reached current one, pick new one
         if (!npc->hasPatrolTarget || Vector2Distance(npc->position, npc->currentPatrolTarget) < 4.0f) {
+            if(!npc->patrolInitialized){
+                // Try to find a free patrol point
+        int freeIndices[32];
+        int freeCount = 0;
+
+        for (int i = 0; i < patrolPointCount; i++) {
+            if (!patrolTaken[i]) {
+                freeIndices[freeCount++] = i;
+            }
+        }
+
+        if (freeCount > 0) {
+            int chosen = freeIndices[GetRandomValue(0, freeCount - 1)];
+            npcPatrolIndex[groupIndex] = chosen;
+            patrolTaken[chosen] = true;
+        } else {
+            // fallback: no free patrol point, just assign randomly
+            npcPatrolIndex[groupIndex] = GetRandomValue(0, patrolPointCount - 1);
+        }
+
+        npc->patrolInitialized = true;
+            }
             npc->currentPatrolTarget = pickNextPatrolPoint(npc, groupIndex);
             npc->hasPatrolTarget = true;
         }

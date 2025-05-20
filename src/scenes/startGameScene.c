@@ -113,8 +113,7 @@ if (GuiButton(playBtn, getTranslation("startgame_newgame"))) {
     //numGuards = 0;
     //loadNPCsFromMap(inmates, 10, guards, 5, inmateTexture, guardTexture, &numInmates, &numGuards);
 
-
-
+    updateDayState(4);
     startSleepForAllNPCs(); // temporary
 
     isNewGame = true;
@@ -124,11 +123,11 @@ if (GuiButton(playBtn, getTranslation("startgame_newgame"))) {
     
 
     
-bool saveExists = (access("data/saves/save1/test.map", F_OK) == 0);
+bool saveExists = (access("data/saves/save1/N-21.map", F_OK) == 0);
 GuiSetState(saveExists ? STATE_NORMAL : STATE_DISABLED);
 
 if (GuiButton(optionsBtn, getTranslation("startgame_loadsave"))) {
-    strcpy(mapName, "test");
+    strcpy(mapName, "N-21");
     snprintf(mapPath, sizeof(mapPath), "data/saves/save1/%s.map", mapName);
     snprintf(itemPath, sizeof(itemPath), "data/saves/save1/items.dat");
 

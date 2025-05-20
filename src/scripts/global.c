@@ -66,6 +66,7 @@ const char *dayStates[] = {
     "WORK",   // 3: 
     "SLEEP", //4
     "WORKOUT" //5
+    
 };
 
 

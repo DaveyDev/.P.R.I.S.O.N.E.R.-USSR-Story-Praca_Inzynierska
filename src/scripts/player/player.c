@@ -164,83 +164,7 @@ bool CheckCollisionEllipseCircle(Vector2 ellipseCenter, float radiusX, float rad
 }
 
 
-/*
-void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
-    float speedPerSecond = player->speed * deltaTime;
-    Vector2 newColliderCenter = player->colliderCenter;
-    bool isMoving = false;
 
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown('D')) {
-        newColliderCenter.x += speedPerSecond;
-        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
-            player->position.x += speedPerSecond;
-            isMoving = true;
-        }
-    }
-    if (IsKeyDown(KEY_LEFT) || IsKeyDown('A')) {
-        newColliderCenter.x -= speedPerSecond;
-        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
-            player->position.x -= speedPerSecond;
-            isMoving = true;
-        }
-    }
-    if (IsKeyDown(KEY_DOWN) || IsKeyDown('S')) {
-        newColliderCenter.y += speedPerSecond;
-        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
-            player->position.y += speedPerSecond;
-            isMoving = true;
-        }
-    }
-    if (IsKeyDown(KEY_UP) || IsKeyDown('W')) {
-        newColliderCenter.y -= speedPerSecond;
-        if (!checkCollisionWithObjects(newColliderCenter, player->colliderRadiusX, player->colliderRadiusY, objects, details, rows, cols)) {
-            player->position.y -= speedPerSecond;
-            isMoving = true;
-        }
-    }
-
-    calculatePlayerSteps(isMoving, deltaTime);
-    handlePickupWithE(); 
-
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), camera);
-
-        if (!tryAttackNPCs(worldPos, guards, numGuards)) {
-            tryAttackNPCs(worldPos, inmates, numInmates);
-        }
-    }
-
-    //if(IsKeyPressed(KEY_G)) startRollCallForAllNPCs();
-    //if(IsKeyPressed(KEY_H)) assignTradesToAllNPCs(inmates, numInmates);
-    //if(IsKeyPressed(KEY_F)) startSleepForAllNPCs();
-
-    //if(IsKeyPressed(KEY_V)) startWorkForAllNPCs();
-
-    
-
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-    Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
-    for (int i = 0; i < numInmates; i++) {
-        Rectangle hitbox = { inmates[i].position.x - 16, inmates[i].position.y - 32, 32, 32 };
-        if (CheckCollisionPointRec(worldMouse, hitbox)) {
-            if (inmates[i].behavior != BEHAVIOR_TALKING) {
-                inmates[i].lastBehavior = inmates[i].behavior;
-                inmates[i].behavior = BEHAVIOR_TALKING;
-                inmates[i].isTalking = true;
-
-                //activeTradeNPC = &inmates[i];
-                //activeTradeNPCIndex = i;
-                
-                handleNPCClick(i);
-                // Start dialog UI or job logic
-                
-                printf("Inmate says: 'Hey comrade... Need something?'\n"); // for testing
-                //inmates[i].behavior = inmates[i].lastBehavior;
-            }
-        }
-    }
-}
-*/
 void updatePlayer(Player *player, float deltaTime, int **objects, int **details, int rows, int cols, Camera2D camera) {
     float speedPerSecond = player->speed * deltaTime;
     bool isMoving = false;
@@ -294,34 +218,7 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
 
     calculatePlayerSteps(isMoving, deltaTime);
     handlePickupWithE(); 
-/*
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), camera);
 
-        if (!tryAttackNPCs(worldPos, guards, numGuards)) {
-            tryAttackNPCs(worldPos, inmates, numInmates);
-        }
-    }
-
-    // Handle NPC clicking
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
-        for (int i = 0; i < numInmates; i++) {
-            Rectangle hitbox = { inmates[i].position.x - 16, inmates[i].position.y - 32, 32, 32 };
-            if (CheckCollisionPointRec(worldMouse, hitbox)) {
-                if (inmates[i].behavior != BEHAVIOR_TALKING) {
-                    inmates[i].lastBehavior = inmates[i].behavior;
-                    inmates[i].behavior = BEHAVIOR_TALKING;
-                    inmates[i].isTalking = true;
-
-                    handleNPCClick(i);
-
-                    printf("Inmate says: 'Hey comrade... Need something?'\n");
-                }
-            }
-        }
-    }
-*/
 if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
     Vector2 worldMouse = GetScreenToWorld2D(GetMousePosition(), camera);
     
@@ -427,17 +324,7 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
                     return true;
                 }
             }
-/*
-            if ((detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) 
-            && CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
-                openDoor(row, col, true);
-            }
 
-            if (!CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider) 
-            && (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR)) {
-                closeDoor(row, col, true);
-            }
-*/
 
 
             if(detailID >= 2000 && detailID <= 2999
@@ -470,48 +357,7 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
     return false;
 }
 
-/*
-void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
-    int padding = 10;
-    int spacing = 8;
 
-    // Prepare text strings with extra values if present
-    char healthText[64];
-    if (player->extraHealth > 0) {
-        snprintf(healthText, sizeof(healthText), "Health: %d (+%d)", (int)player->health, (int)player->extraHealth);
-    } else {
-        snprintf(healthText, sizeof(healthText), "Health: %d", (int)player->health);
-    }
-
-    char foodText[64];
-    if (player->extraFood > 0) {
-        snprintf(foodText, sizeof(foodText), "Food: %d (+%d)", (int)player->food, (int)player->extraFood);
-    } else {
-        snprintf(foodText, sizeof(foodText), "Food: %d", (int)player->food);
-    }
-
-    // Measure text width
-    int healthWidth = MeasureText(healthText, fontSize);
-    int foodWidth = MeasureText(foodText, fontSize);
-    int maxWidth = (healthWidth > foodWidth) ? healthWidth : foodWidth;
-
-    int boxWidth = maxWidth + padding * 2;
-    int boxHeight = fontSize * 2 + spacing + padding * 2;
-
-    int boxX = 10;
-    int boxY = 10;
-
-    // Draw background box
-    DrawRectangleRounded((Rectangle){ boxX, boxY, boxWidth, boxHeight }, 0.2f, 8, bgColor);
-
-    // Draw text
-    int textX = boxX + padding;
-    int textY = boxY + padding;
-
-    DrawText(healthText, textX, textY, fontSize, textColor);
-    DrawText(foodText, textX, textY + fontSize + spacing, fontSize, textColor);
-}
-*/
 void drawPlayerStats(Player *player, int fontSize, Color textColor, Color bgColor) {
     int padding = 10;
     int spacing = 8;
@@ -562,8 +408,8 @@ void savePlayerStats(Player *player, Camera2D camera) {
     }
 
     // Save format: health:food:timeOfDay:dayCount:camera_target_x:camera_target_y
-    fprintf(file, "%f:%f:%f:%d:%f:%f", player->health, player->food, getTimeOfDay(), getDayCount(),
-            camera.target.x, camera.target.y);
+    fprintf(file, "%f:%f:%f:%d:%f:%f:%i", player->health, player->food, getTimeOfDay(), getDayCount(),
+            camera.target.x, camera.target.y, currentDayState);
 
     fclose(file);
 }
@@ -578,12 +424,13 @@ int loadPlayerStats(Player *player, Camera2D camera) {
 
     float loadedTimeOfDay;
     int loadedDayCount;
+    int loadedDayState;
     
     
 
     // Read format must match saved format
-    if (fscanf(file, "%f:%f:%f:%d:%f:%f", &player->health, &player->food, &loadedTimeOfDay, &loadedDayCount,
-               &cameraTargetX, &cameraTargetY) != 6) {
+    if (fscanf(file, "%f:%f:%f:%d:%f:%f:%i", &player->health, &player->food, &loadedTimeOfDay, &loadedDayCount,
+               &cameraTargetX, &cameraTargetY, &loadedDayState) != 7) {
         fprintf(stderr, "Error reading player stats\n");
         fclose(file);
         return 0;
@@ -598,6 +445,7 @@ int loadPlayerStats(Player *player, Camera2D camera) {
 
     setTimeOfDay(loadedTimeOfDay);
     setDayCount(loadedDayCount);
+    updateDayState(loadedDayState);
 
     
     return 1;

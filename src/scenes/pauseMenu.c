@@ -86,6 +86,11 @@ void pauseScene(){
         snprintf(chestPath, sizeof(chestPath), "data/saves/save1/chests.dat");
         saveChests(chestPath);
 
+        char mapPathSave[256] = "\0";
+
+        snprintf(mapPathSave, sizeof(mapPathSave), "data/saves/save1/%s.map", mapName);
+        saveMap(mapPathSave);
+
         // Saving
         saveNPCsToFile("data/saves/save1/inmates.dat", inmates, numInmates);
         saveNPCsToFile("data/saves/save1/guards.dat", guards, numGuards);
