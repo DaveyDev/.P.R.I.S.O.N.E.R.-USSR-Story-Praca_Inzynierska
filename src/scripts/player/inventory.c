@@ -307,10 +307,11 @@ void tryUseActiveItem(Vector2 worldPos) {
 
     int obj = objects[row][col];
 
-    // 🪓 Axe logic (chop trees)
+    // Axe logic (chop trees)
     if (itemId == AXE) {
         if (obj >= 1000 && obj <= 1999 && obj != TREE_STUMP) { // Tree range
             printf("Tree chopped at tile (%d, %d)!\n", col, row);
+            useFood(2.0f);
 
             if (itemCount < MAX_ITEMS) {
                 items[itemCount].id = WOOD_LOG;
@@ -324,6 +325,7 @@ void tryUseActiveItem(Vector2 worldPos) {
         }
         if (obj == TREE_STUMP) { // Tree range
             printf("Tree chopped at tile (%d, %d)!\n", col, row);
+            useFood(2.0f);
 
             if (itemCount < MAX_ITEMS) {
                 items[itemCount].id = WOOD_LOG;
@@ -337,8 +339,9 @@ void tryUseActiveItem(Vector2 worldPos) {
         }
     }
 
-    // ⛏️ Pickaxe logic (mine rocks/ores)
+    // Pickaxe logic (mine rocks/ores)
     if (itemId == PICKAXE) {
+        
         int dropItem = -1;
 
         switch (obj) {
@@ -354,6 +357,7 @@ void tryUseActiveItem(Vector2 worldPos) {
 
         if (dropItem != -1) {
             printf("Mined %d at tile (%d, %d)\n", dropItem, col, row);
+            useFood(2.0f);
 
             if (itemCount < MAX_ITEMS) {
                 items[itemCount].id = dropItem;
@@ -366,7 +370,7 @@ void tryUseActiveItem(Vector2 worldPos) {
             return;
         }
     }
-    // ⛏️ Pickaxe logic (mine rocks/ores)
+    // file logic (get rid of the barbed wire)
     if (itemId == OLD_FILE) {
         int dropItem = -1;
 
@@ -378,6 +382,7 @@ void tryUseActiveItem(Vector2 worldPos) {
 
         if (dropItem != -1) {
             printf("wire fence at tile (%d, %d) was cut\n", col, row);
+            useFood(5.0f);
 
             objects[row][col] = 0;
             return;

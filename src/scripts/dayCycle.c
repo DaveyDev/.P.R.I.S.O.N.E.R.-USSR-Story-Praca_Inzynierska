@@ -63,6 +63,8 @@ void updateDayCycle() {
         playBellSound();
         updateDayState(0);
         wasFoodGiven = false;
+        isWorkDone = false;
+        workAmount = 0;
         //startFoodForGuardNPC();
     }
 

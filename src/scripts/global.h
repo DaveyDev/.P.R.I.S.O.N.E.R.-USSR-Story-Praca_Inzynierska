@@ -99,6 +99,7 @@ extern bool attackMode;
 //work
 extern Vector2 treeBlocks[MAX_RESOURCE_BLOCKS];
 extern int treeBlockCount;
+extern int workAmount;
 
 extern Vector2 rockBlocks[MAX_RESOURCE_BLOCKS];
 extern int rockBlockCount;

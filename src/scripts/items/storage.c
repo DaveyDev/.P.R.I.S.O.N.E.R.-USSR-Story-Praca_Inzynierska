@@ -14,6 +14,8 @@
 Inventory playerInventory;
 Chest chestData[100][100];
 
+
+
 int openedChestRow = -1, openedChestCol = -1; // Track opened chest position
 bool chestUIOpen = false; // Is the chest window open?
 
@@ -80,20 +82,37 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
                 Chest *chest = &chestData[row][col];
 
                 int logCount = 0;
+                int stoneCount = 0;
+
                 for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
                     if (chest->storage.items[i] == WOOD_LOG) { 
                         logCount++;
                     }
                 }
 
-                if (logCount >= 4) {
+                for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
+                    if (chest->storage.items[i] == GOLD_NUGGET 
+                    || chest->storage.items[i] == STONE_ITEM
+                    || chest->storage.items[i] == IRON_NUGGET
+                    || chest->storage.items[i] == COPPER_NUGGET
+                    || chest->storage.items[i] == URANIUM_NUGGET
+                    || chest->storage.items[i] == COAL) { 
+                        stoneCount++;
+                    }
+                }
+
+                if ((logCount >= 4 || stoneCount >= 4) && !isWorkDone) {
                     // Clear chest and change ID to completed chest
                     for (int i = 0; i < MAX_ITEMS_IN_CHEST; i++) {
                         chest->storage.items[i] = -1;
                     }
                     chest->storage.itemCount = 0;
                     printf("work chest completed\n");
-                    isWorkDone = true;
+                    workAmount++;
+                    if(workAmount >= 3) {
+                        isWorkDone = true;
+                        printf("work completed for today\n");
+                    }   
                     //objects[row][col] = 13; // work done chest
                 }
             }

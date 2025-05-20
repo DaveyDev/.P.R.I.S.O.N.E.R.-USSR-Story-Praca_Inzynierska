@@ -91,6 +91,7 @@ bool musicEnabled = false;
 
 //work
 bool isWorkDone = false;
+int workAmount = 0;
 
 
 Vector2 patrolPoints[MAX_PATROL_POINTS] = {0};
