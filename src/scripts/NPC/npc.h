@@ -30,7 +30,8 @@ typedef enum {
     BEHAVIOR_FREE_TIME, // mostly standing 
     BEHAVIOR_WORK, //working (cutting down trees and stones)
     BEHAVIOR_TALKING, // talking with you
-    BEHAVIOR_ROLLCALL, 
+    BEHAVIOR_ROLLCALL,
+    BEHAVIOR_DISCIPLINE_HIT, //npc hits player once 
 } NPCBehavior;
 
 typedef enum {
@@ -86,6 +87,7 @@ typedef struct {
     int reservedRow;
     int reservedCol;
     bool patrolInitialized;
+    
 
     
 

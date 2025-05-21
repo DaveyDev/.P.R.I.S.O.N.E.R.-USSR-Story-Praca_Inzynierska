@@ -30,6 +30,8 @@ typedef struct {
 
     bool wasKnockedOutToday;
     //JobPlayer currentJob;
+    
+    bool isStateDone;
 
 
 

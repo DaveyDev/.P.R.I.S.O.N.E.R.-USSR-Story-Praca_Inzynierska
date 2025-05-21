@@ -9,6 +9,7 @@
 #include "NPC/trade.h"
 #include "sound/soundManager.h"
 #include "global.h"
+#include "player/player.h"
 
 static float timeOfDay = 0.0f;
 static float daySpeed = 0.02f; // Default: 1 full day in 4 minutes
@@ -44,6 +45,13 @@ void setDayCount(int count) {
     dayCount = count;
 }
 
+void checkIfStateWasDone(){
+    if(!player.isStateDone){
+        guards[1].lastBehavior = inmates[1].behavior;
+        guards[1].behavior = BEHAVIOR_DISCIPLINE_HIT;
+    }
+}
+
 
 void updateDayCycle() {
     float previousTime = timeOfDay;  // Store before updating
@@ -66,6 +74,7 @@ void updateDayCycle() {
         isWorkDone = false;
         workAmount = 0;
         //startFoodForGuardNPC();
+        player.isStateDone = false;
     }
 
     if (previousTime < 7.5f && timeOfDay >= 7.5f){ // food
@@ -74,48 +83,60 @@ void updateDayCycle() {
     }
 
     if (previousTime < 8.0f && timeOfDay >= 8.0f) { // food
+        checkIfStateWasDone();
         printf("Eating time triggered\n");
         startLunchForAllNPCs();
         startPatrolForAllNPCs();
         startFoodForGuardNPC();
         playBellSound();
         updateDayState(1);
+        player.isStateDone = false;
     }
 
     if (previousTime < 9.0f && timeOfDay >= 9.0f) { // free time
+        checkIfStateWasDone();
         printf("free time triggered\n");
         startFreeTimeForAllNPCs();
         startPatrolForAllNPCs();
         playBellSound();
         updateDayState(2);
+        player.isStateDone = false;
     }
 
-    if (previousTime < 10.0f && timeOfDay >= 10.0f) { //work time
+    if (previousTime < 10.0f && timeOfDay >= 10.0f) { //work time 
+        checkIfStateWasDone();
         printf("work time triggered\n");
         startWorkForAllNPCs();
         playBellSound();
         updateDayState(3);
+        player.isStateDone = false;
     }
 
     if (previousTime < 18.0f && timeOfDay >= 18.0f) { //free time
+        checkIfStateWasDone();
         printf("free time triggered\n");
         startFreeTimeForAllNPCs();
         playBellSound();
         updateDayState(2);
+        player.isStateDone = false;
     }
 
     if (previousTime < 21.0f && timeOfDay >= 21.0f) { //roll call
+        checkIfStateWasDone();
         printf("free time triggered\n");
         startRollCallForAllNPCs();
         playBellSound();
         updateDayState(0);
+        player.isStateDone = false;
     }
 
-    if (previousTime < 22.0f && timeOfDay >= 22.0f) { //sleep 
+    if (previousTime < 22.0f && timeOfDay >= 22.0f) { //sleep
+        checkIfStateWasDone(); 
         printf("free time triggered\n");
         startSleepForAllNPCs();
         playBellSound();
         updateDayState(4);
+        player.isStateDone = false;
     }
 
 
@@ -204,9 +225,19 @@ void DrawClock(int screenWidth, int screenHeight, int fontSize, Color textColor,
     int dayTextX = barX + padding;
     DrawText(dayText, dayTextX, textY, fontSize - 4, textColor);
 
+
+    Color stateTextColor;
+    if(player.isStateDone) {
+        stateTextColor = GREEN;
+        } else {
+            stateTextColor = textColor;
+        }
+
+
+
     // Draw state text centered
     int stateTextX = barX + (barWidth - stateTextWidth) / 2;
-    DrawText(stateText, stateTextX, textY, fontSize - 4, textColor);
+    DrawText(stateText, stateTextX, textY, fontSize - 4, stateTextColor);
 }
 
 

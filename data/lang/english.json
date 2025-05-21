@@ -21,6 +21,11 @@
 	"ending_good_escape": "You have escaped the gulag - well done, comrade!",
 	"ending_good_escape_line1": "You have escaped the gulag",
 	"ending_good_escape_line2": "well done, comrade!",
-	"ending_bad_death": "you died in a gulag you moron"
+	"ending_bad_death_1": "You died in a gulag you moron",
+	"ending_bad_death_2": "Nice job. Dead in a gulag.",
+	"ending_bad_death_3": "You didn’t make it out, did you?",
+	"ending_bad_death_4": "Gulag got you. Big surprise.",
+	"ending_bad_death_5": "You died in a gulag, genius."
+	
 }
   

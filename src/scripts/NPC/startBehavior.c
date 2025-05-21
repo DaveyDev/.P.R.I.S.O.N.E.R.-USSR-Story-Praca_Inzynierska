@@ -21,11 +21,14 @@ void startLunchForAllNPCs() {
 
 void startPatrolForAllNPCs() {
     for (int i = 0; i < numGuards; i++) {
-        guards[i].behavior = BEHAVIOR_PATROL;
-        //inmates[i].hasPatrolTarget = false;
-        //inmates[i].gotFood = false;
+        if (guards[i].behavior == BEHAVIOR_DISCIPLINE_HIT) {
+            guards[i].lastBehavior = BEHAVIOR_PATROL;  // Save for later
+        } else {
+            guards[i].behavior = BEHAVIOR_PATROL;
+        }
     }
 }
+
 
 void startFoodForGuardNPC() {
         guards[0].behavior = BEHAVIOR_LUNCH_GUARD;
@@ -96,11 +99,17 @@ void startRollCallForAllNPCs() {
     }
 
     for (int i = 0; i < numGuards; i++) {
+    if (guards[i].behavior == BEHAVIOR_DISCIPLINE_HIT) {
+        guards[i].lastBehavior = BEHAVIOR_ROLLCALL;
+    } else {
         guards[i].behavior = BEHAVIOR_ROLLCALL;
-        guards[i].hasPatrolTarget = false;
-        guards[i].pathIndex = 0;
-        guards[i].pathLength = 0;
     }
+
+    guards[i].hasPatrolTarget = false;
+    guards[i].pathIndex = 0;
+    guards[i].pathLength = 0;
+}
+
 }
 
 

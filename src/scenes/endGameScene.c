@@ -13,20 +13,42 @@
 
 
 
-void endGameScene(){
+const int subtitleFontSize3 = 24;
 
-    Rectangle exitBtn = {GetScreenWidth()/2 - 150, GetScreenHeight() / 2 + 160, 300, 50};
+void endGameScene() {
+    static bool messageSelected = false;
+    static const char* deathMessage = NULL;
+
+    static int randomIndex = 0;
+
+    if (!messageSelected) {
+        const int numDeathMessages = 5;
+        randomIndex = GetRandomValue(1, numDeathMessages);
+
+        char keyBuffer[64];
+        snprintf(keyBuffer, sizeof(keyBuffer), "ending_bad_death_%d", randomIndex);
+        deathMessage = getTranslation(keyBuffer);
+
+        messageSelected = true;
+    }
+
+    Rectangle exitBtn = { GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + GetScreenHeight() / 4, 300, 50 };
 
     ClearBackground(bgColor);
 
-    DrawText("you died", GetScreenWidth() / 2 , GetScreenHeight() / 2 , 20, WHITE);
+    int dynamicFontSize = subtitleFontSize3 * (GetScreenWidth() / 800);
+    Vector2 deathMsgPos = {
+        GetScreenWidth() / 2 - MeasureTextEx(baseFont, deathMessage, dynamicFontSize, 2).x / 2,
+        GetScreenHeight() / 3 - dynamicFontSize / 2
+    };
+
+    DrawTextEx(baseFont, deathMessage, deathMsgPos, dynamicFontSize, 2, WHITE);
 
     showFPS();
 
     if (GuiButton(exitBtn, getTranslation("pause_exit"))) {
-        
-        
+        messageSelected = false; // Reset for next time the scene is entered
         *currentScene = MENU;
     }
-
 }
+

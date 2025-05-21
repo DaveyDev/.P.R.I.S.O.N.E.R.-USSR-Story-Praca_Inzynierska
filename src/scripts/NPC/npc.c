@@ -938,6 +938,82 @@ case BEHAVIOR_TALKING:
     break;
 
 
+case BEHAVIOR_DISCIPLINE_HIT: {
+
+    float attackRange = 20.0f;
+
+    // Check distance to player
+    float toPlayer = Vector2Distance(npc->position, playerPos);
+
+    if (toPlayer < attackRange) {
+
+        if (!player.wasKnockedOutToday && !isPlayerSleeping()) {
+            playAttackSound();
+
+            if (player.health <= 5) {
+                player.health = 1;
+                player.wasKnockedOutToday = true;
+                triggerForcedSleep();
+            } else {
+                useHealth(5.0f);
+                printf("Disciplinary hit! Player HP: %f\n", player.health);
+            }
+        }
+
+        // After hitting once, switch to patrol
+        npc->behavior = npc->lastBehavior;
+        npc->pathLength = 0;
+        npc->pathIndex = 0;
+        return;
+    }
+
+    // Move toward player if not in range
+    npc->moveTimer += deltaTime;
+    npc->pathUpdateTimer += deltaTime;
+
+    if (rows > 0 && cols > 0 && npc->pathUpdateTimer >= 1.0f) {
+        npc->pathUpdateTimer = 0.0f;
+
+        NPC *group = (npc->type == NPC_GUARD) ? guards : inmates;
+        int groupCount = (npc->type == NPC_GUARD) ? numGuards : numInmates;
+
+        npc->pathLength = findPath(npc->position, playerPos, npc->path, MAX_NPC_PATH, npc, group, groupCount);
+        npc->pathIndex = 0;
+    }
+
+    int lookahead = npc->pathIndex + 2;
+    if (lookahead >= npc->pathLength) lookahead = npc->pathLength - 1;
+
+    if (npc->pathIndex < npc->pathLength) {
+        Vector2 target = npc->path[lookahead];
+        Vector2 delta = Vector2Subtract(target, npc->position);
+        float distance = Vector2Length(delta);
+
+        Vector2 direction = Vector2Normalize(delta);
+        float speed = 60.0f;
+        float step = speed * deltaTime;
+
+        if (distance <= step) {
+            npc->position = target;
+            npc->pathIndex = lookahead + 1;
+        } else {
+            npc->position = Vector2Add(npc->position, Vector2Scale(direction, step));
+        }
+
+        Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
+        npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.5f));
+
+        if (fabs(direction.x) > fabs(direction.y)) {
+            npc->dir = (direction.x < 0) ? LEFT : RIGHT;
+        } else {
+            npc->dir = (direction.y < 0) ? UP : DOWN;
+        }
+    } else {
+        Vector2 avoid = avoidOtherNPCs(npc, group, groupCount);
+        npc->position = Vector2Add(npc->position, Vector2Scale(avoid, 0.3f));
+    }
+
+} break;
 
 
 
@@ -1339,8 +1415,10 @@ void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY,
 
             // Check player
             if (CheckCollisionEllipseRec(playerPos, playerRadiusX, playerRadiusY, tileRect)) {
+                //if(!(currentDayState == 4 && player.isStateDone)){
                 someoneTouching = true;
                 playerTouching = true;
+                //}
                 
             }
 

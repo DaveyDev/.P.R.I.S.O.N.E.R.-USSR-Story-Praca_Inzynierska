@@ -84,6 +84,8 @@ void initPlayer(Player *player, int screenWidth, int screenHeight, float speed) 
     player-> lastDamageTime = 0.0f;
 
     player-> wasKnockedOutToday = false;
+
+    player-> isStateDone = false;
     
 }
 
@@ -195,6 +197,8 @@ void updatePlayer(Player *player, float deltaTime, int **objects, int **details,
     // Apply horizontal movement first
     player->position.x = newPos.x;
     //camera.target.x = newPos.x;
+
+    
     
 
     // Try vertical movement
@@ -227,10 +231,11 @@ if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
     }
 
     // Example: interaction with NPC hitbox
-    for (int i = 0; i < numInmates; i++) {
-        Rectangle hitbox = { inmates[i].position.x - 16, inmates[i].position.y - 32, 32, 32 };
-        if (CheckCollisionPointRec(worldMouse, hitbox)) {
-            if (inmates[i].behavior != BEHAVIOR_TALKING) {
+    if(!attackMode){
+        for (int i = 0; i < numInmates; i++) {
+            Rectangle hitbox = { inmates[i].position.x - 16, inmates[i].position.y - 32, 32, 32 };
+            if (CheckCollisionPointRec(worldMouse, hitbox)) {
+                if (inmates[i].behavior != BEHAVIOR_TALKING) {
                     inmates[i].lastBehavior = inmates[i].behavior;
                     inmates[i].behavior = BEHAVIOR_TALKING;
                     inmates[i].isTalking = true;
@@ -238,7 +243,8 @@ if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                     handleNPCClick(i);
 
                     printf("Inmate says: 'Hey comrade... Need something?'\n");
-                }
+                 }
+            }
         }
     }
 }
@@ -283,6 +289,49 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
                     return true;
                 }
             }
+
+            // Example: Add this before the return false at the end of the loop for the winning block or anywhere suitable
+            //if (currentDayState == 4) {
+            //    // Check if detailID is a closed door that blocks movement
+            //    if (detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR) {
+            //        if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+            //            // Block movement if colliding with door in state 4
+            //           return true;
+            //        }
+            //    }
+            //}
+
+
+            if (detailID == SPAWN_BLOCK && currentDayState == 4 && !player.isStateDone) {
+                Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
+                float circleRadius = 8.0f;
+                if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
+                    player.isStateDone = true;
+                }
+                
+            }
+            if (detailID == ROLLCALL_BLOCK && currentDayState == 0 && !player.isStateDone) {
+                Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
+                float circleRadius = 8.0f;
+                if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
+                    player.isStateDone = true;
+                }
+            }
+            if (detailID == FOOD_TAKE_BLOCK && currentDayState == 1 && !player.isStateDone) {
+                Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
+                float circleRadius = 8.0f;
+                if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
+                    player.isStateDone = true;
+                }
+            }
+            if (detailID == FREE_TIME_BLOCK && currentDayState == 2 && !player.isStateDone) {
+                Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};
+                float circleRadius = 8.0f;
+                if (CheckCollisionEllipseCircle(colliderCenter, radiusX, radiusY, circleCenter, circleRadius)) {
+                    player.isStateDone = true;
+                }
+            }
+            
 
             if (objectID >= 1000 && objectID <= 1999) {
                 Vector2 circleCenter = {col * 32 + 16, row * 32 + 16};

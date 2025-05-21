@@ -120,7 +120,15 @@ if (startRow < 0 || startCol < 0 || goalRow < 0 || goalCol < 0 ||
             int nc = current->col + offsets[i][1];
 
             // Prevent cutting corners diagonally through walls
-            if (abs(offsets[i][0]) + abs(offsets[i][1]) == 2) { // diagonal
+            //if (abs(offsets[i][0]) + abs(offsets[i][1]) == 2) { // diagonal
+            //    int r1 = current->row + offsets[i][0];
+            //    int c1 = current->col;
+            //    int r2 = current->row;
+            //    int c2 = current->col + offsets[i][1];
+            //    if (!isTileWalkable(r1, c1) || !isTileWalkable(r2, c2)) continue;
+            //}
+
+            if (abs(offsets[i][0]) == 1 && abs(offsets[i][1]) == 1) { // diagonal
                 int r1 = current->row + offsets[i][0];
                 int c1 = current->col;
                 int r2 = current->row;
@@ -176,23 +184,28 @@ if (startRow < 0 || startCol < 0 || goalRow < 0 || goalCol < 0 ||
 bool isTileWalkable(int row, int col) {
     if (row < 0 || row >= rows || col < 0 || col >= cols) return false;
     if (isWallLike(objects[row][col])) return false;
-    if (objects[row][col] != 0 
-    && objects[row][col] != PATROL_BLOCK
-    && objects[row][col] != WINNING_BLOCK
-    && objects[row][col] != GREY_DOOR
-    && objects[row][col] != OPEN_GREY_DOOR
-    && objects[row][col] != LIGHTGREY_DOOR
-    && objects[row][col] != OPEN_LIGHTGREY_DOOR
-    && objects[row][col] != STONE_FLOOR
-    && objects[row][col] != OAK_WOODEN_FLOOR
-    && objects[row][col] != WOODEN_FLOOR
-    || details[row][col] == IRON_BARS
-    || details[row][col] == LEFT_TABLE
-    || details[row][col] == MIDDLE_TABLE
-    || details[row][col] == RIGHT_TABLE
-    || details[row][col] == SMALL_TABLE) return false;
+
+    if (
+        (objects[row][col] != 0 
+        && objects[row][col] != PATROL_BLOCK
+        && objects[row][col] != WINNING_BLOCK
+        && objects[row][col] != GREY_DOOR
+        && objects[row][col] != OPEN_GREY_DOOR
+        && objects[row][col] != LIGHTGREY_DOOR
+        && objects[row][col] != OPEN_LIGHTGREY_DOOR
+        && objects[row][col] != STONE_FLOOR
+        && objects[row][col] != OAK_WOODEN_FLOOR
+        && objects[row][col] != WOODEN_FLOOR)
+        ||
+        (details[row][col] == IRON_BARS
+        || details[row][col] == LEFT_TABLE
+        || details[row][col] == MIDDLE_TABLE
+        || details[row][col] == RIGHT_TABLE
+        || details[row][col] == SMALL_TABLE)
+    ) return false;
 
     return true;
 }
+
 
 
