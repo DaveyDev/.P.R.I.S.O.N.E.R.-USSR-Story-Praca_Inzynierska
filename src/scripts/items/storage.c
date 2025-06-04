@@ -109,9 +109,10 @@ void updateChests(int **map, int mapRows, int mapCols, Camera2D camera) {
                     chest->storage.itemCount = 0;
                     printf("work chest completed\n");
                     workAmount++;
-                    if(workAmount >= 3) {
+                    if(workAmount >= 3 && currentDayState == 3) {
                         isWorkDone = true;
                         printf("work completed for today\n");
+                        player.isStateDone = true;
                     }   
                     //objects[row][col] = 13; // work done chest
                 }

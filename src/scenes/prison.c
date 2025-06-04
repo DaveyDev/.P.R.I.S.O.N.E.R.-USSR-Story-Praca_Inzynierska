@@ -96,7 +96,7 @@ void prisonScene() {
     
     
     
-float cameraSpeed = 150.0f * GetFrameTime(); // Adjust speed here
+float cameraSpeed = 100.0f * GetFrameTime(); // Adjust speed here
 
 float deltaTime = GetFrameTime();
 

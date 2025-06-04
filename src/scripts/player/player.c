@@ -376,6 +376,30 @@ bool checkCollisionWithObjects(Vector2 colliderCenter, float radiusX, float radi
 
 
 
+bool isPassableDoor = (detailID == OPEN_GREY_DOOR || detailID == OPEN_LIGHTGREY_DOOR);
+
+// Block closed doors **only** if currentDayState == 4 and player.isStateDone == true
+bool isClosedDoor = (detailID == GREY_DOOR || detailID == LIGHTGREY_DOOR);
+bool shouldBlockClosedDoor = (currentDayState == 4 && player.isStateDone && isClosedDoor);
+
+bool isNonSolidBed = (
+    detailID == FANCY_BED_UPPER || detailID == FANCY_BED_DOWN ||
+    detailID == USELESS_BED_UPPER || detailID == USELESS_BED_BOTTOM ||
+    detailID == GREEN_BED_UPPER || detailID == GREEN_BED_BOTTOM
+);
+
+if (detailID >= 2000 && detailID <= 2999 &&
+    !isPassableDoor &&
+    !isNonSolidBed &&
+    (!isClosedDoor || shouldBlockClosedDoor)) {
+
+    if (CheckCollisionEllipseRec(colliderCenter, radiusX, radiusY, objectCollider)) {
+        return true; // block movement
+    }
+}
+
+
+
             if(detailID >= 2000 && detailID <= 2999
             && detailID != OPEN_GREY_DOOR
             && detailID != OPEN_LIGHTGREY_DOOR

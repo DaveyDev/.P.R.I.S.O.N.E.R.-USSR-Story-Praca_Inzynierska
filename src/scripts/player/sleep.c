@@ -5,6 +5,7 @@
 #include "../map/map.h"
 #include "../items/idList.h"  // where BED_UPPER and BED_BOTTOM are defined
 #include "../player/player.h" // for accessing or modifying player state
+#include "../NPC/startBehavior.h"
 
 static bool isSleeping = false;
 static float sleepTimer = 0.0f;
@@ -144,6 +145,9 @@ void triggerForcedSleep() {
     setTimeOfDay(6.5f);
     setDayCount(getDayCount() + 1);
     newDayNature();
+    updateDayState(4); // sleep
+    startSleepForAllNPCs();
+    startPatrolForAllNPCs();
 
     // Wake up nearly dead
     player.health = 1.0f;

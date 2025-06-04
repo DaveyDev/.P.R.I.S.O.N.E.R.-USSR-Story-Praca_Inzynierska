@@ -1075,7 +1075,7 @@ void drawNPC(NPC *npc, Camera2D camera) {
     // Draw current position and current target
     //DrawCircleV(npc->position, 1, YELLOW);
     if (npc->pathIndex < npc->pathLength) {
-       // DrawCircleV(npc->path[npc->pathIndex], 2, RED);
+        //DrawCircleV(npc->path[npc->pathIndex], 2, RED);
     }
 
     //DrawCircleLines(npc->position.x, npc->position.y, 20, (Color){255, 100, 100, 60});
@@ -1416,9 +1416,14 @@ void updateDoors(Vector2 playerPos, float playerRadiusX, float playerRadiusY,
             // Check player
             if (CheckCollisionEllipseRec(playerPos, playerRadiusX, playerRadiusY, tileRect)) {
                 //if(!(currentDayState == 4 && player.isStateDone)){
+                
                 someoneTouching = true;
                 playerTouching = true;
                 //}
+                if(currentDayState == 4 && player.isStateDone){
+                    someoneTouching = false;
+                    playerTouching = false;
+                }
                 
             }
 

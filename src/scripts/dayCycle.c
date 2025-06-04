@@ -103,7 +103,7 @@ void updateDayCycle() {
         player.isStateDone = false;
     }
 
-    if (previousTime < 10.0f && timeOfDay >= 10.0f) { //work time 
+    if (previousTime < 11.0f && timeOfDay >= 11.0f) { //work time 
         checkIfStateWasDone();
         printf("work time triggered\n");
         startWorkForAllNPCs();
@@ -112,7 +112,7 @@ void updateDayCycle() {
         player.isStateDone = false;
     }
 
-    if (previousTime < 18.0f && timeOfDay >= 18.0f) { //free time
+    if (previousTime < 16.0f && timeOfDay >= 16.0f) { //free time
         checkIfStateWasDone();
         printf("free time triggered\n");
         startFreeTimeForAllNPCs();
@@ -121,7 +121,7 @@ void updateDayCycle() {
         player.isStateDone = false;
     }
 
-    if (previousTime < 21.0f && timeOfDay >= 21.0f) { //roll call
+    if (previousTime < 20.0f && timeOfDay >= 20.0f) { //roll call
         checkIfStateWasDone();
         printf("free time triggered\n");
         startRollCallForAllNPCs();
@@ -130,9 +130,9 @@ void updateDayCycle() {
         player.isStateDone = false;
     }
 
-    if (previousTime < 22.0f && timeOfDay >= 22.0f) { //sleep
+    if (previousTime < 21.0f && timeOfDay >= 21.0f) { //sleep
         checkIfStateWasDone(); 
-        printf("free time triggered\n");
+        printf("sleep time triggered\n");
         startSleepForAllNPCs();
         playBellSound();
         updateDayState(4);
